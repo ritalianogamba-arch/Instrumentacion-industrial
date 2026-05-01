@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Planta de Control de Tanques</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js"></script>
+    
+    <style>
+        /* ZONA CSS-1: ESTILOS GENERALES */
+        body { font-family: 'Roboto', sans-serif; background: #f0f2f5; margin: 0; text-align: center; }
+        .page-header { display: flex; justify-content: space-between; padding: 15px 30px; background: #4CAF50; color: white; }
+        .header-logo { height: 80px; }
+        
+        /* Tabs */
+        .tabs-container { margin: 20px auto; max-width: 95%; }
+        .tabs-header { display: flex; border-bottom: 2px solid #4CAF50; }
+        .tab-button { flex: 1; padding: 12px; border: none; cursor: pointer; font-size: 16px; background: #f0f0f0; color: #333; }
+        .tab-button.active { background: #4CAF50; color: white; }
+
+        /* Estilos PID Compacto */
+        .pid-card-container { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+        .pid-card { background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 400px; padding: 15px; text-align: left; border-top: 5px solid #ccc; }
+        .pid-section { margin-bottom: 15px; padding: 10px; background: #f9f9f9; border-radius: 5px; }
+        .pid-input-row { display: flex; justify-content: space-between; margin-bottom: 5px; align-items: center; }
+        .pid-input-row label { font-weight: bold; font-size: 14px; width: 100px; }
+        .pid-input-row input { width: 80px; padding: 4px; }
+        .pid-val-display { font-size: 12px; color: #666; width: 60px; text-align: right; }
+
+        .btn-group { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
+        .btn-small { padding: 5px 15px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 12px; }
+        
+        .status-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-top: 5px; }
+        .status-indicator { font-weight: bold; }
+
+        /* Estilos Visuales (Diagrama) */
+        .tank-wrapper { position: absolute; display: flex; align-items: center; gap: 5px; }
+        .tank { width: 80px; height: 60px; background: #bbdefb; border: 2px solid #1976d2; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+        .tank-level-bar { width: 100%; background-color: #3498db; margin-top: auto; transition: height 0.5s, background-color 0.3s ease; z-index: 1; }
+        .tank-info-overlay { z-index: 10; padding: 2px; color: #333; font-size: 15px; font-weight: bold; text-align: center; width: 100%; }
+        
+        .level-input-box { display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.7); padding: 2px; border-radius: 4px; }
+        .level-input-box input { width: 50px; padding: 7px; text-align: center; border: 1px solid #999; border-radius: 4px; font-size: 11px; }
+        .level-input-box label { font-size: 13px; font-weight: bold; color: #555; margin-bottom: 2px; }
+
+        .valve { position: absolute; width: 30px; height: 30px; border-radius: 50%; border: 2px solid #333; cursor: pointer; color: white; font-weight: bold; font-size: 10px; display: flex; align-items: center; justify-content: center; }
+        .valve.open { background: #4CAF50; }
+        .valve.closed { background: #dc3545; }
+        .valve.transitioning { background-color: #FFC107 !important; color: #333 !important; cursor: not-allowed; opacity: 0.8; }
+        
+        .slider-supervisor { width: 100%; }
+        
+        /* ESTILOS GRAFICAS */
+        .chart-controls { background: white; padding: 10px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .chart-wrapper { background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; height: 300px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
+        /* Tablas */
+        table { width: 100%; border-collapse: collapse; background: white; margin-bottom: 20px; }
+        th, td { padding: 8px; border-bottom: 1px solid #ddd; text-align: center; font-size: 13px; }
+        th { background: #4CAF50; color: white; }
+        td.on { background: #d4edda; border: 2px solid #28a745; color: #155724; }
+        td.off { background: #f8d7da; border: 2px solid #dc3545; color: #721c24; }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <img src="{{ url_for('static', filename='logo_unrc.png') }}" class="header-logo">
+        <div class="header-title">
+            <h1>Planta de Control de Tanques</h1>
+            <h2>Instrumentacion industrial (Cod. 0434)</h2>
+        </div>
+        <img src="{{ url_for('static', filename='logo_fi.png') }}" class="header-logo">
+    </header>
+
+    <div class="tabs-container">
+        <div class="tabs-header">
+            <button class="tab-button" onclick="openTab('tab-monitoreo', this)">Monitoreo</button>
+            <button class="tab-button" onclick="openTab('tab-pid', this)">Control PID</button>
+            <button class="tab-button" onclick="openTab('tab-visual', this)">Visual</button>
+            <button class="tab-button" onclick="openTab('tab-graficas', this)">Graficas</button>
+        </div>
+
+        <div id="tab-monitoreo" style="display: block; padding: 20px;">
+            <div style="display: flex; gap: 40px; justify-content: center; align-items: flex-start;">
+                <div><h3>Entradas Digitales</h3><table id="coils_inputs"><thead><tr><th>Direccion</th></tr></thead><tbody></tbody></table></div>
+                <div><h3>Salidas Digitales</h3><table id="coils_outputs"><thead><tr><th>Direccion</th></tr></thead><tbody></tbody></table></div>
+                <div><h3>Entradas Analogicas</h3><table id="registers_inputs"><thead><tr><th>Sensor</th><th>Valor</th></tr></thead><tbody></tbody></table></div>
+                <div style="width: 300px;">
+                    <h3>Salidas Analogicas</h3>
+                    <table id="registers_outputs"><thead><tr><th>Actuador</th><th>Valor</th></tr></thead><tbody></tbody></table>
+                    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <h4 style="margin-top:0; color: #1976D2;">Control Manual</h4>
+                        <label style="font-weight: bold; display:block; text-align: left;">Valvula Neumatica (%MW302)</label> 
+                        <input id="slider302" type="range" min="4000" max="20000" value="4000" class="slider-supervisor" onchange="actualizarValorVariador(302, this.value)"> 
+                        <span id="valor302" style="font-weight: bold; color: #1976D2;">0.0 %</span>
+                        <div style="margin-top: 15px;"></div>
+                        <label style="font-weight: bold; display:block; text-align: left;">Variador Frecuencia (%MW303)</label> 
+                        <input id="slider303" type="range" min="4000" max="20000" value="4000" class="slider-supervisor" onchange="actualizarValorVariador(303, this.value)"> 
+                        <span id="valor303" style="font-weight: bold; color: #1976D2;">0.0 Hz</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-pid" style="display: none; padding: 20px;">
+            <div class="pid-card-container">
+                <div class="pid-card" style="border-top-color: #E65100;">
+                    <h3 style="color: #E65100;">Tacho 2</h3>
+                    <div class="pid-section">
+                        <div class="pid-input-row"><label>SetPoint:</label><input type="number" id="sp-t2"><span id="read-sp-t2" class="pid-val-display">--</span></div>
+                        <div class="pid-input-row"><label>Kp:</label><input type="number" id="kp-t2"><span id="read-kp-t2" class="pid-val-display">--</span></div>
+                        <div class="pid-input-row"><label>Ti:</label><input type="number" id="ti-t2"><span id="read-ti-t2" class="pid-val-display">--</span></div>
+                        <div class="pid-input-row"><label>Td:</label><input type="number" id="td-t2"><span id="read-td-t2" class="pid-val-display">--</span></div>
+                        <div class="btn-group">
+                            <button class="btn-small" onclick="ioPID('T2', 'read')" style="background: #FF9800;">Leer</button>
+                            <button class="btn-small" onclick="ioPID('T2', 'write')" style="background: #4CAF50;">Cargar</button>
+                        </div>
+                    </div>
+                    <div class="pid-section" style="background: #fff3e0;">
+                        <div class="status-row">
+                            <span>Control PID (%M450):</span>
+                            <button id="btn-pid-t2" onclick="togglePID_Coil('T2')" style="background: #F44336; color: white; border: none; padding: 8px; width: 80px; cursor: pointer; font-weight: bold;">OFF</button>
+                        </div>
+                        <div class="status-row" style="border-top: 1px dashed #ccc; padding-top: 8px; margin-top: 8px;">
+                            <span>Nivel Seguro (%M400):</span>
+                            <span id="permiso-t2" class="status-indicator">--</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 12px; color: #444; border-top: 1px solid #eee; padding-top: 10px;">
+                        Temp: <span id="temp-t2-val" style="font-weight: bold;">--</span> | Salida: <span id="out-t2-val" style="font-weight: bold;">--</span>
+                    </div>
+                </div>
+
+                <div class="pid-card" style="border-top-color: #1976D2;">
+                    <h3 style="color: #1976D2;">Tacho 4</h3>
+                    <div class="pid-section">
+                        <div class="pid-input-row"><label>SetPoint:</label><input type="number" id="sp-t4"><span id="read-sp-t4" class="pid-val-display">--</span></div>
+                        <div class="pid-input-row"><label>Kp:</label><input type="number" id="kp-t4"><span id="read-kp-t4" class="pid-val-display">--</span></div>
+                        <div class="pid-input-row"><label>Ti:</label><input type="number" id="ti-t4"><span id="read-ti-t4" class="pid-val-display">--</span></div>
+                        <div class="pid-input-row"><label>Td:</label><input type="number" id="td-t4"><span id="read-td-t4" class="pid-val-display">--</span></div>
+                        <div class="btn-group">
+                            <button class="btn-small" onclick="ioPID('T4', 'read')" style="background: #FF9800;">Leer</button>
+                            <button class="btn-small" onclick="ioPID('T4', 'write')" style="background: #4CAF50;">Cargar</button>
+                        </div>
+                    </div>
+                    <div class="pid-section" style="background: #e3f2fd;">
+                        <div class="status-row">
+                            <span>Control PID (%M350):</span>
+                            <button id="btn-pid-t4" onclick="togglePID_Reg('T4')" style="background: #F44336; color: white; border: none; padding: 8px; width: 80px; cursor: pointer; font-weight: bold;">OFF</button>
+                        </div>
+                        <div class="status-row" style="border-top: 1px dashed #ccc; padding-top: 8px; margin-top: 8px;">
+                            <span>Nivel Seguro (%M300):</span>
+                            <span id="permiso-t4" class="status-indicator">--</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 12px; color: #444; border-top: 1px solid #eee; padding-top: 10px;">
+                        Temp: <span id="temp-t4-val" style="font-weight: bold;">--</span> | Salida: <span id="out-t4-val" style="font-weight: bold;">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-visual" style="display: none; padding: 20px;">
+            <div style="position: relative; width: 800px; height: 500px; margin: 0 auto; background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 10px;">
+                <div style="position: absolute; top: 20px; left: 10px; right: 250px; height: 4px; background: #28a745;"></div>
+                <div style="position: absolute; top: 5px; left: 350px; color: #000000; font-size: 15px;">Alimentacion</div>
+                <div style="position: absolute; top: 20px; left: 550px; width: 4px; height: 80px; background: #28a745;"></div>
+                <div style="position: absolute; top: 255px; left: 610px; width: 4px; height: 189px; background: #28a745;"></div>
+                <div style="position: absolute; top: 20px; left: 300px; width: 4px; height: 80px; background: #28a745;"></div>
+                <div style="position: absolute; top: 162px; left: 290px; width: 4px; height: 71px; background: #28a745;"></div>
+                <div style="position: absolute; top: 230px; left: 283px; width: 10px; height: 4px; background: #28a745;"></div>
+                <div style="position: absolute; top: 262px; left: 240px; width: 4px; height: 71px; background: #28a745;"></div>
+                <div style="position: absolute; top: 333px; left: 233px; width: 11px; height: 4px; background: #28a745;"></div>
+                <div style="position: absolute; top: 130px; left: 602px; width: 20px; height: 4px; background: #28a745;"></div>
+                <div style="position: absolute; top: 162px; left: 560px; width: 4px; height: 94px; background: #28a745;"></div>
+                <div style="position: absolute; top: 162px; left: 660px; width: 4px; height: 94px; background: #28a745;"></div>
+                <div style="position: absolute; top: 362px; left: 184px; width: 4px; height: 80px; background: #28a745;"></div>
+                <div style="position: absolute; top: 252px; left: 560px; width: 100px; height: 4px; background: #28a745;"></div>
+                <div style="position: absolute; top: 442px; left: 184px; right: 10px; height: 4px; background: #28a745;"></div>
+                <div style="position: absolute; top: 425px; left: 350px; color: #000000; font-size: 15px;">Descarga</div>
+
+                <div class="tank-wrapper" style="top: 100px; left: 520px;">
+                    <div class="tank"><div class="tank-info-overlay">T4<br><span id="vis-temp-t4">--</span></div><div class="tank-level-bar" id="vis-lev-t4" style="height: 0%;"></div></div>
+                    <div class="level-input-box" style="position: absolute; right: 105%;"><label>Set %</label><input type="number" id="sp-niv-t4" onchange="writeLevelSP('T4', this.value)"></div>
+                </div>
+                <div class="tank-wrapper" style="top: 100px; left: 620px;">
+                    <div class="tank"><div class="tank-info-overlay">T5<br>N/A</div><div class="tank-level-bar" id="level-t5" style="height: 0%;"></div></div>
+                    <div class="level-input-box"><label>Set %</label><input type="number" id="sp-niv-t5" onchange="writeLevelSP('T5', this.value)"></div>
+                </div>
+                <div class="tank-wrapper" style="top: 100px; left: 250px;">
+                    <div class="tank"><div class="tank-info-overlay">T1</div><div class="tank-level-bar" id="vis-lev-t1" style="height: 0%;"></div></div>
+                    <div class="level-input-box" style="position: absolute; right: 105%;"><label>Set %</label><input type="number" id="sp-niv-t1" onchange="writeLevelSP('T1', this.value)"></div>
+                </div>
+                <div class="tank-wrapper" style="top: 200px; left: 200px;">
+                    <div class="tank"><div class="tank-info-overlay">T2<br><span id="vis-temp-t2">--</span></div><div class="tank-level-bar" id="vis-lev-t2" style="height: 0%;"></div></div>
+                    <div class="level-input-box" style="position: absolute; right: 105%;"><label>Set %</label><input type="number" id="sp-niv-t2" onchange="writeLevelSP('T2', this.value)"></div>
+                </div>
+                <div class="tank-wrapper" style="top: 300px; left: 150px;">
+                    <div class="tank"><div class="tank-info-overlay">T3</div><div class="tank-level-bar" id="vis-lev-t3" style="height: 0%;"></div></div>
+                    <div class="level-input-box" style="position: absolute; right: 105%;"><label>Set %</label><input type="number" id="sp-niv-t3" onchange="writeLevelSP('T3', this.value)"></div>
+                </div>
+
+                <div class="valve closed" id="valve1" onclick="toggleValve(1)" style="top: 30px; left: 240px;">EV1</div>
+                <div class="valve closed" id="valve2" onclick="toggleValve(2)" style="top: 30px; left: 560px;">EV2</div>
+                <div class="valve closed" id="valve3" onclick="toggleValve(3)" style="top: 180px; left: 305px;">EV3</div>
+                <div class="valve closed" id="valve4" onclick="toggleValve(4)" style="top: 270px; left: 250px;">EV4</div>
+                <div class="valve closed" id="valve5" onclick="toggleValve(5)" style="top: 180px; left: 670px;">EV5</div>
+                <div class="valve closed" id="valve6" onclick="toggleValve(6)" style="top: 180px; left: 509px;">EV6</div>
+                <div class="valve closed" id="valve7" onclick="toggleValve(7)" style="top: 370px; left: 200px;">EV7</div>
+            </div>
+        </div>
+
+        <div id="tab-graficas" style="display: none; padding: 20px;">
+            <div class="chart-controls">
+                <label style="font-weight: bold; color: #333;">
+                    <input type="checkbox" id="autoScale" checked onchange="toggleScaleMode()" style="width: 20px; height: 20px; vertical-align: middle;">
+                    Seguimiento Automático
+                </label>
+                
+                <span id="manualControls" style="display:none; margin-left: 20px; background: #f0f0f0; padding: 5px 10px; border-radius: 5px;">
+                    <label>Min: <input type="number" id="chartMin" value="0" style="width:50px; padding: 4px; border-radius: 4px; border: 1px solid #ccc;"></label>
+                    <label style="margin-left: 10px;">Max: <input type="number" id="chartMax" value="100" style="width:50px; padding: 4px; border-radius: 4px; border: 1px solid #ccc;"></label>
+                    <button onclick="applyManualScale()" style="margin-left: 10px; background: #1976D2; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Aplicar</button>
+                </span>
+            </div>
+            
+            <div class="chart-wrapper">
+                <h4 style="margin: 0 0 10px 0; color: #1976D2;">Temperatura Tacho 4</h4>
+                <canvas id="chartT4"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <h4 style="margin: 0 0 10px 0; color: #E65100;">Temperatura Tacho 2</h4>
+                <canvas id="chartT2"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURACION GLOBAL
+        const CONFIG_TANQUES = {
+            T1: { addr: 101, min: 4000, max: 10083 },
+            T2: { addr: 102, min: 4000, max: 10812 },
+            T3: { addr: 103, min: 4000, max: 6150  },
+            T4: { addr: 104, min: 4000, max: 9745  },
+            T5: { addr: 105, min: 4000, max: 20000 } 
+        };
+        
+        let g_tempT2 = 0;
+        let g_tempT4 = 0;
+
+        // CHART.JS CON ZOOM/PAN ACTIVADO
+        let c2, c4;
+        function initCharts() {
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { 
+                    y: { beginAtZero: false },
+                    x: { 
+                        ticks: { maxTicksLimit: 20 } // Evitar saturacion de etiquetas
+                    }
+                },
+                plugins: {
+                    zoom: {
+                        pan: { enabled: true, mode: 'x' },
+                        zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' }
+                    }
+                }
+            };
+
+            c2 = new Chart(document.getElementById('chartT2').getContext('2d'), { 
+                type: 'line', 
+                data: { labels: [], datasets: [{ label: 'Temp T2 (C)', borderColor: '#E65100', backgroundColor: 'rgba(230, 81, 0, 0.1)', data: [], tension: 0.4, fill: true }] }, 
+                options: JSON.parse(JSON.stringify(commonOptions)) // Clonar opciones
+            });
+            
+            c4 = new Chart(document.getElementById('chartT4').getContext('2d'), { 
+                type: 'line', 
+                data: { labels: [], datasets: [{ label: 'Temp T4 (C)', borderColor: '#1976D2', backgroundColor: 'rgba(25, 118, 210, 0.1)', data: [], tension: 0.4, fill: true }] }, 
+                options: JSON.parse(JSON.stringify(commonOptions)) 
+            });
+        }
+
+        function toggleScaleMode() {
+            const isAuto = document.getElementById('autoScale').checked;
+            document.getElementById('manualControls').style.display = isAuto ? 'none' : 'inline-block';
+        }
+
+        function applyManualScale() {
+            const min = parseFloat(document.getElementById('chartMin').value);
+            const max = parseFloat(document.getElementById('chartMax').value);
+            [c2, c4].forEach(chart => {
+                chart.options.scales.y.min = min;
+                chart.options.scales.y.max = max;
+                chart.update();
+            });
+        }
+
+        function updateCharts(t2, t4) {
+            const now = new Date().toLocaleTimeString();
+            const isAuto = document.getElementById('autoScale').checked;
+
+            // PUSH DATOS T2
+            c2.data.labels.push(now); 
+            c2.data.datasets[0].data.push(t2);
+            
+            // PUSH DATOS T4
+            c4.data.labels.push(now); 
+            c4.data.datasets[0].data.push(t4);
+            
+            // LOGICA DE VENTANA DESLIZANTE (SCROLL AUTOMATICO)
+            // Limita el buffer total a 2000 puntos (aprox 30 min si actualiza cada 1s, o mas si es cada min)
+            if(c2.data.labels.length > 2000) { 
+                c2.data.labels.shift(); c2.data.datasets[0].data.shift();
+                c4.data.labels.shift(); c4.data.datasets[0].data.shift();
+            }
+
+            // Muestra solo los ultimos 30 puntos para efecto "tiempo real"
+            const totalPoints = c2.data.labels.length;
+            if(totalPoints > 30) {
+                c2.options.scales.x.min = totalPoints - 30;
+                c2.options.scales.x.max = totalPoints - 1;
+                c4.options.scales.x.min = totalPoints - 30;
+                c4.options.scales.x.max = totalPoints - 1;
+            }
+
+            // AJUSTE DE ESCALA Y (AUTO)
+            if(isAuto) {
+                c2.options.scales.y.min = Math.floor(t2 - 10);
+                c2.options.scales.y.max = Math.ceil(t2 + 10);
+                c4.options.scales.y.min = Math.floor(t4 - 10);
+                c4.options.scales.y.max = Math.ceil(t4 + 10);
+            }
+            
+            c2.update();
+            c4.update();
+        }
+
+        // INTERFAZ
+        function openTab(name, btn) {
+            document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
+            document.getElementById(name).style.display = 'block';
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // MODBUS
+        function writeRegister(addr, val) {
+             if(addr===300 || addr===301 || addr===400) { alert("Direccion protegida"); return; }
+             fetch('/write_register', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({address: addr, value: parseInt(val)}) });
+        }
+        function writeLevelSP(tankId, percent) {
+            const cfg = CONFIG_TANQUES[tankId];
+            if(!cfg) return;
+            let p = parseFloat(percent); if(p < 0) p = 0; if(p > 100) p = 100;
+            const rawVal = Math.round(cfg.min + (p * (cfg.max - cfg.min) / 100));
+            writeRegister(cfg.addr, rawVal);
+        }
+
+        // PID
+        function ioPID(id, action) {
+            const suffix = id.toLowerCase();
+            if (action === 'read') {
+                document.getElementById(`sp-${suffix}`).value = document.getElementById(`read-sp-${suffix}`).innerText;
+                document.getElementById(`kp-${suffix}`).value = document.getElementById(`read-kp-${suffix}`).innerText;
+                document.getElementById(`ti-${suffix}`).value = document.getElementById(`read-ti-${suffix}`).innerText;
+                document.getElementById(`td-${suffix}`).value = document.getElementById(`read-td-${suffix}`).innerText;
+                alert("Valores cargados.");
+            } else {
+                const params = {
+                    id: id,
+                    setpoint: document.getElementById(`sp-${suffix}`).value,
+                    kp: document.getElementById(`kp-${suffix}`).value,
+                    ti: document.getElementById(`ti-${suffix}`).value,
+                    td: document.getElementById(`td-${suffix}`).value
+                };
+                fetch('/update_pid', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(params) })
+                .then(r=>r.json()).then(d=>alert(d.success?"Guardado":"Error"));
+            }
+        }
+        function togglePID_Coil(id) { 
+            const btn = document.getElementById(`btn-pid-${id.toLowerCase()}`);
+            const isOn = btn.innerText === "ON";
+            fetch('/write_coil', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({address: 450, value: !isOn}) });
+        }
+        function togglePID_Reg(id) { 
+            const btn = document.getElementById(`btn-pid-${id.toLowerCase()}`);
+            const isOn = btn.innerText === "ON";
+            const newVal = isOn ? 0 : 1;
+            fetch('/write_register', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({address: 407, value: newVal}) })
+            .then(()=>{ fetch('/write_coil', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({address: 350, value: (newVal===1)}) }); });
+        }
+
+        // LOOP
+        setInterval(() => {
+            fetch('/status').then(r=>r.json()).then(d => {
+                // Tablas
+                let h1=""; d.coils_inputs.forEach((v,i)=>h1+=`<tr><td class="${v?'on':'off'}">%I0.${i}</td></tr>`); document.getElementById('coils_inputs').innerHTML=h1;
+                let h2=""; d.coils_outputs.forEach((v,i)=>h2+=`<tr><td class="${v?'on':'off'}">%Q0.${i}</td></tr>`); document.getElementById('coils_outputs').innerHTML=h2;
+                
+                let h3=""; 
+                const sen=['PT100 T2','PT100 T4','Nivel T1','Nivel T4','Nivel T2','Nivel T3'];
+                d.registers_inputs.forEach((v,i)=>{ 
+                    let val=v;
+                    if(i<2) val=((v*75/1000)+0.5).toFixed(1)+" C";
+                    else if(i===2) val=escalarNivel(v, CONFIG_TANQUES.T1)+" %";
+                    else if(i===3) val=escalarNivel(v, CONFIG_TANQUES.T4)+" %";
+                    else if(i===4) val=escalarNivel(v, CONFIG_TANQUES.T2)+" %";
+                    else if(i===5) val=escalarNivel(v, CONFIG_TANQUES.T3)+" %";
+                    h3+=`<tr><td>${sen[i]}</td><td>${val}</td></tr>`;
+                });
+                document.getElementById('registers_inputs').innerHTML=h3;
+
+                let h4="";
+                const act=['Resist 1','Valvula','VFD','Reserva'];
+                d.registers_outputs.forEach((v,i)=>{
+                    let val=v;
+                    if(i===1) val=((v-4000)/16000*100).toFixed(1)+" %";
+                    if(i===2) val=((v-4000)/16000*50).toFixed(1)+" Hz";
+                    h4+=`<tr><td>${act[i]}</td><td>${val}</td></tr>`;
+                });
+                document.getElementById('registers_outputs').innerHTML=h4;
+
+                // PID T2
+                if(d.pid_t2.params) {
+                    document.getElementById('read-sp-t2').innerText = d.pid_t2.params.setpoint;
+                    document.getElementById('read-kp-t2').innerText = d.pid_t2.params.kp;
+                    document.getElementById('read-ti-t2').innerText = d.pid_t2.params.ti;
+                    document.getElementById('read-td-t2').innerText = d.pid_t2.params.td;
+                    document.getElementById('temp-t2-val').innerText = d.pid_t2.status.temp_actual + " C";
+                    document.getElementById('out-t2-val').innerText = d.pid_t2.status.salida + " %";
+                    updateBtn('btn-pid-t2', d.pid_flags.t2_activo);
+                    updatePermiso('permiso-t2', d.pid_flags.t2_permiso);
+                }
+                // PID T4
+                if(d.pid_t4.params) {
+                    document.getElementById('read-sp-t4').innerText = d.pid_t4.params.setpoint;
+                    document.getElementById('read-kp-t4').innerText = d.pid_t4.params.kp;
+                    document.getElementById('read-ti-t4').innerText = d.pid_t4.params.ti;
+                    document.getElementById('read-td-t4').innerText = d.pid_t4.params.td;
+                    document.getElementById('temp-t4-val').innerText = d.pid_t4.status.temp_actual + " C";
+                    document.getElementById('out-t4-val').innerText = d.pid_t4.status.salida + " %";
+                    updateBtn('btn-pid-t4', d.pid_flags.t4_activo);
+                    updatePermiso('permiso-t4', d.pid_flags.t4_permiso);
+                }
+
+                // Visual
+                if(d.registers_inputs.length >= 6) {
+                    setVisLevel('t2', d.registers_inputs[4], CONFIG_TANQUES.T2);
+                    let t2 = ((d.registers_inputs[0]*75/1000)).toFixed(1);
+                    document.getElementById('vis-temp-t2').innerText = t2 + " C";
+                    
+                    setVisLevel('t4', d.registers_inputs[3], CONFIG_TANQUES.T4);
+                    let t4 = ((d.registers_inputs[1]*75/1000)).toFixed(1);
+                    document.getElementById('vis-temp-t4').innerText = t4 + " C";
+                    
+                    setVisLevel('t1', d.registers_inputs[2], CONFIG_TANQUES.T1);
+                    setVisLevel('t3', d.registers_inputs[5], CONFIG_TANQUES.T3);
+                    
+                    // Color simplificado: Si (PID ON) y (Nivel Seguro) -> ROJO, sino AZUL
+                    const hT2 = d.pid_flags.t2_activo && d.pid_flags.t2_permiso;
+                    const hT4 = d.pid_flags.t4_activo && d.pid_flags.t4_permiso;
+                    
+                    document.getElementById('vis-lev-t2').style.backgroundColor = hT2 ? '#FF5722' : '#3498db';
+                    document.getElementById('vis-lev-t4').style.backgroundColor = hT4 ? '#FF5722' : '#3498db';
+
+                    g_tempT2 = parseFloat(t2);
+                    g_tempT4 = parseFloat(t4);
+                }
+                
+                if(d.sp_niveles && d.sp_niveles.length >= 5) {
+                    updateInputIfNoFocus('sp-niv-t1', d.sp_niveles[0], CONFIG_TANQUES.T1);
+                    updateInputIfNoFocus('sp-niv-t2', d.sp_niveles[1], CONFIG_TANQUES.T2);
+                    updateInputIfNoFocus('sp-niv-t3', d.sp_niveles[2], CONFIG_TANQUES.T3);
+                    updateInputIfNoFocus('sp-niv-t4', d.sp_niveles[3], CONFIG_TANQUES.T4);
+                    updateInputIfNoFocus('sp-niv-t5', d.sp_niveles[4], CONFIG_TANQUES.T5);
+                }
+                
+                if(d.registers_outputs.length >= 3) {
+                   const val302 = d.registers_outputs[1];
+                   document.getElementById('valor302').innerText = ((val302-4000)/16000*100).toFixed(1)+" %";
+                   if(!document.getElementById('slider302').matches(':active')) document.getElementById('slider302').value = val302;
+                   const val303 = d.registers_outputs[2];
+                   document.getElementById('valor303').innerText = ((val303-4000)/16000*50).toFixed(1)+" Hz";
+                   if(!document.getElementById('slider303').matches(':active')) document.getElementById('slider303').value = val303;
+                }
+            });
+        }, 2000);
+
+        // LOOP LENTO
+        setInterval(() => {
+            updateCharts(g_tempT2, g_tempT4);
+        }, 60000);
+
+        function escalarNivel(v, cfg) {
+            let p = ((v - cfg.min)/(cfg.max - cfg.min))*100;
+            if(p<0) p=0; if(p>100) p=100;
+            return p.toFixed(1);
+        }
+        function setVisLevel(id, v, cfg) {
+            document.getElementById(`vis-lev-${id}`).style.height = escalarNivel(v, cfg) + "%";
+        }
+        function updateInputIfNoFocus(id, rawVal, cfg) {
+            if(document.activeElement.id !== id) {
+                let p = ((rawVal - cfg.min) / (cfg.max - cfg.min)) * 100;
+                if(p<0) p=0; if(p>100) p=100;
+                document.getElementById(id).value = Math.round(p);
+            }
+        }
+        function updateBtn(id, active) {
+            const btn = document.getElementById(id);
+            if(active) { btn.innerText="ON"; btn.style.background="#4CAF50"; }
+            else { btn.innerText="OFF"; btn.style.background="#F44336"; }
+        }
+        function updatePermiso(id, ok) {
+            const s = document.getElementById(id);
+            if(ok) { s.innerText="OK"; s.style.color="green"; }
+            else { s.innerText="BAJO"; s.style.color="red"; }
+        }
+        function actualizarValorVariador(addr, val) { writeRegister(addr, val); }
+        function toggleValve(n) {
+            const addr = 14 + (n-1);
+            const btn = document.getElementById(`valve${n}`);
+            if(btn.disabled) return; 
+            
+            btn.disabled = true; 
+            btn.classList.add('transitioning');
+            const nState = !btn.classList.contains('open');
+            fetch('/write_coil', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({address: addr, value: nState}) })
+            .then(r=>r.json()).then(d=>{ 
+                if(d.success) { 
+                     setTimeout(() => {
+                        btn.disabled = false; 
+                        btn.classList.remove('transitioning');
+                        if(nState) { btn.classList.add('open'); btn.classList.remove('closed'); }
+                        else { btn.classList.add('closed'); btn.classList.remove('open'); }
+                     }, 16000);
+                } else {
+                     btn.disabled = false; 
+                     btn.classList.remove('transitioning');
+                     alert('Error al accionar');
+                }
+            });
+        }
+        function actualizarEstadoValvulas() {
+             for(let i=1; i<=7; i++) {
+                 const btn = document.getElementById(`valve${i}`);
+                 if(btn.disabled) continue;
+                 fetch(`/read_coil?address=${14+i-1}`).then(r=>r.json()).then(d=>{
+                     if(d.success && !btn.disabled) {
+                         if(d.value) { btn.classList.add('open'); btn.classList.remove('closed'); }
+                         else { btn.classList.add('closed'); btn.classList.remove('open'); }
+                     }
+                 });
+             }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+             document.querySelector('.tab-button').click();
+             initCharts();
+             setInterval(actualizarEstadoValvulas, 3000);
+        });
+    </script>
+</body>
+</html>
