@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planta de Control de Tanques</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <!-- External Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js"></script>
+</head>
+<body>
+    
+    <!-- Component: Header -->
+    {% include 'components/header.html' %}
+
+    <main class="tabs-container">
+        <!-- Tabs Navigation -->
+        <nav class="tabs-header">
+            <button class="tab-button" onclick="openTab('tab-monitoreo', this)">Monitoreo</button>
+            <button class="tab-button" onclick="openTab('tab-pid', this)">Control PID</button>
+            <button class="tab-button" onclick="openTab('tab-visual', this)">Visual</button>
+            <button class="tab-button" onclick="openTab('tab-graficas', this)">Gráficas</button>
+        </nav>
+
+        <!-- Tab Contents -->
+        {% include 'tabs/monitoreo.html' %}
+        {% include 'tabs/pid.html' %}
+        {% include 'tabs/visual.html' %}
+        {% include 'tabs/graficas.html' %}
+    </main>
+
+    <!-- Main Logic -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

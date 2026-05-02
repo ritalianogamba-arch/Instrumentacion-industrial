@@ -1,0 +1,29 @@
+<div id="tab-graficas" class="tab-content" style="display: none; padding: 20px;">
+    <div class="chart-controls">
+        <label class="auto-scale-label">
+            <input type="checkbox" id="autoScale" checked onchange="toggleScaleMode()">
+            Seguimiento Automático
+        </label>
+        
+        <div id="manualControls" class="manual-controls" style="display:none;">
+            <label>Min: <input type="number" id="chartMin" value="0"></label>
+            <label>Max: <input type="number" id="chartMax" value="100"></label>
+            <button class="btn-apply" onclick="applyManualScale()">Aplicar</button>
+        </div>
+    </div>
+    
+    <div class="charts-container">
+        <div class="chart-wrapper">
+            <h4 class="chart-title t4-color">Temperatura Tacho 4</h4>
+            <div class="canvas-container">
+                <canvas id="chartT4"></canvas>
+            </div>
+        </div>
+        <div class="chart-wrapper">
+            <h4 class="chart-title t2-color">Temperatura Tacho 2</h4>
+            <div class="canvas-container">
+                <canvas id="chartT2"></canvas>
+            </div>
+        </div>
+    </div>
+</div>

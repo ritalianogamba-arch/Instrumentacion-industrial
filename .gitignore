@@ -1,0 +1,31 @@
+# Python bytecode (compiled files)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Flask-specific
+instance/
+.webassets-cache
+
+# Environment variables (SENSITIVE)
+.env
+.flaskenv
+
+# Database files
+*.db
+*.sqlite
+
+# Unit test / coverage reports
+.coverage
+htmlcov/
+.pytest_cache/
+
+# IDE specific (Optional but recommended)
+.vscode/
+.idea/

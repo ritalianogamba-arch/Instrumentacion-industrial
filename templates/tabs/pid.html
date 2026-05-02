@@ -1,0 +1,61 @@
+<div id="tab-pid" class="tab-content" style="display: none; padding: 20px;">
+    <div class="pid-card-container">
+        <!-- Tacho 2 -->
+        <div class="pid-card tacho-2-card">
+            <h3 class="card-title">Tacho 2</h3>
+            <div class="pid-section">
+                <div class="pid-input-row"><label>SetPoint:</label><input type="number" id="sp-t2"><span id="read-sp-t2" class="pid-val-display">--</span></div>
+                <div class="pid-input-row"><label>Kp:</label><input type="number" id="kp-t2"><span id="read-kp-t2" class="pid-val-display">--</span></div>
+                <div class="pid-input-row"><label>Ti:</label><input type="number" id="ti-t2"><span id="read-ti-t2" class="pid-val-display">--</span></div>
+                <div class="pid-input-row"><label>Td:</label><input type="number" id="td-t2"><span id="read-td-t2" class="pid-val-display">--</span></div>
+                <div class="btn-group">
+                    <button class="btn-small btn-read" onclick="ioPID('T2', 'read')">Leer</button>
+                    <button class="btn-small btn-write" onclick="ioPID('T2', 'write')">Cargar</button>
+                </div>
+            </div>
+            <div class="pid-section status-section">
+                <div class="status-row">
+                    <span>Control PID (%M450):</span>
+                    <button id="btn-pid-t2" class="toggle-btn" onclick="togglePID_Coil('T2')">OFF</button>
+                </div>
+                <div class="status-row-divider"></div>
+                <div class="status-row">
+                    <span>Nivel Seguro (%M400):</span>
+                    <span id="permiso-t2" class="status-indicator">--</span>
+                </div>
+            </div>
+            <div class="pid-footer">
+                Temp: <span id="temp-t2-val">--</span> | Salida: <span id="out-t2-val">--</span>
+            </div>
+        </div>
+
+        <!-- Tacho 4 -->
+        <div class="pid-card tacho-4-card">
+            <h3 class="card-title">Tacho 4</h3>
+            <div class="pid-section">
+                <div class="pid-input-row"><label>SetPoint:</label><input type="number" id="sp-t4"><span id="read-sp-t4" class="pid-val-display">--</span></div>
+                <div class="pid-input-row"><label>Kp:</label><input type="number" id="kp-t4"><span id="read-kp-t4" class="pid-val-display">--</span></div>
+                <div class="pid-input-row"><label>Ti:</label><input type="number" id="ti-t4"><span id="read-ti-t4" class="pid-val-display">--</span></div>
+                <div class="pid-input-row"><label>Td:</label><input type="number" id="td-t4"><span id="read-td-t4" class="pid-val-display">--</span></div>
+                <div class="btn-group">
+                    <button class="btn-small btn-read" onclick="ioPID('T4', 'read')">Leer</button>
+                    <button class="btn-small btn-write" onclick="ioPID('T4', 'write')">Cargar</button>
+                </div>
+            </div>
+            <div class="pid-section status-section">
+                <div class="status-row">
+                    <span>Control PID (%M350):</span>
+                    <button id="btn-pid-t4" class="toggle-btn" onclick="togglePID_Reg('T4')">OFF</button>
+                </div>
+                <div class="status-row-divider"></div>
+                <div class="status-row">
+                    <span>Nivel Seguro (%M300):</span>
+                    <span id="permiso-t4" class="status-indicator">--</span>
+                </div>
+            </div>
+            <div class="pid-footer">
+                Temp: <span id="temp-t4-val">--</span> | Salida: <span id="out-t4-val">--</span>
+            </div>
+        </div>
+    </div>
+</div>

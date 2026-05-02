@@ -1,0 +1,33 @@
+<div id="tab-monitoreo" class="tab-content" style="display: block; padding: 20px;">
+    <div class="monitoreo-grid">
+        <div class="panel">
+            <h3>Entradas Digitales</h3>
+            <table id="coils_inputs"><thead><tr><th>Direccion</th></tr></thead><tbody></tbody></table>
+        </div>
+        <div class="panel">
+            <h3>Salidas Digitales</h3>
+            <table id="coils_outputs"><thead><tr><th>Direccion</th></tr></thead><tbody></tbody></table>
+        </div>
+        <div class="panel">
+            <h3>Entradas Analogicas</h3>
+            <table id="registers_inputs"><thead><tr><th>Sensor</th><th>Valor</th></tr></thead><tbody></tbody></table>
+        </div>
+        <div class="panel control-manual">
+            <h3>Salidas Analogicas</h3>
+            <table id="registers_outputs"><thead><tr><th>Actuador</th><th>Valor</th></tr></thead><tbody></tbody></table>
+            <div class="manual-control-card">
+                <h4>Control Manual</h4>
+                <div class="control-item">
+                    <label>Valvula Neumatica (%MW302)</label> 
+                    <input id="slider302" type="range" min="4000" max="20000" value="4000" class="slider-supervisor" onchange="actualizarValorVariador(302, this.value)"> 
+                    <span id="valor302" class="value-display">0.0 %</span>
+                </div>
+                <div class="control-item">
+                    <label>Variador Frecuencia (%MW303)</label> 
+                    <input id="slider303" type="range" min="4000" max="20000" value="4000" class="slider-supervisor" onchange="actualizarValorVariador(303, this.value)"> 
+                    <span id="valor303" class="value-display">0.0 Hz</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
