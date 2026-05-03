@@ -33,7 +33,7 @@ body {
 }
 
 .header-logo {
-    height: 60px;
+    height: 100px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
@@ -494,4 +494,45 @@ td.off {
     font-weight: bold;
     color: var(--secondary);
     font-size: 1.1rem;
+}
+
+/* Status Badge */
+.status-badge {
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: white;
+}
+
+.status-online {
+    color: #2e7d32;
+    border: 2px solid #a5d6a7;
+}
+
+.status-offline {
+    color: #e65100;
+    border: 2px solid #ffcc80;
+    animation: pulse-sim 2s infinite;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.status-online .status-dot { background: #4caf50; box-shadow: 0 0 8px #4caf50; }
+.status-offline .status-dot { background: #ff9800; box-shadow: 0 0 8px #ff9800; }
+
+@keyframes pulse-sim {
+    0% { transform: scale(1); box-shadow: 0 4px 8px rgba(255, 152, 0, 0.2); }
+    50% { transform: scale(1.05); box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4); }
+    100% { transform: scale(1); box-shadow: 0 4px 8px rgba(255, 152, 0, 0.2); }
 }

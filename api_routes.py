@@ -5,7 +5,10 @@ from modbus_core import (
     read_registers_safe, write_register_safe,
     client_manager
 )
-from data import get_mock_status
+from mocks import (
+    get_mock_status, mock_read_coil, mock_write_coil, 
+    mock_read_register, mock_write_register
+)
 
 # Create a Blueprint for the API
 api_bp = Blueprint('api', __name__)
@@ -16,7 +19,12 @@ api_bp = Blueprint('api', __name__)
 @api_bp.route('/')
 def index():
     status = "Simulado" if client_manager.is_disabled else "Conectado"
-    return render_template('index.html', usuario="Operador", rol="supervisor", status=status)
+    system_data = get_system_data()
+    return render_template('index.html', 
+                           usuario="Operador", 
+                           rol="supervisor", 
+                           status=status,
+                           **system_data)
 
 # =========================================================================
 # ZONA 4: API MODBUS BASICA (COILS Y REGISTERS)
@@ -27,6 +35,8 @@ def read_coil():
         address = int(request.args.get('address'))
         result = read_coils_safe(address, count=1)
         if not result: 
+            if client_manager.is_disabled:
+                return jsonify({'success': True, 'value': mock_read_coil(address)})
             return jsonify({'success': False, 'error': 'Fallo lectura (PLC offline o timeout)'}), 503
         return jsonify({'success': True, 'value': result.bits[0]})
     except Exception as e: 
@@ -39,6 +49,11 @@ def write_coil():
         data = request.get_json()
         address = data['address']
         value = bool(data['value'])
+        
+        if client_manager.is_disabled:
+            mock_write_coil(address, value)
+            return jsonify({'success': True})
+
         result = write_coil_safe(address, value)
         if not result: 
             return jsonify({'success': False, 'error': 'Fallo escritura (PLC offline o timeout)'}), 503
@@ -51,6 +66,9 @@ def write_coil():
 def read_register():
     try:
         address = int(request.args.get('address'))
+        if client_manager.is_disabled:
+            return jsonify({'success': True, 'value': mock_read_register(address)})
+
         result = read_registers_safe(address, count=1)
         if not result: 
             return jsonify({'success': False, 'error': 'Fallo lectura (PLC offline o timeout)'}), 503
@@ -65,10 +83,16 @@ def write_register():
         data = request.get_json()
         address = data['address']
         value = int(data['value']) 
+        if client_manager.is_disabled:
+            mock_write_register(address, value)
+            return jsonify({'success': True})
+
         # Proteccion: 300 y 400 son coils de seguridad
         if address == 300 or address == 400: 
              return jsonify({'success': False, 'error': 'Dirección reservada para supervisor.'}), 403
+
         result = write_register_safe(address, value)
+        
         if not result: 
             return jsonify({'success': False, 'error': 'Fallo escritura (PLC offline o timeout)'}), 503
         return jsonify({'success': True})
@@ -103,9 +127,9 @@ def status():
 
     # 2. Analogicos
     ai = read_registers_safe(200, count=6)
-    aq = read_registers_safe(301, count=4)
+    aq = read_registers_safe(301, count=5)
     reg_in = ai.registers if ai else [0]*6
-    reg_out = aq.registers if aq else [0]*4
+    reg_out = aq.registers if aq else [0]*5
     
     # 3. SetPoints de Nivel
     sp_niv = read_registers_safe(101, count=5)

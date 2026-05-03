@@ -2,12 +2,12 @@
     <div
         style="position: relative; width: 800px; height: 500px; margin: 0 auto; background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 10px;">
         <!-- Pipelines principales -->
-        <div style="position: absolute; top: 20px; left: 10px; right: 250px; height: 4px; background: #28a745;"></div>
-        <div style="position: absolute; top: 5px; left: 350px; color: #000000; font-size: 15px;">Alimentacion</div>
+        <div style="position: absolute; top: 20px; left: 10px; right: 255px; height: 4px; background: #28a745;"></div>
+        <div style="position: absolute; left: 350px; color: #000000; font-size: 15px;">Alimentacion</div>
 
         <!-- Bajadas de alimentacion -->
         <div style="position: absolute; top: 20px; left: 300px; width: 4px; height: 80px; background: #28a745;"></div>
-        <div style="position: absolute; top: 20px; left: 550px; width: 4px; height: 80px; background: #28a745;"></div>
+        <div style="position: absolute; top: 20px; left: 545px; width: 4px; height: 80px; background: #28a745;"></div>
 
         <!-- Tuberias de salida (ajustadas para tanques de 80px de alto) -->
         <div style="position: absolute; top: 182px; left: 290px; width: 4px; height: 51px; background: #28a745;"></div>
@@ -18,17 +18,17 @@
         <!-- Debajo T2 -->
         <div style="position: absolute; top: 333px; left: 233px; width: 11px; height: 4px; background: #28a745;"></div>
 
-        <div style="position: absolute; top: 130px; left: 602px; width: 20px; height: 4px; background: #28a745;"></div>
         <!-- T4 a T5 -->
-        <div style="position: absolute; top: 182px; left: 560px; width: 4px; height: 74px; background: #28a745;"></div>
-        <!-- Debajo T4 -->
-        <div style="position: absolute; top: 182px; left: 660px; width: 4px; height: 74px; background: #28a745;"></div>
-        <!-- Debajo T5 -->
+        <div style="position: absolute; top: 130px; left: 545px; width: 148px; height: 4px; background: #28a745;"></div>
 
-        <div style="position: absolute; top: 252px; left: 560px; width: 100px; height: 4px; background: #28a745;"></div>
+        <!-- Debajo T4 -->
+        <div style="position: absolute; top: 182px; left: 545px; width: 4px; height: 74px; background: #28a745;"></div>
+        <!-- Debajo T5 -->
+        <div style="position: absolute; top: 182px; left: 690px; width: 4px; height: 74px; background: #28a745;"></div>
         <!-- Union T4/T5 -->
-        <div style="position: absolute; top: 255px; left: 610px; width: 4px; height: 189px; background: #28a745;"></div>
+        <div style="position: absolute; top: 252px; left: 545px; width: 148px; height: 4px; background: #28a745;"></div>
         <!-- Bajada comun T4/T5 -->
+        <div style="position: absolute; top: 255px; left: 610px; width: 4px; height: 189px; background: #28a745;"></div>
 
         <div style="position: absolute; top: 382px; left: 184px; width: 4px; height: 60px; background: #28a745;"></div>
         <!-- Debajo T3 -->
@@ -36,88 +36,41 @@
         <div style="position: absolute; top: 442px; left: 184px; right: 10px; height: 4px; background: #28a745;"></div>
         <div style="position: absolute; top: 425px; left: 350px; color: #000000; font-size: 15px;">Descarga</div>
 
-        <!-- T4 -->
-        <div class="tank-wrapper" style="top: 100px; left: 520px;">
+        <!-- Tanques -->
+        {% for tanque in elementos.tanques %}
+        {% set t_top = [100, 200, 300, 100, 100][loop.index0] %}
+        {% set t_left = [250, 200, 150, 500, 640][loop.index0] %}
+        {% set box_style = 'style="position: absolute; right: 105%;"' if loop.index != 5 else '' %}
+        <div class="tank-wrapper" style="top: {{ t_top }}px; left: {{ t_left }}px;">
             <div class="tank">
-                <div class="tank-info-overlay">T4<br><span id="vis-temp-t4">--</span></div>
-                <div class="water-fill" id="vis-lev-t4" style="height: 0%;">
+                <div class="tank-info-overlay">
+                    {{ tanque.nombre }}
+                    {% if loop.index == 2 or loop.index == 4 %}
+                    <br><span id="vis-temp-t{{ loop.index }}">--</span>
+                    {% endif %}
+                </div>
+                <div class="water-fill" id="vis-lev-t{{ loop.index }}" style="height: 0%;">
                     <div class="water-waves">
                         <div class="wave"></div>
                         <div class="wave"></div>
                     </div>
                 </div>
             </div>
-            <div class="level-input-box" style="position: absolute; right: 105%;"><label>Set %</label><input
-                    type="number" id="sp-niv-t4" onchange="writeLevelSP('T4', this.value)"></div>
+            <div class="level-input-box" {{ box_style | safe }}>
+                <label>Set %</label>
+                <input type="number" id="sp-niv-t{{ loop.index }}"
+                    onchange="writeLevelSP('T{{ loop.index }}', this.value)">
+            </div>
         </div>
+        {% endfor %}
 
-        <!-- T5 -->
-        <div class="tank-wrapper" style="top: 100px; left: 620px;">
-            <div class="tank">
-                <div class="tank-info-overlay">T5</div>
-                <div class="water-fill" id="vis-lev-t5" style="height: 0%;">
-                    <div class="water-waves">
-                        <div class="wave"></div>
-                        <div class="wave"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="level-input-box"><label>Set %</label><input type="number" id="sp-niv-t5"
-                    onchange="writeLevelSP('T5', this.value)"></div>
-        </div>
-
-        <!-- T1 -->
-        <div class="tank-wrapper" style="top: 100px; left: 250px;">
-            <div class="tank">
-                <div class="tank-info-overlay">T1</div>
-                <div class="water-fill" id="vis-lev-t1" style="height: 0%;">
-                    <div class="water-waves">
-                        <div class="wave"></div>
-                        <div class="wave"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="level-input-box" style="position: absolute; right: 105%;"><label>Set %</label><input
-                    type="number" id="sp-niv-t1" onchange="writeLevelSP('T1', this.value)"></div>
-        </div>
-
-        <!-- T2 -->
-        <div class="tank-wrapper" style="top: 200px; left: 200px;">
-            <div class="tank">
-                <div class="tank-info-overlay">T2<br><span id="vis-temp-t2">--</span></div>
-                <div class="water-fill" id="vis-lev-t2" style="height: 0%;">
-                    <div class="water-waves">
-                        <div class="wave"></div>
-                        <div class="wave"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="level-input-box" style="position: absolute; right: 105%;"><label>Set %</label><input
-                    type="number" id="sp-niv-t2" onchange="writeLevelSP('T2', this.value)"></div>
-        </div>
-
-        <!-- T3 -->
-        <div class="tank-wrapper" style="top: 300px; left: 150px;">
-            <div class="tank">
-                <div class="tank-info-overlay">T3</div>
-                <div class="water-fill" id="vis-lev-t3" style="height: 0%;">
-                    <div class="water-waves">
-                        <div class="wave"></div>
-                        <div class="wave"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="level-input-box" style="position: absolute; right: 105%;"><label>Set %</label><input
-                    type="number" id="sp-niv-t3" onchange="writeLevelSP('T3', this.value)"></div>
-        </div>
 
         <!-- Válvulas -->
-        <div class="valve closed" id="valve1" onclick="toggleValve(1)" style="top: 30px; left: 240px;">EV1</div>
-        <div class="valve closed" id="valve2" onclick="toggleValve(2)" style="top: 30px; left: 560px;">EV2</div>
-        <div class="valve closed" id="valve3" onclick="toggleValve(3)" style="top: 190px; left: 305px;">EV3</div>
-        <div class="valve closed" id="valve4" onclick="toggleValve(4)" style="top: 290px; left: 250px;">EV4</div>
-        <div class="valve closed" id="valve5" onclick="toggleValve(5)" style="top: 190px; left: 670px;">EV5</div>
-        <div class="valve closed" id="valve6" onclick="toggleValve(6)" style="top: 190px; left: 509px;">EV6</div>
-        <div class="valve closed" id="valve7" onclick="toggleValve(7)" style="top: 392px; left: 200px;">EV7</div>
+        {% for valvula in elementos.valvulas %}
+        {% set v_top = [30, 30, 190, 290, 190, 190, 392, 120][loop.index0] %}
+        {% set v_left = [240, 560, 305, 250, 670, 509, 200, 600][loop.index0] %}
+        <div class="valve closed" id="valve{{ loop.index }}" onclick="toggleValve({{ loop.index }})"
+            style="top: {{ v_top }}px; left: {{ v_left }}px;">EV{{ loop.index }}</div>
+        {% endfor %}
     </div>
 </div>

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planta de Control de Tanques</title>
 
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     
@@ -37,7 +39,12 @@
         {% include 'tabs/graficas.html' %}
     </main>
 
-    <!-- Main Logic -->
+    <!-- Modular Logic -->
+    <script src="{{ url_for('static', filename='js/config.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/control.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

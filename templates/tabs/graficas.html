@@ -13,17 +13,14 @@
     </div>
     
     <div class="charts-container">
+        {% for pid in elementos.pids %}
+        {% set pid_id = 'T2' if '2' in pid.nombre else 'T4' %}
         <div class="chart-wrapper">
-            <h4 class="chart-title t4-color">Temperatura Tacho 4</h4>
+            <h4 class="chart-title {{ 't2-color' if pid_id == 'T2' else 't4-color' }}">{{ pid.nombre }}</h4>
             <div class="canvas-container">
-                <canvas id="chartT4"></canvas>
+                <canvas id="chart{{ pid_id }}"></canvas>
             </div>
         </div>
-        <div class="chart-wrapper">
-            <h4 class="chart-title t2-color">Temperatura Tacho 2</h4>
-            <div class="canvas-container">
-                <canvas id="chartT2"></canvas>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </div>

@@ -2,31 +2,101 @@
     <div class="monitoreo-grid">
         <div class="panel">
             <h3>Entradas Digitales</h3>
-            <table id="coils_inputs"><thead><tr><th>Direccion</th></tr></thead><tbody></tbody></table>
+            <table id="coils_inputs">
+                <thead>
+                    <tr>
+                        <th>Direccion</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for boton in elementos.botones_ev %}
+                    <tr>
+                        <td>%I0.{{ loop.index0 }} ({{ boton.nombre }})</td>
+                        <td id="coil-in-{{ loop.index0 }}" class="off">OFF</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         <div class="panel">
             <h3>Salidas Digitales</h3>
-            <table id="coils_outputs"><thead><tr><th>Direccion</th></tr></thead><tbody></tbody></table>
+            <table id="coils_outputs">
+                <thead>
+                    <tr>
+                        <th>Actuador</th>
+                        <th>Direccion</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for valvula in elementos.valvulas %}
+                    <tr>
+                        <td>{{ valvula.nombre }}</td>
+                        <td>%Q0.{{ loop.index0 }}</td>
+                        <td id="coil-out-{{ loop.index0 }}" class="off">OFF</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         <div class="panel">
             <h3>Entradas Analogicas</h3>
-            <table id="registers_inputs"><thead><tr><th>Sensor</th><th>Valor</th></tr></thead><tbody></tbody></table>
+            <table id="registers_inputs">
+                <thead>
+                    <tr>
+                        <th>Sensor</th>
+                        <th>Direccion</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sensor in elementos.sensores %}
+                    <tr>
+                        <td>{{ sensor.nombre }}</td>
+                        <td>%IW{{ sensor.address }}</td>
+                        <td id="reg-in-{{ sensor.address }}" class="value">--</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         <div class="panel control-manual">
             <h3>Salidas Analogicas</h3>
-            <table id="registers_outputs"><thead><tr><th>Actuador</th><th>Valor</th></tr></thead><tbody></tbody></table>
+            <table id="registers_outputs">
+                <thead>
+                    <tr>
+                        <th>Actuador</th>
+                        <th>Direccion</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for actuador in elementos.salidas_analogicas %}
+                    <tr>
+                        <td>{{ actuador.nombre }}</td>
+                        <td>%MW{{ actuador.address }}</td>
+                        <td id="reg-out-{{ actuador.address }}" class="value">--</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
             <div class="manual-control-card">
                 <h4>Control Manual</h4>
+                {% for actuador in elementos.salidas_analogicas %}
+                {% if actuador.address in [302, 303] %}
                 <div class="control-item">
-                    <label>Valvula Neumatica (%MW302)</label> 
-                    <input id="slider302" type="range" min="4000" max="20000" value="4000" class="slider-supervisor" onchange="actualizarValorVariador(302, this.value)"> 
-                    <span id="valor302" class="value-display">0.0 %</span>
+                    <label>{{ actuador.nombre }} (%MW{{ actuador.address }})</label>
+                    <input id="slider{{ actuador.address }}" type="range" min="4000" max="20000" value="4000"
+                        class="slider-supervisor"
+                        onchange="actualizarValorVariador({{ actuador.address }}, this.value)">
+                    <span id="valor{{ actuador.address }}" class="value-display">0.0 {{ 'Hz' if actuador.address == 302
+                        else
+                        '%' }}</span>
                 </div>
-                <div class="control-item">
-                    <label>Variador Frecuencia (%MW303)</label> 
-                    <input id="slider303" type="range" min="4000" max="20000" value="4000" class="slider-supervisor" onchange="actualizarValorVariador(303, this.value)"> 
-                    <span id="valor303" class="value-display">0.0 Hz</span>
-                </div>
+                {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>

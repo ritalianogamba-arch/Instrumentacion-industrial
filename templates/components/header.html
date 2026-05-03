@@ -4,5 +4,13 @@
         <h1>Planta de Control de Tanques</h1>
         <h2>Instrumentacion industrial (Cod. 0434)</h2>
     </div>
+    
+    {% if status %}
+    <div class="status-badge {{ 'status-offline' if status == 'Simulado' else 'status-online' }}">
+        <div class="status-dot"></div>
+        {{ 'Modo Simulación' if status == 'Simulado' else 'Sistema Online' }}
+    </div>
+    {% endif %}
+
     <img src="{{ url_for('static', filename='logo_fi.png') }}" class="header-logo" alt="Logo FI">
 </header>
