@@ -4,7 +4,8 @@ from models.iot_models import PID
 # HOLDING REGISTER %MW
 
 PID_T2 : PID = PID(
-    id = 1,
+    nombre= 'PID TANQUE 2',
+    identifier = 1,
     set_point=1,
     address_set_point=400,
     kp=1,
@@ -16,7 +17,8 @@ PID_T2 : PID = PID(
 )
 
 PID_T4 : PID = PID(
-    id = 2,
+    nombre= 'PID TANQUE 4',
+    identifier = 2,
     set_point=1,
     address_set_point=420,
     kp=1,

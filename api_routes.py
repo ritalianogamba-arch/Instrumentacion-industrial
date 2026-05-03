@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, render_template
-from config import logger
+from config import logger, get_system_data
 from modbus_core import (
     read_coils_safe, write_coil_safe, 
     read_registers_safe, write_register_safe,
@@ -154,6 +154,18 @@ def status():
         "pid_t2": pid_t2, 
         "pid_t4": pid_t4
     })
+
+# =========================================================================
+# ZONA 5.1: API DE CONFIGURACION (ESTATICA)
+# =========================================================================
+@api_bp.route('/data', methods=['GET'])
+def get_data():
+    """Devuelve la estructura de elementos del sistema."""
+    try:
+        return jsonify(get_system_data())
+    except Exception as e:
+        logger.error(f"Error en get_data: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 # =========================================================================
 # ZONA 6: API CONTROL PID

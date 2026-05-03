@@ -6,3 +6,4 @@ from .sensors import *
 from .valves import *
 from .tanks import *
 from .pid import *
+from .data import *
