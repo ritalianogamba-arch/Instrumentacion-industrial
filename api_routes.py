@@ -27,11 +27,11 @@ def read_coil():
         address = int(request.args.get('address'))
         result = read_coils_safe(address, count=1)
         if not result: 
-            return jsonify({'success': False, 'error': 'Fallo lectura'})
+            return jsonify({'success': False, 'error': 'Fallo lectura (PLC offline o timeout)'}), 503
         return jsonify({'success': True, 'value': result.bits[0]})
     except Exception as e: 
         logger.error(f"Error en read_coil: {e}")
-        return jsonify({'success': False, 'error': str(e)})
+        return jsonify({'success': False, 'error': str(e)}), 400
 
 @api_bp.route('/write_coil', methods=['POST'])
 def write_coil():
@@ -41,11 +41,11 @@ def write_coil():
         value = bool(data['value'])
         result = write_coil_safe(address, value)
         if not result: 
-            return jsonify({'success': False, 'error': 'Fallo escritura'})
+            return jsonify({'success': False, 'error': 'Fallo escritura (PLC offline o timeout)'}), 503
         return jsonify({'success': True})
     except Exception as e: 
         logger.error(f"Error en write_coil: {e}")
-        return jsonify({'success': False, 'error': str(e)})
+        return jsonify({'success': False, 'error': str(e)}), 400
 
 @api_bp.route('/read_register', methods=['GET'])
 def read_register():
@@ -53,11 +53,11 @@ def read_register():
         address = int(request.args.get('address'))
         result = read_registers_safe(address, count=1)
         if not result: 
-            return jsonify({'success': False, 'error': 'Fallo lectura'})
+            return jsonify({'success': False, 'error': 'Fallo lectura (PLC offline o timeout)'}), 503
         return jsonify({'success': True, 'value': result.registers[0]})
     except Exception as e: 
         logger.error(f"Error en read_register: {e}")
-        return jsonify({'success': False, 'error': str(e)})
+        return jsonify({'success': False, 'error': str(e)}), 400
 
 @api_bp.route('/write_register', methods=['POST'])
 def write_register():
@@ -67,14 +67,14 @@ def write_register():
         value = int(data['value']) 
         # Proteccion: 300 y 400 son coils de seguridad
         if address == 300 or address == 400: 
-             return jsonify({'success': False, 'error': 'Dirección reservada para supervisor.'})
+             return jsonify({'success': False, 'error': 'Dirección reservada para supervisor.'}), 403
         result = write_register_safe(address, value)
         if not result: 
-            return jsonify({'success': False, 'error': 'Fallo escritura'})
+            return jsonify({'success': False, 'error': 'Fallo escritura (PLC offline o timeout)'}), 503
         return jsonify({'success': True})
     except Exception as e: 
         logger.error(f"Error en write_register: {e}")
-        return jsonify({'success': False, 'error': str(e)})
+        return jsonify({'success': False, 'error': str(e)}), 400
 
 # =========================================================================
 # ZONA 5: API DE ESTADO (MONITOREO GENERAL)
@@ -86,18 +86,18 @@ def status():
 
     # 1. Lectura Coils
     coils_data = read_coils_safe(0, count=24)
-    permiso_t4 = read_coils_safe(300, count=1)
+    if not coils_data:
+        return jsonify({'success': False, 'error': 'No se pudo conectar con el PLC o timeout de lectura'}), 503
+
+    # Encender calentamiento de resistencia
     estado_t4  = read_coils_safe(350, count=1)
-    permiso_t2 = read_coils_safe(400, count=1)
     estado_t2  = read_coils_safe(450, count=1)
 
-    coils_in = coils_data.bits[:14] if coils_data else [False]*14
-    coils_out = coils_data.bits[14:24] if coils_data else [False]*10
+    coils_in = coils_data.bits[:14]
+    coils_out = coils_data.bits[14:24]
 
     pid_flags = {
-        "t4_permiso": permiso_t4.bits[0] if permiso_t4 else False,
         "t4_activo":  estado_t4.bits[0] if estado_t4 else False,
-        "t2_permiso": permiso_t2.bits[0] if permiso_t2 else False,
         "t2_activo":  estado_t2.bits[0] if estado_t2 else False
     }
 
@@ -170,15 +170,19 @@ def update_pid():
         ti_raw = int(float(d['ti']) / 0.1)
         td_raw = int(float(d['td']) / 0.1)
         
-        write_register_safe(base, sp_raw)
-        write_register_safe(base+2, kp_raw)
-        write_register_safe(base+4, ti_raw)
-        write_register_safe(base+6, td_raw)
+        r1 = write_register_safe(base, sp_raw)
+        r2 = write_register_safe(base+2, kp_raw)
+        r3 = write_register_safe(base+4, ti_raw)
+        r4 = write_register_safe(base+6, td_raw)
+        
+        if not all([r1, r2, r3, r4]):
+            return jsonify({'success': False, 'error': 'Fallo escritura parcial o total en PLC'}), 503
+
         logger.info(f"✓ PID {d.get('id')} actualizado")
         return jsonify({'success': True})
     except Exception as e: 
         logger.error(f"Error en update_pid: {e}")
-        return jsonify({'success': False, 'error': str(e)})
+        return jsonify({'success': False, 'error': str(e)}), 400
 
 @api_bp.route('/reset_pid', methods=['POST'])
 def reset_pid(): 

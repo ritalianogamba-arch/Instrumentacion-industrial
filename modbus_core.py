@@ -85,15 +85,13 @@ def safe_modbus_operation(operation_func, **kwargs):
             result = operation_func(client_manager.client, **kwargs)
             
             if result and result.isError():
-                logger.warning(f"⚠ Error en operación Modbus: {result}")
+                logger.warning(f"Error en operación Modbus: {result}")
                 return None
             
             return result
         
         except Exception as e:
             logger.error(f"Excepción en operación: {e}")
-            # No reintentamos aquí para evitar bucles infinitos; 
-            # la próxima llamada a safe_modbus_operation lo intentará si es necesario.
             return None
 
 # Wrappers para las operaciones comunes
