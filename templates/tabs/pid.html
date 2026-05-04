@@ -1,11 +1,11 @@
 <div id="tab-pid" class="tab-content" style="display: none; padding: 20px;">
     <div class="pid-card-container">
         {% for pid in elementos.pids %}
-        {% set pid_id = 'T2' if '2' in pid.nombre else 'T4' %}
-        {% set suffix = pid_id.lower() %}
-        <div class="pid-card {{ 'tacho-2-card' if pid_id == 'T2' else 'tacho-4-card' }}">
+        {% set suffix = 't2' if pid.identifier == 1 else 't4' %}
+        <div class="pid-card {{ 'tacho-2-card' if pid.identifier == 1 else 'tacho-4-card' }}">
             <h3 class="card-title">{{ pid.nombre }}</h3>
             <div class="pid-section">
+                <!-- ... Inputs ... -->
                 <div class="pid-input-row">
                     <label>SetPoint:</label>
                     <input type="number" id="sp-{{ suffix }}">
@@ -27,14 +27,17 @@
                     <span id="read-td-{{ suffix }}" class="pid-val-display">--</span>
                 </div>
                 <div class="btn-group">
-                    <button class="btn-small btn-read" onclick="ioPID('{{ pid_id }}', 'read')">Leer</button>
-                    <button class="btn-small btn-write" onclick="ioPID('{{ pid_id }}', 'write')">Cargar</button>
+                    <button class="btn-small btn-read" onclick="ioPID('{{ suffix | upper }}', 'read')">Leer</button>
+                    <button class="btn-small btn-write" onclick="ioPID('{{ suffix | upper }}', 'write')">Cargar</button>
                 </div>
             </div>
             <div class="pid-section status-section">
                 <div class="status-row">
-                    <span>Control PID (%M{{ 450 if pid_id == 'T2' else 350 }}):</span>
-                    <button id="btn-pid-{{ suffix }}" class="toggle-btn" onclick="{{ "togglePID_Coil('T2')" if pid_id == 'T2' else "togglePID_Reg('T4')" }}">OFF</button>
+                    <span>Control PID (%M{{ pid.boton_virtual_address }}):</span>
+                    <button id="btn-pid-{{ suffix }}" class="toggle-btn"
+                        onclick="toggleGenericPID('{{ suffix | upper }}', {{ pid.boton_virtual_address }}, '{{ 'coil' if pid.identifier == 1 else 'reg' }}')">
+                        OFF
+                    </button>
                 </div>
                 <div class="status-row-divider"></div>
                 <div class="status-row">

@@ -24,10 +24,13 @@ class ModbusClientManager:
             self.client.connect()
             if self.client.is_socket_open():
                 logger.info(f"Conexión Modbus establecida: {self.ip}:{self.port}")
+                self.is_disabled = False
                 return True
+            self.is_disabled = True
             return False
         except Exception as e:
             logger.error(f"Error en conexión inicial: {e}")
+            self.is_disabled = True
             return False
     
     def is_connected(self):

@@ -92,8 +92,9 @@ body {
 /* Monitoreo Grid */
 .monitoreo-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
     gap: 1.5rem;
+    align-items: start;
 }
 
 .panel {
@@ -530,6 +531,62 @@ td.off {
 
 .status-online .status-dot { background: #4caf50; box-shadow: 0 0 8px #4caf50; }
 .status-offline .status-dot { background: #ff9800; box-shadow: 0 0 8px #ff9800; }
+
+/* Bloqueo Remoto Notice */
+.remote-lock-notice {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--danger);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: var(--radius);
+    font-weight: 800;
+    z-index: 9999;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    display: none; /* Se activa por JS */
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 2px solid rgba(255,255,255,0.3);
+    pointer-events: none;
+}
+
+.remote-lock-notice.active {
+    display: block;
+}
+
+.remote-lock-notice.centered {
+    bottom: 50%;
+    right: 50%;
+    transform: translate(50%, 50%) scale(1.5);
+    background: #000;
+    border-color: var(--danger);
+    box-shadow: 0 0 50px var(--danger);
+}
+
+/* Botones Modo Auto/Manual */
+.mode-toggle-btn {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    transition: all 0.3s;
+    text-transform: uppercase;
+}
+
+.mode-auto {
+    background: var(--secondary);
+    color: white;
+    border-color: var(--secondary);
+}
+
+.mode-manual {
+    background: #eee;
+    color: #666;
+}
 
 @keyframes pulse-sim {
     0% { transform: scale(1); box-shadow: 0 4px 8px rgba(255, 152, 0, 0.2); }

@@ -5,9 +5,80 @@
 let g_tempT2 = 0;
 let g_tempT4 = 0;
 
+/**
+ * Retorna un color HSL basado en la temperatura para el gradiente visual
+ */
+function getWaterColor(temp) {
+    if (temp < 35) return '#1976d2'; // Azul estándar
+    if (temp < 50) return '#4fc3f7'; // Turquesa
+    if (temp < 75) return '#ffb74d'; // Naranja claro
+    if (temp < 90) return '#ff5722'; // Naranja intenso
+    return '#d32f2f'; // Rojo (Crítico)
+}
+
 // LOOP PRINCIPAL
 function mainLoop() {
     fetchStatus().then(d => {
+        // --- Actualización de Badge de Estado ---
+        const badge = document.getElementById('status-badge');
+        const badgeText = document.getElementById('status-text');
+        if (badge && badgeText && d.mode) {
+            const isSim = d.mode === "Simulado";
+            if (isSim) {
+                badge.classList.remove('status-online');
+                badge.classList.add('status-offline');
+                badgeText.innerText = 'Modo Simulación';
+            } else {
+                badge.classList.remove('status-offline');
+                badge.classList.add('status-online');
+                badgeText.innerText = 'Sistema Online';
+            }
+            
+            // Mostrar/Ocultar controles de simulación
+            document.querySelectorAll('.sim-only-header, .sim-only-cell').forEach(el => {
+                el.style.display = isSim ? '' : 'none';
+            });
+        }
+
+        // --- Bloqueo Remoto Notice ---
+        const lockNotice = document.getElementById('remote-lock-notice');
+        if (lockNotice) {
+            if (d.remote_lock) {
+                lockNotice.classList.add('active');
+            } else {
+                lockNotice.classList.remove('active', 'centered');
+            }
+        }
+
+        // --- Modos de Tanque ---
+        if (d.tank_modes) {
+            d.tank_modes.forEach((isAuto, i) => {
+                const index = i + 1;
+                const btn = document.getElementById(`btn-mode-${index}`);
+                const btnVis = document.getElementById(`btn-mode-t${index}-vis`);
+                const status = document.getElementById(`mode-status-${index}`);
+                
+                const text = isAuto ? 'AUTOMATICO' : 'MANUAL';
+                const classAdd = isAuto ? 'mode-auto' : 'mode-manual';
+                const classRem = isAuto ? 'mode-manual' : 'mode-auto';
+
+                if (btn) {
+                    btn.innerText = text;
+                    btn.classList.add(classAdd);
+                    btn.classList.remove(classRem);
+                }
+                if (btnVis) {
+                    btnVis.innerText = text;
+                    btnVis.classList.add(classAdd);
+                    btnVis.classList.remove(classRem);
+                }
+                if (status) {
+                    status.innerText = text;
+                    status.className = isAuto ? 'on' : 'off';
+                }
+            });
+        }
+
         // --- Tablas (Actualización dirigida para evitar parpadeo y pérdida de estilo) ---
         d.coils_inputs.forEach((v, i) => {
             const el = document.getElementById(`coil-in-${i}`);
@@ -53,6 +124,23 @@ function mainLoop() {
             }
         });
 
+        
+        // --- Sincronización de Válvulas Visuales ---
+        // Coils 14-21 corresponden a EV1-EV8
+        d.coils_outputs.forEach((v, i) => {
+            const index = i + 1;
+            const btn = document.getElementById(`valve${index}`);
+            if (btn && !btn.classList.contains('transitioning')) {
+                if (v) {
+                    btn.classList.add('open');
+                    btn.classList.remove('closed');
+                } else {
+                    btn.classList.add('closed');
+                    btn.classList.remove('open');
+                }
+            }
+        });
+
         // --- PID T2 ---
         if (d.pid_t2.params) {
             document.getElementById('read-sp-t2').innerText = d.pid_t2.params.setpoint;
@@ -80,11 +168,11 @@ function mainLoop() {
         // --- Visualización ---
         if (d.registers_inputs.length >= 6) {
             setVisLevel('t2', d.registers_inputs[4], CONFIG_TANQUES.T2);
-            let t2 = ((d.registers_inputs[0] * 75 / 1000)).toFixed(1);
+            let t2 = ((d.registers_inputs[0] * 75 / 1000) + 0.5).toFixed(1);
             document.getElementById('vis-temp-t2').innerText = t2 + " C";
 
             setVisLevel('t4', d.registers_inputs[3], CONFIG_TANQUES.T4);
-            let t4 = ((d.registers_inputs[1] * 75 / 1000)).toFixed(1);
+            let t4 = ((d.registers_inputs[1] * 75 / 1000) + 0.5).toFixed(1);
             document.getElementById('vis-temp-t4').innerText = t4 + " C";
 
             setVisLevel('t1', d.registers_inputs[2], CONFIG_TANQUES.T1);
@@ -96,8 +184,19 @@ function mainLoop() {
 
             const levT2 = document.getElementById('vis-lev-t2');
             const levT4 = document.getElementById('vis-lev-t4');
-            if (levT2) levT2.style.backgroundColor = hT2 ? '#ff5722' : '#1976d2';
-            if (levT4) levT4.style.backgroundColor = hT4 ? '#ff5722' : '#1976d2';
+            const levT1 = document.getElementById('vis-lev-t1');
+            const levT3 = document.getElementById('vis-lev-t3');
+            const levT5 = document.getElementById('vis-lev-t5');
+
+            if (levT2) levT2.style.backgroundColor = getWaterColor(parseFloat(t2));
+            if (levT4) levT4.style.backgroundColor = getWaterColor(parseFloat(t4));
+            
+            // Los otros tanques asumen temperatura ambiente (20°C) o puedes ligarlos si quieres
+            if (levT1) levT1.style.backgroundColor = getWaterColor(20);
+            if (levT3) levT3.style.backgroundColor = getWaterColor(20);
+            if (levT5) levT5.style.backgroundColor = getWaterColor(20);
+
+            g_tempT2 = parseFloat(t2);
 
             g_tempT2 = parseFloat(t2);
             g_tempT4 = parseFloat(t4);
@@ -139,5 +238,4 @@ document.addEventListener('DOMContentLoaded', function () {
     // Iniciar loops de actualización
     setInterval(mainLoop, 2000);
     setInterval(() => updateCharts(g_tempT2, g_tempT4), 60000);
-    setInterval(actualizarEstadoValvulas, 3000);
 });

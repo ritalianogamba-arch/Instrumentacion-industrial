@@ -37,8 +37,16 @@ _registers[420] = int(30.0 * 1000 / 75)
 _mock_state_flags = {
     "t4_permiso": True,
     "t2_permiso": True,
-    "simulated": True
+    "simulated": True,
+    "remote_lock": False # Podemos cambiarlo manualmente para pruebas
 }
+
+# Inicializar modos de tanque (M201-M205) en Manual (False)
+for addr in range(201, 206):
+    _coils[addr] = False
+
+# Inicializar llave de bloqueo (M13)
+_coils[13] = True
 
 def get_mock_status():
     """Compila el estado actual en el formato que espera el frontend (api_routes.py)"""
@@ -88,9 +96,14 @@ def get_mock_status():
         }
     }
 
+    # Modos de tanque (201-205)
+    tank_modes = [_coils[i] for i in range(201, 206)]
+
     return {
         "coils_inputs": coils_0_23[:14],
         "coils_outputs": coils_0_23[14:24],
+        "remote_lock": _coils[13],
+        "tank_modes": tank_modes,
         "pid_flags": {
             "t4_activo": _coils[350],
             "t2_activo": _coils[450],
@@ -133,15 +146,28 @@ def physics_loop():
             
             flujo_in = (vfd_p / 100) * (neum_p / 100) * 8.0 # Flujo un poco más rápido
             
-            # 2. ELECTRO VÁLVULAS (USANDO ENTRADA_SERVER)
-            ev1 = _coils[ELECTRO_VALVULA_1.entrada_server]
-            ev2 = _coils[ELECTRO_VALVULA_2.entrada_server]
-            ev3 = _coils[ELECTRO_VALVULA_3.entrada_server]
-            ev4 = _coils[ELECTRO_VALVULA_4.entrada_server]
-            ev5 = _coils[ELECTRO_VALVULA_5.entrada_server]
-            ev6 = _coils[ELECTRO_VALVULA_6.entrada_server]
-            ev7 = _coils[ELECTRO_VALVULA_7.entrada_server]
-            ev8 = _coils[ELECTRO_VALVULA_8.entrada_server]
+            # 2. LÓGICA DE VÁLVULAS (ENTRADA FÍSICA O COMANDO SCADA)
+            # Cada válvula responde a su botón físico (I0.X) o al mando del servidor (M14+X)
+            def esta_abierta(ev_config, coil_idx):
+                # El bloqueo remoto (M13) suele impedir el mando del servidor, 
+                # pero el botón físico (I0.X) suele ser cableado directo o bypass.
+                # Para la simulación: Bloqueo activo = ignorar comandos SCADA.
+                cmd_scada = _coils[ev_config.entrada_server] and not _coils[13]
+                btn_fisico = _coils[ev_config.entrada_digital]
+                return cmd_scada or btn_fisico
+
+            ev1 = esta_abierta(ELECTRO_VALVULA_1, 0)
+            ev2 = esta_abierta(ELECTRO_VALVULA_2, 1)
+            ev3 = esta_abierta(ELECTRO_VALVULA_3, 2)
+            ev4 = esta_abierta(ELECTRO_VALVULA_4, 3)
+            ev5 = esta_abierta(ELECTRO_VALVULA_5, 4)
+            ev6 = esta_abierta(ELECTRO_VALVULA_6, 5)
+            ev7 = esta_abierta(ELECTRO_VALVULA_7, 6)
+            ev8 = esta_abierta(ELECTRO_VALVULA_8, 7)
+            
+            # Sincronizar bobinas de salida (%Q / Coils 14-21) para que el SCADA las lea
+            _coils[14] = ev1; _coils[15] = ev2; _coils[16] = ev3; _coils[17] = ev4
+            _coils[18] = ev5; _coils[19] = ev6; _coils[20] = ev7; _coils[21] = ev8
             
             # 3. NIVELES ACTUALES (CONVERSIÓN DE CRUDA A %)
             n_t1 = max(0, min(100, (_registers[SENSOR_PRESION_T1.address] - 4000) / 6000 * 100))
@@ -167,36 +193,63 @@ def physics_loop():
             if ev6 and n_t4_t5 > 0: n_t4_t5 -= 4.0
             if ev5 and n_t4_t5 > 0: n_t4_t5 -= 4.0
             
+            # 5.1 SIMULACION DE CONTROL DE NIVEL PLC (SI ESTA EN AUTO)
+            # Tanques 1-5 usan SP en 101-105 y Modos en 201-205
+            niveles = [n_t1, n_t2, n_t3, n_t4_t5, n_t4_t5]
+            for i in range(5):
+                if _coils[201 + i]: # Si está en AUTO
+                    sp_raw = _registers[101 + i]
+                    sp_p = max(0, min(100, (sp_raw - 4000) / 6000 * 100))
+                    
+                    # Control simple tipo On/Off con histéresis para simular PLC
+                    if niveles[i] < sp_p - 1:
+                        niveles[i] += 2.0 # Llenando en auto
+                    elif niveles[i] > sp_p + 1:
+                        niveles[i] -= 2.0 # Vaciando en auto
+            
+            n_t1, n_t2, n_t3, n_t4_t5 = niveles[0], niveles[1], niveles[2], niveles[3]
+
             # 5. CLAMPING Y RESTRICCIONES
             n_t1 = max(0, min(100, n_t1))
             n_t2 = max(20.0, min(100, n_t2)) # Seguridad de 20%
             n_t3 = max(0, min(100, n_t3))
             n_t4_t5 = max(20.0, min(100, n_t4_t5)) # Seguridad de 20%
             
-            # 6. TEMPERATURAS (CONVERSIÓN DE CRUDA A °C)
+            # 6. FISICA DE CONTROL PID (SIMULADA)
+            def simular_pid(pid_idx, addr_sp, addr_pv, addr_res, coil_enable):
+                if _coils[coil_enable]:
+                    sp = (_registers[addr_sp] * 75 / 1000) + 0.5
+                    pv = (_registers[addr_pv] * 75 / 1000) + 0.5
+                    error = sp - pv
+                    # Control proporcional simple para la simulación
+                    output = max(0, min(1.0, error * 0.2)) 
+                    _registers[addr_res] = int(4000 + (output * 16000))
+                else:
+                    # Si el PID está OFF, la resistencia vuelve a 4000 (0%)
+                    _registers[addr_res] = 4000
+
+            simular_pid(1, 400, SENSOR_TEMP_T2.address, 300, 450)
+            simular_pid(2, 420, SENSOR_TEMP_T4.address, 301, 350)
+
+            # 7. TEMPERATURAS (CONVERSIÓN DE CRUDA A °C)
             t2_temp = (_registers[SENSOR_TEMP_T2.address] * 75 / 1000) + 0.5
             t4_temp = (_registers[SENSOR_TEMP_T4.address] * 75 / 1000) + 0.5
             
-            # Enfriamiento natural (pérdida de calor)
-            t2_temp = max(20.0, t2_temp - 0.1)
-            t4_temp = max(20.0, t4_temp - 0.1)
+            p_res_t2 = (_registers[300] - 4000) / 16000
+            p_res_t4 = (_registers[301] - 4000) / 16000
             
-            # Calentamiento (Flags de Control 450 y 350)
-            if _coils[450] and n_t2 > 20:
-                t2_temp += 0.7 # Velocidad de calentamiento
-            if _coils[350] and n_t4_t5 > 20:
-                t4_temp += 0.7
-                
-            # 7. ACTUALIZAR REGISTROS DE SENSORES (VUELTA A CRUDA MODBUS)
-            _registers[SENSOR_PRESION_T1.address] = int(4000 + (n_t1 * 6000 / 100))
-            _registers[SENSOR_PRESION_T2.address] = int(4000 + (n_t2 * 6000 / 100))
-            _registers[SENSOR_PRESION_T3.address] = int(4000 + (n_t3 * 6000 / 100))
-            _registers[SENSOR_PRESION_T4_T5.address] = int(4000 + (n_t4_t5 * 6000 / 100))
+            t2_temp = max(20.0, t2_temp - 0.05)
+            t4_temp = max(20.0, t4_temp - 0.05)
             
+            if ev3: t2_temp = t2_temp + (20 - t2_temp) * 0.15
+            if ev2: t4_temp = t4_temp + (20 - t4_temp) * 0.15
+            
+            if n_t2 > 20: t2_temp += (p_res_t2 * 1.5)
+            if n_t4_t5 > 20: t4_temp += (p_res_t4 * 1.5)
+            
+            # Sincronizar registros
             _registers[SENSOR_TEMP_T2.address] = int((t2_temp - 0.5) * 1000 / 75)
             _registers[SENSOR_TEMP_T4.address] = int((t4_temp - 0.5) * 1000 / 75)
-            
-            # Sincronizar PV del PID para visualización
             _registers[401] = _registers[SENSOR_TEMP_T2.address]
             _registers[421] = _registers[SENSOR_TEMP_T4.address]
 

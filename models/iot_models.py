@@ -31,7 +31,7 @@ class SalidaDigital:
     estado: bool = False
     entrada_digital: Optional[int] = None       # Botón Fisico (Address)
     entrada_analogica: Optional[int] = None     # Entrada tipo sensor (Address)
-    entrada_server: Optional[int] = None        # Servidor (Address)
+    entrada_server: Optional[int] = None        # Servidor boton pagina(Address)
 
 @dataclass
 class SalidaAnalogica:
@@ -43,6 +43,15 @@ class SalidaAnalogica:
     estado: float = 0.0
 
 @dataclass
+class BotonVirtual:
+    """
+    Representa un botón en la interfaz del SCADA que envía comandos al PLC.
+    """
+    nombre: str
+    address: int
+    descripcion: Optional[str] = None
+
+@dataclass
 class Tanque:
     """
     Representa un tanque con sus sensores y válvulas.
@@ -51,6 +60,9 @@ class Tanque:
     sensor_de_presion: int  #(Address)
     valvula_superior: int   #(Address)
     valvula_inferior: int   #(Address)
+    SetPoint_Level: int   #(Address)
+    modo_auto_address: int  #(Address para toggle Manual/Auto)
+    boton_virtual_address: int  # Dirección del botón virtual
     sensor_de_temperatura: Optional[int] = None
     condicion_de_nivel: Optional[int] = None
     resistencia: Optional[int] = None 
@@ -71,3 +83,4 @@ class PID:
     address_ti: int
     td: float
     address_td: int
+    boton_virtual_address: int  # Dirección del botón virtual

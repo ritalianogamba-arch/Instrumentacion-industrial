@@ -6,9 +6,9 @@
     </div>
     
     {% if status %}
-    <div class="status-badge {{ 'status-offline' if status == 'Simulado' else 'status-online' }}">
+    <div id="status-badge" class="status-badge {{ 'status-offline' if status == 'Simulado' else 'status-online' }}">
         <div class="status-dot"></div>
-        {{ 'Modo Simulación' if status == 'Simulado' else 'Sistema Online' }}
+        <span id="status-text">{{ 'Modo Simulación' if status == 'Simulado' else 'Sistema Online' }}</span>
     </div>
     {% endif %}
 

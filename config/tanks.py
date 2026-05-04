@@ -22,28 +22,37 @@ from .actuator import (
 # (%MW) Asociado a (%IW)
 
 TANQUE_1: Tanque = Tanque(
-    nombre= 'Tanque 1',
-    sensor_de_presion=SENSOR_PRESION_T1.address,            
-    valvula_superior=ELECTRO_VALVULA_1.address,           
-    valvula_inferior=ELECTRO_VALVULA_3.address,            
+    nombre='Tacho 1',
+    sensor_de_presion=SENSOR_PRESION_T1.address,
+    valvula_superior=ELECTRO_VALVULA_1.address,
+    valvula_inferior=ELECTRO_VALVULA_3.address,
+    SetPoint_Level=101,
+    modo_auto_address=201,
+    boton_virtual_address=201
 )
 
-TANQUE_2: Tanque = Tanque(  
-    nombre= 'Tanque 2',  
-    sensor_de_presion=SENSOR_PRESION_T2.address,            
+TANQUE_2: Tanque = Tanque(
+    nombre='Tacho 2',
+    sensor_de_presion=SENSOR_PRESION_T2.address,
+    valvula_superior=ELECTRO_VALVULA_3.address,
+    valvula_inferior=ELECTRO_VALVULA_4.address,
+    SetPoint_Level=102,
+    modo_auto_address=202,
+    boton_virtual_address=202,
     sensor_de_temperatura=SENSOR_TEMP_T2.address,
-    valvula_superior=ELECTRO_VALVULA_3.address,            
-    valvula_inferior=ELECTRO_VALVULA_4.address,        
-    condicion_de_nivel= 400,  # Valor de %M COIL
-    resistencia = RESISTENCIA_T2.address,
-    pid_id= 1, 
-)   
+    resistencia=RESISTENCIA_T2.address,
+    condicion_de_nivel= 400,
+    pid_id= 1
+)
 
 TANQUE_3: Tanque = Tanque(   
     nombre= 'Tanque 3',
     sensor_de_presion=SENSOR_PRESION_T3.address,            
     valvula_superior=ELECTRO_VALVULA_4.address,            
-    valvula_inferior=ELECTRO_VALVULA_7.address,           
+    valvula_inferior=ELECTRO_VALVULA_7.address, 
+    SetPoint_Level= 103,           
+    modo_auto_address= 203,
+    boton_virtual_address=203
 )   
 
 TANQUE_4: Tanque = Tanque(   
@@ -55,11 +64,17 @@ TANQUE_4: Tanque = Tanque(
     condicion_de_nivel= 300, # Valor de %M COIL
     resistencia = RESISTENCIA_T4.address,
     pid_id= 2,
+    SetPoint_Level= 104, 
+    modo_auto_address= 204,
+    boton_virtual_address=204
 )   
 
-TANQUE_5: Tanque = Tanque(  
-    nombre= 'Tanque 5',
-    sensor_de_presion=SENSOR_PRESION_T4_T5.address,            
-    valvula_superior=ELECTRO_VALVULA_8.address,            
-    valvula_inferior=ELECTRO_VALVULA_5.address,            
+TANQUE_5: Tanque = Tanque(
+    nombre='Tacho 5',
+    sensor_de_presion=SENSOR_PRESION_T4_T5.address,
+    valvula_superior=ELECTRO_VALVULA_8.address,
+    valvula_inferior=ELECTRO_VALVULA_5.address,
+    SetPoint_Level=105,
+    modo_auto_address=205,
+    boton_virtual_address=205
 )

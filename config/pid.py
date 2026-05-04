@@ -14,6 +14,7 @@ PID_T2 : PID = PID(
     address_ti=404,
     td=1,
     address_td=406,
+    boton_virtual_address=450
 )
 
 PID_T4 : PID = PID(
@@ -27,4 +28,5 @@ PID_T4 : PID = PID(
     address_ti=424,
     td=1,
     address_td=426,
+    boton_virtual_address=350
 )

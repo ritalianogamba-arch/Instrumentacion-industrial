@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, render_template
-from config import logger, get_system_data
+from config import logger, get_system_data, PLC_REMOTE_LOCK_ADDR
 from modbus_core import (
     read_coils_safe, write_coil_safe, 
     read_registers_safe, write_register_safe,
@@ -13,12 +13,22 @@ from mocks import (
 # Create a Blueprint for the API
 api_bp = Blueprint('api', __name__)
 
+def check_remote_lock():
+    """Verifica si el mando remoto está bloqueado por hardware (M13)."""
+    if client_manager.is_disabled:
+        return False # En modo simulado no bloqueamos por defecto
+    
+    lock_data = read_coils_safe(PLC_REMOTE_LOCK_ADDR, count=1)
+    return lock_data.bits[0] if lock_data else False
+
 # =========================================================================
 # ZONA 3: RUTA PRINCIPAL (FRONTEND)
 # =========================================================================
 @api_bp.route('/')
 def index():
-    status = "Simulado" if client_manager.is_disabled else "Conectado"
+    # Solo decimos conectado si el socket está abierto Y no estamos en modo deshabilitado
+    is_online = client_manager.is_connected() and not client_manager.is_disabled
+    status = "Conectado" if is_online else "Simulado"
     system_data = get_system_data()
     return render_template('index.html', 
                            usuario="Operador", 
@@ -50,6 +60,9 @@ def write_coil():
         address = data['address']
         value = bool(data['value'])
         
+        if check_remote_lock():
+            return jsonify({'success': False, 'error': 'Bloqueo Remoto Activo (Mantenimiento)'}), 403
+
         if client_manager.is_disabled:
             mock_write_coil(address, value)
             return jsonify({'success': True})
@@ -83,6 +96,10 @@ def write_register():
         data = request.get_json()
         address = data['address']
         value = int(data['value']) 
+        
+        if check_remote_lock():
+            return jsonify({'success': False, 'error': 'Bloqueo Remoto Activo (Mantenimiento)'}), 403
+
         if client_manager.is_disabled:
             mock_write_register(address, value)
             return jsonify({'success': True})
@@ -106,7 +123,13 @@ def write_register():
 @api_bp.route('/status')
 def status():
     if client_manager.is_disabled:
-        return jsonify(get_mock_status())
+        data = get_mock_status()
+        data["mode"] = "Simulado"
+        return jsonify(data)
+
+    # 0. Verificar Bloqueo Remoto
+    lock_data = read_coils_safe(PLC_REMOTE_LOCK_ADDR, count=1)
+    remote_lock = lock_data.bits[0] if lock_data else False
 
     # 1. Lectura Coils
     coils_data = read_coils_safe(0, count=24)
@@ -168,7 +191,17 @@ def status():
                 }
         }
 
+    # Determinar modo para el frontend
+    mode = "Conectado" if client_manager.is_connected() and not client_manager.is_disabled else "Simulado"
+
+    # 5. Modos Auto/Manual (201-205)
+    modes_data = read_coils_safe(201, count=5)
+    tank_modes = modes_data.bits if modes_data else [False]*5
+
     return jsonify({
+        "mode": mode,
+        "remote_lock": remote_lock,
+        "tank_modes": tank_modes,
         "coils_inputs": coils_in, 
         "coils_outputs": coils_out, 
         "pid_flags": pid_flags,
@@ -206,6 +239,9 @@ def update_pid():
         ti_raw = int(float(d['ti']) / 0.1)
         td_raw = int(float(d['td']) / 0.1)
         
+        if check_remote_lock():
+            return jsonify({'success': False, 'error': 'Bloqueo Remoto Activo (Mantenimiento)'}), 403
+
         r1 = write_register_safe(base, sp_raw)
         r2 = write_register_safe(base+2, kp_raw)
         r3 = write_register_safe(base+4, ti_raw)
@@ -224,3 +260,42 @@ def update_pid():
 def reset_pid(): 
     logger.info("Reset PID solicitado")
     return jsonify({'success': True})
+
+@api_bp.route('/toggle_auto', methods=['POST'])
+def toggle_auto():
+    """Cambia entre modo Manual y Auto para un tanque."""
+    if check_remote_lock():
+        return jsonify({'success': False, 'error': 'Bloqueo Remoto Activo'}), 403
+        
+    try:
+        data = request.get_json()
+        address = int(data['address'])
+        value = bool(data['value'])
+        
+        if client_manager.is_disabled:
+            mock_write_coil(address, value)
+            return jsonify({'success': True})
+            
+        result = write_coil_safe(address, value)
+        if not result:
+            return jsonify({'success': False, 'error': 'Fallo en PLC'}), 503
+            
+        return jsonify({'success': True})
+    except Exception as e:
+        logger.error(f"Error en toggle_auto: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@api_bp.route('/mock/toggle_input', methods=['POST'])
+def mock_toggle_input():
+    if not client_manager.is_disabled:
+        return jsonify({"success": False, "error": "Not in simulation mode"}), 403
+    
+    try:
+        data = request.get_json()
+        address = int(data['address'])
+        from mocks import mock_read_coil, mock_write_coil
+        current = mock_read_coil(address)
+        mock_write_coil(address, not current)
+        return jsonify({"success": True, "new_state": not current})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400

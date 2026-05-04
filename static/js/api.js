@@ -29,3 +29,11 @@ function fetchStatus() {
 function readCoil(addr) {
     return fetch(`/read_coil?address=${addr}`).then(r => r.json());
 }
+
+function toggleAutoMode(addr, value) {
+    return fetch('/toggle_auto', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address: addr, value: value })
+    });
+}

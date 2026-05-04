@@ -1,76 +1,110 @@
 <div id="tab-visual" class="tab-content" style="display: none; padding: 20px;">
     <div
-        style="position: relative; width: 800px; height: 500px; margin: 0 auto; background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 10px;">
-        <!-- Pipelines principales -->
-        <div style="position: absolute; top: 20px; left: 10px; right: 255px; height: 4px; background: #28a745;"></div>
-        <div style="position: absolute; left: 350px; color: #000000; font-size: 15px;">Alimentacion</div>
+        style="position: relative; width: 1300px; height: 600px; margin: 0 auto; background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 10px; transform: scale(1.2); transform-origin: top left;">
 
-        <!-- Bajadas de alimentacion -->
-        <div style="position: absolute; top: 20px; left: 300px; width: 4px; height: 80px; background: #28a745;"></div>
-        <div style="position: absolute; top: 20px; left: 545px; width: 4px; height: 80px; background: #28a745;"></div>
+        <!-- ::::::::::::::::::::::: DIBUJO DE LAS LINEAS ::::::::::::::::::::::: -->
+        <!-- Cañería Superior -->
+        <div style="position: absolute; top: 22px; left: 10px; width: 306px; height: 6px; background: #28a745;"></div>
+        <div style="position: absolute; top: 22px; left: 312px; width: 254px; height: 6px; background: #28a745;"></div>
+        <div style="position: absolute; top: -4px; left: 60px; font-size: 20px; color: #000000; font-weight: bold;">
+            Alimentación</div>
+        <div style="position: absolute; top: 20px; left: 10px; width: 556px; height: 2px; background: #000000;"></div>
+        <div style="position: absolute; top: 27px; left: 10px; width: 556px; height: 2px; background: #000000;"></div>
 
-        <!-- Tuberias de salida (ajustadas para tanques de 80px de alto) -->
-        <div style="position: absolute; top: 182px; left: 290px; width: 4px; height: 51px; background: #28a745;"></div>
-        <!-- Debajo T1 -->
-        <div style="position: absolute; top: 230px; left: 283px; width: 10px; height: 4px; background: #28a745;"></div>
+        <!-- Bajadas Alimentación -->
+        <div style="position: absolute; top: 26px; left: 300px; width: 6px; height: 78px; background: #28a745;"></div>
+        <div style="position: absolute; top: 26px; left: 560px; width: 6px; height: 209px; background: #28a745;"></div>
+        <!-- Bordes bajadas -->
+        <div style="position: absolute; top: 28px; left: 558px; width: 2px; height: 209px; background: #000000;"></div>
+        <div style="position: absolute; top: 22px; left: 564px; width: 2px; height: 213px; background: #000000;"></div>
+        <div style="position: absolute; top: 28px; left: 298px; width: 2px; height: 76px; background: #000000;"></div>
+        <div style="position: absolute; top: 28px; left: 306px; width: 2px; height: 76px; background: #000000;"></div>
 
-        <div style="position: absolute; top: 282px; left: 240px; width: 4px; height: 51px; background: #28a745;"></div>
-        <!-- Debajo T2 -->
-        <div style="position: absolute; top: 333px; left: 233px; width: 11px; height: 4px; background: #28a745;"></div>
+        <!-- Conexiones Intermedias -->
+        <div style="position: absolute; top: 200px; left: 209px; width: 64px; height: 6px; background: #28a745;"></div>
+        <div style="position: absolute; top: 200px; left: 205px; width: 6px; height: 40px; background: #28a745;"></div>
+        <div style="position: absolute; top: 198px; left: 203px; width: 2px; height: 46px; background: #000000;"></div>
+        <div style="position: absolute; top: 206px; left: 211px; width: 62px; height: 2px; background: #000000;"></div>
+        <div style="position: absolute; top: 198px; left: 203px; width: 70px; height: 2px; background: #000000;"></div>
+        <div style="position: absolute; top: 206px; left: 211px; width: 2px; height: 40px; background: #000000;"></div>
 
-        <!-- T4 a T5 -->
-        <div style="position: absolute; top: 130px; left: 545px; width: 148px; height: 4px; background: #28a745;"></div>
+        <!-- Descargas y Uniones -->
+        <div style="position: absolute; top: 330px; left: 117px; width: 61px; height: 6px; background: #28a745;"></div>
+        <div style="position: absolute; top: 330px; left: 113px; width: 6px; height: 40px; background: #28a745;"></div>
+        <div style="position: absolute; top: 328px; left: 111px; width: 67px; height: 2.5px; background: #000000;">
+        </div>
+        <div style="position: absolute; top: 336px; left: 119px; width: 59px; height: 2px; background: #000000;"></div>
+        <div style="position: absolute; top: 328px; left: 111px; width: 2px; height: 46px; background: #000000;"></div>
+        <div style="position: absolute; top: 336px; left: 119px; width: 2px; height: 40px; background: #000000;"></div>
 
-        <!-- Debajo T4 -->
-        <div style="position: absolute; top: 182px; left: 545px; width: 4px; height: 74px; background: #28a745;"></div>
-        <!-- Debajo T5 -->
-        <div style="position: absolute; top: 182px; left: 690px; width: 4px; height: 74px; background: #28a745;"></div>
-        <!-- Union T4/T5 -->
-        <div style="position: absolute; top: 252px; left: 545px; width: 148px; height: 4px; background: #28a745;"></div>
-        <!-- Bajada comun T4/T5 -->
-        <div style="position: absolute; top: 255px; left: 610px; width: 4px; height: 189px; background: #28a745;"></div>
+        <!-- Conexión T4-T5 -->
+        <div style="position: absolute; top: 333px; left: 593px; width: 76px; height: 6px; background: #28a745;"></div>
+        <div style="position: absolute; top: 331px; left: 593px; width: 76px; height: 2px; background: #000000;"></div>
+        <div style="position: absolute; top: 339px; left: 593px; width: 76px; height: 2px; background: #000000;"></div>
 
-        <div style="position: absolute; top: 382px; left: 184px; width: 4px; height: 60px; background: #28a745;"></div>
-        <!-- Debajo T3 -->
+        <!-- Descargas Generales -->
+        <div style="position: absolute; top: 493px; left: 113px; width: 6px; height: 50px; background: #28a745;"></div>
+        <div style="position: absolute; top: 537px; left: 113px; width: 520px; height: 6px; background: #28a745;"></div>
+        <div style="position: absolute; top: 297px; left: 560px; width: 6px; height: 105px; background: #28a745;"></div>
+        <div style="position: absolute; top: 397px; left: 560px; width: 70px; height: 6px; background: #28a745;"></div>
+        <div style="position: absolute; top: 297px; left: 694px; width: 6px; height: 105px; background: #28a745;"></div>
+        <div style="position: absolute; top: 397px; left: 630px; width: 70px; height: 6px; background: #28a745;"></div>
+        <div style="position: absolute; top: 398px; left: 630px; width: 6px; height: 140px; background: #28a745;"></div>
+        <div style="position: absolute; top: 537px; left: 630px; width: 270px; height: 6px; background: #28a745;"></div>
 
-        <div style="position: absolute; top: 442px; left: 184px; right: 10px; height: 4px; background: #28a745;"></div>
-        <div style="position: absolute; top: 425px; left: 350px; color: #000000; font-size: 15px;">Descarga</div>
+        <div style="position: absolute; top: 500px; left: 800px; font-size: 20px; color: #000000; font-weight: bold;">
+            Descarga</div>
 
-        <!-- Tanques -->
+        <!-- TANQUES (DINÁMICOS) -->
         {% for tanque in elementos.tanques %}
-        {% set t_top = [100, 200, 300, 100, 100][loop.index0] %}
-        {% set t_left = [250, 200, 150, 500, 640][loop.index0] %}
-        {% set box_style = 'style="position: absolute; right: 105%;"' if loop.index != 5 else '' %}
-        <div class="tank-wrapper" style="top: {{ t_top }}px; left: {{ t_left }}px;">
-            <div class="tank">
+        {% set i = loop.index %}
+        {% set t_top = [105, 235, 370, 235, 235][i-1] %}
+        {% set t_left = [272, 176, 85, 532, 665][i-1] %}
+        <div class="tank-wrapper" style="position: absolute; top: {{ t_top }}px; left: {{ t_left }}px;">
+            <div class="tank" id="tank{{ i }}"
+                style="position: relative; width: 60px; height: 120px; background: linear-gradient(to right, #dbdbdb, #e0e0e0, #bdbdbd); border: 2px solid black; border-radius: 25px / 10px; overflow: hidden;">
                 <div class="tank-info-overlay">
                     {{ tanque.nombre }}
-                    {% if loop.index == 2 or loop.index == 4 %}
-                    <br><span id="vis-temp-t{{ loop.index }}">--</span>
+                    {% if tanque.sensor_de_temperatura %}
+                    <br><span id="vis-temp-t{{ i }}">--</span>
                     {% endif %}
                 </div>
-                <div class="water-fill" id="vis-lev-t{{ loop.index }}" style="height: 0%;">
+                <div class="water-fill" id="vis-lev-t{{ i }}" style="height: 0%;">
                     <div class="water-waves">
                         <div class="wave"></div>
                         <div class="wave"></div>
                     </div>
                 </div>
             </div>
-            <div class="level-input-box" {{ box_style | safe }}>
-                <label>Set %</label>
-                <input type="number" id="sp-niv-t{{ loop.index }}"
-                    onchange="writeLevelSP('T{{ loop.index }}', this.value)">
+            <!-- Caja de Control Lateral -->
+            <div class="level-input-box"
+                style="position: absolute; right: 105%; top: 10px; min-width: 80px; text-align: center;">
+                <label style="font-size: 11px; font-weight: bold;">Set %</label>
+                <input type="number" id="sp-niv-t{{ i }}-vis"
+                    style="width: 100%; border-radius: 4px; border: 1px solid #ccc; padding: 2px;"
+                    onchange="writeLevelSP('T{{ i }}', this.value)">
+
+                <button id="btn-mode-t{{ i }}-vis" class="mode-toggle-btn-small mode-manual"
+                    style="margin-top: 8px; width: 100%; font-size: 10px;"
+                    onclick="toggleTankMode({{ i }}, {{ tanque.modo_auto_address }})">
+                    MANUAL
+                </button>
+                <div style="margin-top: 5px; font-size: 12px; font-weight: bold; color: #1976d2;">
+                    <span id="vis-lev-t{{ i }}-val">--</span>%
+                </div>
             </div>
         </div>
         {% endfor %}
 
-
-        <!-- Válvulas -->
+        <!-- VÁLVULAS (DINÁMICAS) -->
         {% for valvula in elementos.valvulas %}
-        {% set v_top = [30, 30, 190, 290, 190, 190, 392, 120][loop.index0] %}
-        {% set v_left = [240, 560, 305, 250, 670, 509, 200, 600][loop.index0] %}
-        <div class="valve closed" id="valve{{ loop.index }}" onclick="toggleValve({{ loop.index }})"
-            style="top: {{ v_top }}px; left: {{ v_left }}px;">EV{{ loop.index }}</div>
+        {% set i = loop.index %}
+        {% set v_top = [57, 192, 322, 130, 325, 389, 389, 502][i-1] %}
+        {% set v_left = [293, 230, 138, 552, 620, 590, 660, 105][i-1] %}
+        <div class="valve closed" id="valve{{ i }}" onclick="toggleValve({{ i }}, {{ valvula.entrada_server }})"
+            style="position:absolute; top: {{ v_top }}px; left: {{ v_left }}px; width: 22px; height: 22px; background: #ff8c00; border: 2px solid black; border-radius: 0px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; cursor: pointer; color: #000; transition: all 0.3s ease;">
+            EV{{ i }}
+        </div>
         {% endfor %}
     </div>
 </div>

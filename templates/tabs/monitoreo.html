@@ -7,13 +7,21 @@
                     <tr>
                         <th>Direccion</th>
                         <th>Estado</th>
+                        <th class="sim-only-header" style="display:none;">Simular</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for boton in elementos.botones_ev %}
-                    <tr>
-                        <td>%I0.{{ loop.index0 }} ({{ boton.nombre }})</td>
-                        <td id="coil-in-{{ loop.index0 }}" class="off">OFF</td>
+                    <tr {% if boton.address==13 %}style="border-top: 2px solid #eee; background: #fffcfc;" {% endif %}>
+                        <td>
+                            {% if boton.address == 13 %}<strong>{% endif %}
+                                %I0.{{ boton.address }} ({{ boton.nombre }})
+                                {% if boton.address == 13 %}</strong>{% endif %}
+                        </td>
+                        <td id="coil-in-{{ boton.address }}" class="off">OFF</td>
+                        <td class="sim-only-cell" style="display:none;">
+                            <button class="btn-small" onclick="mockToggleInput({{ boton.address }})">Toggle</button>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -56,6 +64,55 @@
                         <td>{{ sensor.nombre }}</td>
                         <td>%IW{{ sensor.address }}</td>
                         <td id="reg-in-{{ sensor.address }}" class="value">--</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="panel">
+            <h3>Modo de Control de Tanques</h3>
+            <table id="tank_modes">
+                <thead>
+                    <tr>
+                        <th>Tanque</th>
+                        <th>Direccion (%M)</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tanque in elementos.tanques %}
+                    <tr>
+                        <td>{{ tanque.nombre }}</td>
+                        <td>%M{{ tanque.modo_auto_address }}</td>
+                        <td id="mode-status-{{ loop.index }}">--</td>
+                        <td>
+                            <button id="btn-mode-{{ loop.index }}" class="mode-toggle-btn mode-manual"
+                                onclick="toggleTankMode({{ loop.index }}, {{ tanque.modo_auto_address }})">
+                                MANUAL
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="panel">
+            <h3>Botones Virtuales del SCADA</h3>
+            <table id="virtual_buttons_table">
+                <thead>
+                    <tr>
+                        <th>Función</th>
+                        <th>Dirección (%M)</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bv in elementos.botones_virtuales %}
+                    <tr>
+                        <td>{{ bv.nombre }}</td>
+                        <td>%M{{ bv.address }}</td>
+                        <td>{{ bv.descripcion or '-' }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
