@@ -18,9 +18,13 @@
                                 %I0.{{ boton.address }} ({{ boton.nombre }})
                                 {% if boton.address == 13 %}</strong>{% endif %}
                         </td>
-                        <td id="coil-in-{{ boton.address }}" class="off">OFF</td>
+                        <td id="coil-in-{{ boton.address }}" class="off" 
+                            style="cursor: pointer;"
+                            onclick="if(document.getElementById('status-text').innerText.includes('Simul')) mockToggleInput({{ boton.address }})">
+                            OFF
+                        </td>
                         <td class="sim-only-cell" style="display:none;">
-                            <button class="btn-small" onclick="mockToggleInput({{ boton.address }})">Toggle</button>
+                            <button class="btn-small" onclick="mockToggleInput({{ boton.address }})">Forzar</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -147,6 +151,7 @@
                     <label>{{ actuador.nombre }} (%MW{{ actuador.address }})</label>
                     <input id="slider{{ actuador.address }}" type="range" min="4000" max="20000" value="4000"
                         class="slider-supervisor"
+                        oninput="document.getElementById('valor{{ actuador.address }}').innerText = (({{ '50' if actuador.address == 302 else '100' }} * (this.value - 4000) / 16000)).toFixed(1) + '{{ ' Hz' if actuador.address == 302 else ' %' }}'"
                         onchange="actualizarValorVariador({{ actuador.address }}, this.value)">
                     <span id="valor{{ actuador.address }}" class="value-display">0.0 {{ 'Hz' if actuador.address == 302
                         else

@@ -80,49 +80,78 @@ function mainLoop() {
         }
 
         // --- Tablas (Actualización dirigida para evitar parpadeo y pérdida de estilo) ---
-        d.coils_inputs.forEach((v, i) => {
-            const el = document.getElementById(`coil-in-${i}`);
-            if (el) {
-                el.innerText = v ? 'ON' : 'OFF';
-                el.className = v ? 'on' : 'off';
-            }
-        });
+        // --- Tablas de Coils ---
+        if (d.elementos) {
+            d.coils_inputs.forEach((v, i) => {
+                const b = d.elementos.botones_ev[i];
+                if (!b) return;
+                const el = document.getElementById(`coil-in-${b.address}`);
+                if (el) {
+                    el.innerText = v ? 'ON' : 'OFF';
+                    el.className = v ? 'on' : 'off';
+                }
+            });
 
-        d.coils_outputs.forEach((v, i) => {
-            const el = document.getElementById(`coil-out-${i}`);
-            if (el) {
-                el.innerText = v ? 'ON' : 'OFF';
-                el.className = v ? 'on' : 'off';
-            }
-        });
+            d.coils_outputs.forEach((v, i) => {
+                const valv = d.elementos.valvulas[i];
+                if (!valv) return;
+                // En monitoreo.html usamos index0 para coil-out
+                const el = document.getElementById(`coil-out-${i}`);
+                if (el) {
+                    el.innerText = v ? 'ON' : 'OFF';
+                    el.className = v ? 'on' : 'off';
+                }
+            });
+        }
 
         d.registers_inputs.forEach((v, i) => {
-            const addr = 200 + i;
-            const el = document.getElementById(`reg-in-${addr}`);
-            if (el) {
-                let val = v;
-                // Formateo específico por dirección
-                if (addr === 200 || addr === 201) val = ((v * 75 / 1000) + 0.5).toFixed(1) + " C";
-                else if (addr === 202) val = escalarNivel(v, CONFIG_TANQUES.T1) + " %";
-                else if (addr === 204) val = escalarNivel(v, CONFIG_TANQUES.T2) + " %";
-                else if (addr === 205) val = escalarNivel(v, CONFIG_TANQUES.T3) + " %";
-                else if (addr === 203) val = escalarNivel(v, CONFIG_TANQUES.T4) + " %";
-                // T5 usa la misma presión que T4 generalmente en este sistema acoplado
-                el.innerText = val;
-            }
+            // Buscamos el elemento correspondiente en el DOM por su ID de dirección
+            // Nota: En monitoreo.html los IDs son 'reg-in-{{ sensor.address }}'
+            // El backend envía registers_inputs en el orden de LISTA_SENSORES.
+            // Para ser 100% dinámicos, el backend debería enviar un mapa o el sensor object.
+            // Por ahora, usamos el índice para obtener el sensor del DOM si es posible,
+            // o confiamos en que el backend envíe los valores escalados si es posible.
+            
+            // Refactorización: El backend ya provee get_system_data. 
+            // Podríamos obtener las direcciones reales. 
+            // Por ahora, mantenemos la compatibilidad con el DOM actual.
         });
 
+        // Actualización específica por ID para asegurar precisión sin importar el orden
+        if (d.elementos && d.elementos.sensores) {
+            d.elementos.sensores.forEach((s, i) => {
+                const v = d.registers_inputs[i];
+                const el = document.getElementById(`reg-in-${s.address}`);
+                if (el) {
+                    let val = v;
+                    if (s.nombre.toLowerCase().includes("temp")) val = ((v * 75 / 1000) + 0.5).toFixed(1) + " C";
+                    else if (s.nombre.toLowerCase().includes("presion")) {
+                         // Buscar config de tanque asociada si existe
+                         const tKey = Object.keys(CONFIG_TANQUES).find(k => CONFIG_TANQUES[k].sensor === s.address);
+                         if (tKey) val = escalarNivel(v, CONFIG_TANQUES[tKey]) + " %";
+                         else val = v;
+                    }
+                    el.innerText = val;
+                }
+            });
+        }
+
         d.registers_outputs.forEach((v, i) => {
-            const addr = 301 + i;
-            const el = document.getElementById(`reg-out-${addr}`);
-            if (el) {
-                let val = v;
-                if (addr === 302) val = ((v - 4000) / 16000 * 50).toFixed(1) + " Hz";
-                else if (addr === 303) val = ((v - 4000) / 16000 * 100).toFixed(1);
-                else if (addr >= 304) val = ((v - 4000) / 16000 * 100).toFixed(1);
-                el.innerText = val;
-            }
+            // El backend envía registers_outputs en el orden de LISTA_ACTUADORES.
         });
+
+        if (d.elementos && d.elementos.salidas_analogicas) {
+            d.elementos.salidas_analogicas.forEach((a, i) => {
+                const v = d.registers_outputs[i];
+                const el = document.getElementById(`reg-out-${a.address}`);
+                if (el) {
+                    let val = v;
+                    if (a.address === 302) val = ((v - 4000) / 16000 * 50).toFixed(1) + " Hz";
+                    else val = ((v - 4000) / 16000 * 100).toFixed(1) + " %";
+                    el.innerText = val;
+                }
+            });
+        }
 
 
         // --- Sincronización de Válvulas Visuales ---
@@ -166,64 +195,60 @@ function mainLoop() {
         }
 
         // --- Visualización ---
-        if (d.registers_inputs.length >= 6) {
-            setVisLevel('t2', d.registers_inputs[4], CONFIG_TANQUES.T2);
-            let t2 = ((d.registers_inputs[0] * 75 / 1000) + 0.5).toFixed(1);
-            document.getElementById('vis-temp-t2').innerText = t2 + " C";
-
-            setVisLevel('t4', d.registers_inputs[3], CONFIG_TANQUES.T4);
-            let t4 = ((d.registers_inputs[1] * 75 / 1000) + 0.5).toFixed(1);
-            document.getElementById('vis-temp-t4').innerText = t4 + " C";
-
-            setVisLevel('t1', d.registers_inputs[2], CONFIG_TANQUES.T1);
-            setVisLevel('t3', d.registers_inputs[5], CONFIG_TANQUES.T3);
-            if (d.registers_inputs.length >= 7) setVisLevel('t5', d.registers_inputs[6], CONFIG_TANQUES.T5);
-
-            const hT2 = d.pid_flags.t2_activo && d.pid_flags.t2_permiso;
-            const hT4 = d.pid_flags.t4_activo && d.pid_flags.t4_permiso;
-
-            const levT2 = document.getElementById('vis-lev-t2');
-            const levT4 = document.getElementById('vis-lev-t4');
-            const levT1 = document.getElementById('vis-lev-t1');
-            const levT3 = document.getElementById('vis-lev-t3');
-            const levT5 = document.getElementById('vis-lev-t5');
-
-            if (levT2) levT2.style.backgroundColor = getWaterColor(parseFloat(t2));
-            if (levT4) levT4.style.backgroundColor = getWaterColor(parseFloat(t4));
-
-            // Los otros tanques asumen temperatura ambiente (20°C) o puedes ligarlos si quieres
-            if (levT1) levT1.style.backgroundColor = getWaterColor(20);
-            if (levT3) levT3.style.backgroundColor = getWaterColor(20);
-            if (levT5) levT5.style.backgroundColor = getWaterColor(20);
-
-            g_tempT2 = parseFloat(t2);
-
-            g_tempT2 = parseFloat(t2);
-            g_tempT4 = parseFloat(t4);
+        if (d.elementos && d.elementos.tanques) {
+            d.elementos.tanques.forEach((t, i) => {
+                const index = i + 1;
+                // Encontrar el sensor de presión del tanque
+                const sPresionIdx = d.elementos.sensores.findIndex(s => s.address === t.sensor_de_presion);
+                if (sPresionIdx !== -1) {
+                    const rawLevel = d.registers_inputs[sPresionIdx];
+                    const tankKey = `T${index}`;
+                    setVisLevel(`t${index}`, rawLevel, CONFIG_TANQUES[tankKey]);
+                    
+                    const levEl = document.getElementById(`vis-lev-t${index}`);
+                    const levValEl = document.getElementById(`vis-lev-t${index}-val`);
+                    if (levValEl) levValEl.innerText = escalarNivel(rawLevel, CONFIG_TANQUES[tankKey]) + "%";
+                    
+                    // Encontrar el sensor de temperatura si tiene
+                    if (t.sensor_de_temperatura) {
+                        const sTempIdx = d.elementos.sensores.findIndex(s => s.address === t.sensor_de_temperatura);
+                        if (sTempIdx !== -1) {
+                            const rawTemp = d.registers_inputs[sTempIdx];
+                            const tempC = ((rawTemp * 75 / 1000) + 0.5).toFixed(1);
+                            const tempEl = document.getElementById(`vis-temp-t${index}`);
+                            if (tempEl) tempEl.innerText = tempC + " C";
+                            if (levEl) levEl.style.backgroundColor = getWaterColor(parseFloat(tempC));
+                            
+                            if (index === 2) g_tempT2 = parseFloat(tempC);
+                            if (index === 4) g_tempT4 = parseFloat(tempC);
+                        }
+                    } else {
+                        if (levEl) levEl.style.backgroundColor = getWaterColor(20);
+                    }
+                }
+                
+                // Actualizar SP Inputs
+                const spValRaw = d.sp_niveles[i];
+                const tankKey = `T${index}`;
+                updateInputIfNoFocus(`sp-niv-t${index}-vis`, spValRaw, CONFIG_TANQUES[tankKey]);
+            });
         }
 
-        if (d.sp_niveles && d.sp_niveles.length >= 5) {
-            updateInputIfNoFocus('sp-niv-t1', d.sp_niveles[0], CONFIG_TANQUES.T1);
-            updateInputIfNoFocus('sp-niv-t2', d.sp_niveles[1], CONFIG_TANQUES.T2);
-            updateInputIfNoFocus('sp-niv-t3', d.sp_niveles[2], CONFIG_TANQUES.T3);
-            updateInputIfNoFocus('sp-niv-t4', d.sp_niveles[3], CONFIG_TANQUES.T4);
-            updateInputIfNoFocus('sp-niv-t5', d.sp_niveles[4], CONFIG_TANQUES.T5);
+        // --- Actuadores Manuales ---
+        if (d.elementos && d.elementos.salidas_analogicas) {
+            d.elementos.salidas_analogicas.forEach((a, i) => {
+                const val = d.registers_outputs[i];
+                const slider = document.getElementById(`slider${a.address}`);
+                const display = document.getElementById(`valor${a.address}`);
+                
+                if (slider && !slider.matches(':active')) slider.value = val;
+                if (display && !slider.matches(':active')) {
+                    if (a.address === 302) display.innerText = ((val - 4000) / 16000 * 50).toFixed(1) + " Hz";
+                    else display.innerText = ((val - 4000) / 16000 * 100).toFixed(1) + " %";
+                }
+            });
         }
-
-        if (d.registers_outputs.length >= 3) {
-            // VFD (302)
-            const val302 = d.registers_outputs[1];
-            const elVal302 = document.getElementById('valor302');
-            if (elVal302) elVal302.innerText = ((val302 - 4000) / 16000 * 50).toFixed(1) + " Hz";
-            if (!document.getElementById('slider302').matches(':active')) document.getElementById('slider302').value = val302;
-
-            // Neumática (303)
-            const val303 = d.registers_outputs[2];
-            const elVal303 = document.getElementById('valor303');
-            if (elVal303) elVal303.innerText = ((val303 - 4000) / 16000 * 100).toFixed(1) + " %";
-            if (!document.getElementById('slider303').matches(':active')) document.getElementById('slider303').value = val303;
-        }
-    });
+    }).catch(err => console.error("Error en mainLoop:", err));
 }
 
 // INICIALIZACIÓN

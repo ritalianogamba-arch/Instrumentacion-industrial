@@ -1,7 +1,7 @@
 const CONFIG_TANQUES = {
-    T1: { addr: 101, min: 4000, max: 10083 },
-    T2: { addr: 102, min: 4000, max: 10812 },
-    T3: { addr: 103, min: 4000, max: 6150  },
-    T4: { addr: 104, min: 4000, max: 9745  },
-    T5: { addr: 105, min: 4000, max: 20000 } 
+    T1: { sensor: 202, sp: 101, min: 4000, max: 10000 },
+    T2: { sensor: 204, sp: 102, min: 4000, max: 10000 },
+    T3: { sensor: 205, sp: 103, min: 4000, max: 10000 },
+    T4: { sensor: 203, sp: 104, min: 4000, max: 10000 },
+    T5: { sensor: 203, sp: 105, min: 4000, max: 10000 } 
 };

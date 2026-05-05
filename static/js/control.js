@@ -9,12 +9,12 @@ function ioPID(id, action) {
         const kp = document.getElementById(`read-kp-${suffix}`);
         const ti = document.getElementById(`read-ti-${suffix}`);
         const td = document.getElementById(`read-td-${suffix}`);
-        
+
         if (sp) document.getElementById(`sp-${suffix}`).value = sp.innerText;
         if (kp) document.getElementById(`kp-${suffix}`).value = kp.innerText;
         if (ti) document.getElementById(`ti-${suffix}`).value = ti.innerText;
         if (td) document.getElementById(`td-${suffix}`).value = td.innerText;
-        
+
         alert("Valores cargados.");
     } else {
         const params = {
@@ -29,13 +29,13 @@ function ioPID(id, action) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(params)
         })
-        .then(r => {
-            if (r.status === 403) { mostrarBloqueoAnimado(); return null; }
-            return r.json();
-        })
-        .then(d => {
-            if (d) alert(d.success ? "Guardado" : "Error");
-        });
+            .then(r => {
+                if (r.status === 403) { mostrarBloqueoAnimado(); return null; }
+                return r.json();
+            })
+            .then(d => {
+                if (d) alert(d.success ? "Guardado" : "Error");
+            });
     }
 }
 
@@ -43,10 +43,13 @@ function toggleGenericPID(id, address, type) {
     const btn = document.getElementById(`btn-pid-${id.toLowerCase()}`);
     if (!btn) return;
     const isOn = btn.innerText === "ON";
-    
+
     if (type === 'coil') {
         writeCoil(address, !isOn).then(r => {
-            if (r.status === 403) mostrarBloqueoAnimado();
+            if (r.status === 403) {
+                mostrarBloqueoAnimado();
+                return null;
+            }
         });
     } else {
         const newVal = isOn ? 0 : 1;
@@ -63,39 +66,41 @@ function toggleGenericPID(id, address, type) {
 
 function toggleValve(n, addr) {
     const btn = document.getElementById(`valve${n}`);
-    if (!btn || btn.disabled) return;
+    if (!btn || btn.classList.contains('transitioning')) return;
 
-    btn.disabled = true;
     btn.classList.add('transitioning');
     const nState = !btn.classList.contains('open');
 
     writeCoil(addr, nState)
         .then(r => {
-            if (r.status === 403) {
+            if (r && r.status === 403) {
                 mostrarBloqueoAnimado();
-                btn.disabled = false;
                 btn.classList.remove('transitioning');
                 return null;
             }
-            return r.json();
+            return r ? r.json() : null;
         })
         .then(d => {
-            if (!d) return;
+            if (!d) {
+                btn.classList.remove('transitioning');
+                return;
+            }
             if (d.success) {
+                // En modo simulado, el cambio es casi instantáneo en el backend
+                // pero mantenemos una pequeña animación de transición
+                const delay = d.note === 'Escrito en Mock' ? 500 : 16000;
                 setTimeout(() => {
-                    btn.disabled = false;
                     btn.classList.remove('transitioning');
-                    if (nState) {
-                        btn.classList.add('open'); btn.classList.remove('closed');
-                    } else {
-                        btn.classList.add('closed'); btn.classList.remove('open');
-                    }
-                }, 16000);
+                    // El mainLoop se encargará de poner la clase open/closed real
+                }, delay);
             } else {
-                btn.disabled = false;
                 btn.classList.remove('transitioning');
                 alert('Error al accionar');
             }
+        })
+        .catch(err => {
+            btn.classList.remove('transitioning');
+            console.error(err);
         });
 }
 
@@ -105,8 +110,8 @@ function writeLevelSP(tankId, percent) {
     let p = parseFloat(percent);
     if (p < 0) p = 0; if (p > 100) p = 100;
     const rawVal = Math.round(cfg.min + (p * (cfg.max - cfg.min) / 100));
-    writeRegister(cfg.addr, rawVal).then(r => {
-        if (r.status === 403) mostrarBloqueoAnimado();
+    writeRegister(cfg.sp, rawVal).then(r => {
+        if (r && r.status === 403) mostrarBloqueoAnimado();
     });
 }
 
@@ -121,11 +126,11 @@ function toggleTankMode(index, address) {
     const btnVisId = `btn-mode-t${index}-vis`;
     const btn = document.getElementById(btnId);
     const btnVis = document.getElementById(btnVisId);
-    
+
     if (!btn) return;
     const isAuto = btn.classList.contains('mode-auto');
     const newValue = !isAuto;
-    
+
     toggleAutoMode(address, newValue)
         .then(r => {
             if (r.status === 403) {
@@ -143,7 +148,7 @@ function toggleTankMode(index, address) {
 function mostrarBloqueoAnimado() {
     const notice = document.getElementById('remote-lock-notice');
     if (!notice) return;
-    
+
     notice.classList.add('active', 'centered');
     setTimeout(() => {
         notice.classList.remove('centered');
@@ -155,5 +160,5 @@ function mockToggleInput(address) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ address: address })
-    });
+    }).catch(err => console.error("Error toggling mock coil:", err));
 }

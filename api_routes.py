@@ -127,76 +127,65 @@ def status():
         data["mode"] = "Simulado"
         return jsonify(data)
 
-    # 0. Verificar Bloqueo Remoto
-    lock_data = read_coils_safe(PLC_REMOTE_LOCK_ADDR, count=1)
-    remote_lock = lock_data.bits[0] if lock_data else False
+    # 1. Obtener datos del sistema para saber qué leer
+    system_data = get_system_data()
+    elementos = system_data["elementos"]
 
-    # 1. Lectura Coils
-    coils_data = read_coils_safe(0, count=24)
-    if not coils_data:
-        return jsonify({'success': False, 'error': 'No se pudo conectar con el PLC o timeout de lectura'}), 503
-
-    # Encender calentamiento de resistencia
-    estado_t4  = read_coils_safe(350, count=1)
-    estado_t2  = read_coils_safe(450, count=1)
-
-    coils_in = coils_data.bits[:14]
-    coils_out = coils_data.bits[14:24]
-
-    pid_flags = {
-        "t4_activo":  estado_t4.bits[0] if estado_t4 else False,
-        "t2_activo":  estado_t2.bits[0] if estado_t2 else False
-    }
-
-    # 2. Analogicos
-    ai = read_registers_safe(200, count=6)
-    aq = read_registers_safe(301, count=5)
-    reg_in = ai.registers if ai else [0]*6
-    reg_out = aq.registers if aq else [0]*5
+    # 2. Lectura de Coils (Entradas y Válvulas)
+    # Leemos un bloque que cubra la mayoría para optimizar
+    coils_data = read_coils_safe(0, count=500)
     
-    # 3. SetPoints de Nivel
-    sp_niv = read_registers_safe(101, count=5)
-    sp_niveles = sp_niv.registers if sp_niv else [0]*5
+    def get_coil(addr):
+        return coils_data.bits[addr] if coils_data and addr < len(coils_data.bits) else False
 
-    # 4. PIDs
-    pid_t2_raw = read_registers_safe(400, count=8)
-    pid_t2 = {}
-    if pid_t2_raw:
-        r = pid_t2_raw.registers
-        pid_t2 = {
-            'params': {'setpoint': round((r[0]*75/1000)+0.5, 1), 
-                        'kp':    r[2]*0.01, 
-                        'ti': r[4]*0.1, 
-                        'td': r[6]*0.1},
-            'status': {'temp_actual': round((r[1]*75/1000)+0.5, 1), 
-                        'error': round(r[3]*75/1000, 1), 
-                        'salida': r[5]/100.0}
-        }
+    coils_in = [get_coil(b['address']) for b in elementos['botones_ev']]
+    coils_out = [get_coil(v['entrada_server']) for v in elementos['valvulas']]
 
-    pid_t4_raw = read_registers_safe(420, count=8)
-    pid_t4 = {}
-    if pid_t4_raw:
-        r = pid_t4_raw.registers
-        pid_t4 = {
-            'params': {
-                'setpoint': round((r[0]*75/1000)+0.5, 1), 
-                'kp': r[2]*0.01, 
-                'ti': r[4]*0.1, 
-                'td': r[6]*0.1
+    # 3. Analogicos (Sensores y Actuadores)
+    reg_in = []
+    for s in elementos['sensores']:
+        res = read_registers_safe(s['address'], count=1)
+        reg_in.append(res.registers[0] if res else 0)
+
+    reg_out = []
+    for a in elementos['salidas_analogicas']:
+        res = read_registers_safe(a['address'], count=1)
+        reg_out.append(res.registers[0] if res else 0)
+    
+    # 4. SetPoints de Nivel y Modos Auto
+    sp_niveles = []
+    tank_modes = []
+    for t in elementos['tanques']:
+        res_sp = read_registers_safe(t['SetPoint_Level'], count=1)
+        sp_niveles.append(res_sp.registers[0] if res_sp else 0)
+        tank_modes.append(get_coil(t['modo_auto_address']))
+
+    # 5. PIDs (Lectura dinámica por PID)
+    pids_status = {}
+    pid_flags = {}
+    for pid in elementos['pids']:
+        res = read_registers_safe(pid['address_set_point'], count=8)
+        if res:
+            r = res.registers
+            pids_status[f"pid_{pid['identifier']}"] = {
+                'params': {
+                    'setpoint': round((r[0]*75/1000)+0.5, 1), 
+                    'kp': r[2]*0.01, 
+                    'ti': r[4]*0.1, 
+                    'td': r[6]*0.1
                 },
-            'status': {
-                'temp_actual': round((r[1]*75/1000)+0.5, 1), 
-                'error': round(r[3]*75/1000, 1), 
-                'salida': r[5]/100.0
+                'status': {
+                    'temp_actual': round((r[1]*75/1000)+0.5, 1), 
+                    'error': round(r[3]*75/1000, 1), 
+                    'salida': r[5]/100.0
                 }
-        }
+            }
+        
+        # Flags de activación (usando el botón virtual address del modelo)
+        pid_flags[f"t{2 if pid['identifier'] == 1 else 4}_activo"] = get_coil(pid['boton_virtual_address'])
 
-    # Determinar modo para el frontend
     mode = "Conectado" if client_manager.is_connected() and not client_manager.is_disabled else "Simulado"
-
-    # 5. Modos Auto/Manual (201-205)
-    modes_data = read_coils_safe(201, count=5)
-    tank_modes = modes_data.bits if modes_data else [False]*5
+    remote_lock = get_coil(PLC_REMOTE_LOCK_ADDR)
 
     return jsonify({
         "mode": mode,
@@ -208,8 +197,9 @@ def status():
         "registers_inputs": reg_in, 
         "registers_outputs": reg_out, 
         "sp_niveles": sp_niveles,
-        "pid_t2": pid_t2, 
-        "pid_t4": pid_t4
+        "pid_t2": pids_status.get("pid_1", {}), 
+        "pid_t4": pids_status.get("pid_2", {}),
+        "elementos": elementos
     })
 
 # =========================================================================
@@ -233,7 +223,16 @@ def update_pid():
         return jsonify({'success': True, 'note': 'Simulado'})
     try:
         d = request.get_json()
-        base = 400 if d.get('id') == 'T2' else 420
+        pid_id_str = d.get('id') # 'T2' o 'T4'
+        
+        # Encontrar el PID en la configuración
+        system_data = get_system_data()
+        pid_obj = next((p for p in system_data["elementos"]["pids"] if p['nombre'].split()[-1] == pid_id_str), None)
+        
+        if not pid_obj:
+            return jsonify({'success': False, 'error': f'PID {pid_id_str} no encontrado'}), 404
+            
+        base = pid_obj['address_set_point']
         sp_raw = int(((float(d['setpoint']) - 0.5) * 1000) / 75)
         kp_raw = int(float(d['kp']) / 0.01)
         ti_raw = int(float(d['ti']) / 0.1)
@@ -250,7 +249,7 @@ def update_pid():
         if not all([r1, r2, r3, r4]):
             return jsonify({'success': False, 'error': 'Fallo escritura parcial o total en PLC'}), 503
 
-        logger.info(f"✓ PID {d.get('id')} actualizado")
+        logger.info(f"✓ PID {pid_id_str} actualizado en base {base}")
         return jsonify({'success': True})
     except Exception as e: 
         logger.error(f"Error en update_pid: {e}")
