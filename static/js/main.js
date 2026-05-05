@@ -33,7 +33,7 @@ function mainLoop() {
                 badge.classList.add('status-online');
                 badgeText.innerText = 'Sistema Online';
             }
-            
+
             // Mostrar/Ocultar controles de simulación
             document.querySelectorAll('.sim-only-header, .sim-only-cell').forEach(el => {
                 el.style.display = isSim ? '' : 'none';
@@ -57,8 +57,8 @@ function mainLoop() {
                 const btn = document.getElementById(`btn-mode-${index}`);
                 const btnVis = document.getElementById(`btn-mode-t${index}-vis`);
                 const status = document.getElementById(`mode-status-${index}`);
-                
-                const text = isAuto ? 'AUTOMATICO' : 'MANUAL';
+
+                const text = isAuto ? 'AUTO' : 'MANUAL';
                 const classAdd = isAuto ? 'mode-auto' : 'mode-manual';
                 const classRem = isAuto ? 'mode-manual' : 'mode-auto';
 
@@ -124,7 +124,7 @@ function mainLoop() {
             }
         });
 
-        
+
         // --- Sincronización de Válvulas Visuales ---
         // Coils 14-21 corresponden a EV1-EV8
         d.coils_outputs.forEach((v, i) => {
@@ -190,7 +190,7 @@ function mainLoop() {
 
             if (levT2) levT2.style.backgroundColor = getWaterColor(parseFloat(t2));
             if (levT4) levT4.style.backgroundColor = getWaterColor(parseFloat(t4));
-            
+
             // Los otros tanques asumen temperatura ambiente (20°C) o puedes ligarlos si quieres
             if (levT1) levT1.style.backgroundColor = getWaterColor(20);
             if (levT3) levT3.style.backgroundColor = getWaterColor(20);

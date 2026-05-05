@@ -2,71 +2,138 @@
     <div
         style="position: relative; width: 1300px; height: 600px; margin: 0 auto; background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 10px; transform: scale(1.2); transform-origin: top left;">
 
-        <!-- ::::::::::::::::::::::: DIBUJO DE LAS LINEAS ::::::::::::::::::::::: -->
-        <!-- Cañería Superior -->
-        <div style="position: absolute; top: 22px; left: 10px; width: 306px; height: 6px; background: #28a745;"></div>
-        <div style="position: absolute; top: 22px; left: 312px; width: 254px; height: 6px; background: #28a745;"></div>
-        <div style="position: absolute; top: -4px; left: 60px; font-size: 20px; color: #000000; font-weight: bold;">
-            Alimentación</div>
-        <div style="position: absolute; top: 20px; left: 10px; width: 556px; height: 2px; background: #000000;"></div>
+        <!-----------------------------------------------::::::::::::::::::::::: -------------------------------------------------------><!----------------------------------------------- DIBUJO DE LAS LINEAS --------------------------------------------------------->
+        <!-----------------------------------------------::::::::::::::::::::::: ------------------------------------------------------->
+        <!-------- CAÑERÍA SUPERIOR --------------->
+        <div id="line1a"
+            style="position: absolute; top: 22px; left: 10px; width: 306px; height: 6px; background: #28a745;"></div>
+        <div id="line1b"
+            style="position: absolute; top: 22px; left: 306px; width: 260px; height: 6px; background: #28a745;"></div>
+        <div style="position: absolute; top: -4px; left: 60px; font-size: 20px; color: #000000;">Alimentación</div>
+        <!-------- BORDES --------------->
+        <div style="position: absolute; top: 20px; left: 10px; width: 558px; height: 2px; background: #000000;"></div>
         <div style="position: absolute; top: 27px; left: 10px; width: 556px; height: 2px; background: #000000;"></div>
 
-        <!-- Bajadas Alimentación -->
-        <div style="position: absolute; top: 26px; left: 300px; width: 6px; height: 78px; background: #28a745;"></div>
-        <div style="position: absolute; top: 26px; left: 560px; width: 6px; height: 209px; background: #28a745;"></div>
-        <!-- Bordes bajadas -->
+        <!------- BAJADA ALIMENTACIÓN - TANQUES 1 Y 4 -->
+        <div id="line2"
+            style="position: absolute; top: 26px; left: 300px; width: 6px; height: 78px; background: #28a745;"></div>
+        <div id="line3"
+            style="position: absolute; top: 26px; left: 560px; width: 6px; height: 209px; background: #28a745; ;"></div>
+
+        <!-------- BORDES --------------->
         <div style="position: absolute; top: 28px; left: 558px; width: 2px; height: 209px; background: #000000;"></div>
-        <div style="position: absolute; top: 22px; left: 564px; width: 2px; height: 213px; background: #000000;"></div>
+        <div style="position: absolute; top: 22px; left: 566px; width: 2px; height: 213px; background: #000000;"></div>
         <div style="position: absolute; top: 28px; left: 298px; width: 2px; height: 76px; background: #000000;"></div>
         <div style="position: absolute; top: 28px; left: 306px; width: 2px; height: 76px; background: #000000;"></div>
 
-        <!-- Conexiones Intermedias -->
-        <div style="position: absolute; top: 200px; left: 209px; width: 64px; height: 6px; background: #28a745;"></div>
-        <div style="position: absolute; top: 200px; left: 205px; width: 6px; height: 40px; background: #28a745;"></div>
+        <!------ CONEXION TANQUES 1 Y 2 -->
+        <div id="line4"
+            style="position: absolute; top: 200px; left: 209px; width: 64px; height: 6px; background: #28a745;"></div>
+        <div id="line5"
+            style="position: absolute; top: 200px; left: 205px; width: 6px; height: 40px; background: #28a745;"></div>
+
+        <!-------- BORDES --------------->
         <div style="position: absolute; top: 198px; left: 203px; width: 2px; height: 46px; background: #000000;"></div>
         <div style="position: absolute; top: 206px; left: 211px; width: 62px; height: 2px; background: #000000;"></div>
         <div style="position: absolute; top: 198px; left: 203px; width: 70px; height: 2px; background: #000000;"></div>
         <div style="position: absolute; top: 206px; left: 211px; width: 2px; height: 40px; background: #000000;"></div>
 
-        <!-- Descargas y Uniones -->
-        <div style="position: absolute; top: 330px; left: 117px; width: 61px; height: 6px; background: #28a745;"></div>
-        <div style="position: absolute; top: 330px; left: 113px; width: 6px; height: 40px; background: #28a745;"></div>
+        <!----- CONEXION TANQUES 2 Y 3 -->
+        <div id="line6"
+            style="position: absolute; top: 330px; left: 117px; width: 61px; height: 6px; background: #28a745;"></div>
+        <div id="line7"
+            style="position: absolute; top: 330px; left: 113px; width: 6px; height: 41px; background: #28a745;"></div>
+
+        <!-------- BORDES --------------->
         <div style="position: absolute; top: 328px; left: 111px; width: 67px; height: 2.5px; background: #000000;">
         </div>
         <div style="position: absolute; top: 336px; left: 119px; width: 59px; height: 2px; background: #000000;"></div>
-        <div style="position: absolute; top: 328px; left: 111px; width: 2px; height: 46px; background: #000000;"></div>
-        <div style="position: absolute; top: 336px; left: 119px; width: 2px; height: 40px; background: #000000;"></div>
+        <div style="position: absolute; top: 328px; left: 111px; width: 2px; height: 47px; background: #000000;"></div>
+        <div style="position: absolute; top: 336px; left: 119px; width: 2px; height: 41px; background: #000000;"></div>
 
-        <!-- Conexión T4-T5 -->
-        <div style="position: absolute; top: 333px; left: 593px; width: 76px; height: 6px; background: #28a745;"></div>
+        <!----- CONEXION TANQUES 4 Y 5 -->
+        <div id="line9"
+            style="position: absolute; top: 333px; left: 593px; width: 76px; height: 6px; background: #28a745;;"></div>
+
+        <!-------- BORDES --------------->
         <div style="position: absolute; top: 331px; left: 593px; width: 76px; height: 2px; background: #000000;"></div>
         <div style="position: absolute; top: 339px; left: 593px; width: 76px; height: 2px; background: #000000;"></div>
 
-        <!-- Descargas Generales -->
-        <div style="position: absolute; top: 493px; left: 113px; width: 6px; height: 50px; background: #28a745;"></div>
-        <div style="position: absolute; top: 537px; left: 113px; width: 520px; height: 6px; background: #28a745;"></div>
-        <div style="position: absolute; top: 297px; left: 560px; width: 6px; height: 105px; background: #28a745;"></div>
-        <div style="position: absolute; top: 397px; left: 560px; width: 70px; height: 6px; background: #28a745;"></div>
-        <div style="position: absolute; top: 297px; left: 694px; width: 6px; height: 105px; background: #28a745;"></div>
-        <div style="position: absolute; top: 397px; left: 630px; width: 70px; height: 6px; background: #28a745;"></div>
-        <div style="position: absolute; top: 398px; left: 630px; width: 6px; height: 140px; background: #28a745;"></div>
-        <div style="position: absolute; top: 537px; left: 630px; width: 270px; height: 6px; background: #28a745;"></div>
+        <!----- DESCARGA TANQUE 3 -->
+        <div id="line10"
+            style="position: absolute; top: 493px; left: 113px; width: 6px; height: 50px; background: #28a745;"></div>
+        <div id="line15a"
+            style="position: absolute; top: 537px; left: 113px; width: 520px; height: 6px; background: #28a745;"></div>
 
-        <div style="position: absolute; top: 500px; left: 800px; font-size: 20px; color: #000000; font-weight: bold;">
-            Descarga</div>
+        <!-------- BORDES --------------->
+        <div style="position: absolute; top: 493px; left: 111px; width: 2px; height: 51px; background: #000000; "></div>
+        <div style="position: absolute; top: 493px; left: 119px; width: 2px; height: 43px; background: #000000; "></div>
+        <div style="position: absolute; top: 535px; left: 119px; width: 510px; height: 2px; background: #000000;"></div>
+        <div style="position: absolute; top: 543px; left: 111px; width: 518px; height: 2px; background: #000000;"></div>
+
+        <!---- DESCARGA TANQUE 4 -->
+        <div id="line11"
+            style="position: absolute; top: 297px; left: 560px; width: 6px; height: 105px; background: #28a745;"></div>
+        <div id="line13a"
+            style="position: absolute; top: 397px; left: 560px; width: 70px; height: 6px; background: #28a745;"></div>
+
+        <!-------- BORDES --------------->
+        <div style="position: absolute; top: 297px; left: 558px; width: 2px; height: 106px; background: #000000;"></div>
+        <div style="position: absolute; top: 297px; left: 566px; width: 2px; height: 100px; background: #000000;"></div>
+        <div style="position: absolute; top: 395px; left: 566px; width: 74px; height: 2px; background: #000000;"></div>
+        <div style="position: absolute; top: 403px; left: 558px; width: 72px; height: 2px; background: #000000;"></div>
+
+        <!---- DESCARGA TANQUE 5 -->
+        <div id="line12"
+            style="position: absolute; top: 297px; left: 694px; width: 6px; height: 105px; background: #28a745;"></div>
+        <div id="line13b"
+            style="position: absolute; top: 397px; left: 630px; width: 70px; height: 6px; background: #28a745;"></div>
+
+        <!-------- BORDES --------------->
+        <div style="position: absolute; top: 297px; left: 692px; width: 2px; height: 100px; background: #000000;"></div>
+        <div style="position: absolute; top: 297px; left: 700px; width: 2px; height: 106px; background: #000000;"></div>
+        <div style="position: absolute; top: 395px; left: 636px; width: 58px; height: 2px; background: #000000;"></div>
+        <div style="position: absolute; top: 403px; left: 636px; width: 66px; height: 2px; background: #000000;"></div>
+
+        <!---- DESCARGA TANQUES 4 Y 5 -->
+        <div id="line14"
+            style="position: absolute; top: 398px; left: 630px; width: 6px; height: 140px; background: #28a745;"></div>
+
+        <!-------- BORDES --------------->
+        <div style="position: absolute; top: 404px; left: 628px; width: 2px; height: 133px; background: #000000;"></div>
+        <div style="position: absolute; top: 404px; left: 636px; width: 2px; height: 133px; background: #000000;"></div>
+
+        <!---- DESCARGA GENERAL -->
+        <div id="line15b"
+            style="position: absolute; top: 537px; left: 630px; width: 270px; height: 6px; background: #28a745;"></div>
+
+        <!-------- BORDES --------------->
+        <div style="position: absolute; top: 535px; left: 636px; width: 264px; height: 2px; background: #000000;"></div>
+        <div style="position: absolute; top: 543px; left: 629px; width: 271px; height: 2px; background: #000000;"></div>
+
+        <div style="position: absolute; top: 500px; left: 800px; font-size: 20px; color: #000000;">Descarga</div>
 
         <!-- TANQUES (DINÁMICOS) -->
         {% for tanque in elementos.tanques %}
         {% set i = loop.index %}
-        {% set t_top = [105, 235, 370, 235, 235][i-1] %}
+        {% set t_top = [104, 235, 370, 235, 235][i-1] %}
         {% set t_left = [272, 176, 85, 532, 665][i-1] %}
-        <div class="tank-wrapper" style="position: absolute; top: {{ t_top }}px; left: {{ t_left }}px;">
-            <div class="tank" id="tank{{ i }}"
+        <div class="tank-wrapper" style="position: absolute; top: {{ t_top }}px; left: {{ t_left }}px; z-index: 1;">
+            <div class="tank" id="tank{{ i }}" ondblclick="openTankDetail({{ i }})"
                 style="position: relative; width: 60px; height: 120px; background: linear-gradient(to right, #dbdbdb, #e0e0e0, #bdbdbd); border: 2px solid black; border-radius: 25px / 10px; overflow: hidden;">
-                <div class="tank-info-overlay">
+                <div class="tank-info-overlay" style="position: absolute; top: 20px; left: -2px; color: black">
                     {{ tanque.nombre }}
+                </div>
+                <div class="tank-info-nivel"
+                    style="position: absolute; top: 50px; left: 0; width: 100%; text-align: center; font-size: 11px; z-index: 3;">
+                    {% if tanque.sensor_de_presion %}
+                    <span id="vis-lev-t{{ i }}-val">--</span>%
+                    {% endif %}
+                </div>
+                <div class="tank-info-temp"
+                    style="position: absolute; top: 85px; left: 0; width: 100%; text-align: center; font-size: 11px; z-index: 3;">
                     {% if tanque.sensor_de_temperatura %}
-                    <br><span id="vis-temp-t{{ i }}">--</span>
+                    <span id="vis-temp-t{{ i }}">--</span>°C
                     {% endif %}
                 </div>
                 <div class="water-fill" id="vis-lev-t{{ i }}" style="height: 0%;">
@@ -76,35 +143,131 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 🔥 TERMÓMETRO (NUEVO - NO TOCA NADA EXISTENTE) -->
+            {% if tanque.sensor_de_temperatura %}
+            <div style="
+        position: absolute;
+        left: 75px;
+        top: 0px;
+        width: 25px;
+        height: 120px;
+    ">
+                <!-- Tubo -->
+                <div style="
+            position: relative;
+            width: 15px;
+            height: 100%;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid black;
+        ">
+                    <div id="temp-fill-t{{ i }}" style="
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                height: 0%;
+                background: linear-gradient(to top, blue, cyan, lime, yellow, red);
+            ">
+                    </div>
+                </div>
+
+                <!-- Bulbo -->
+                <div style="
+            position: absolute;
+            bottom: -8px;
+            left: -5px;
+            width: 25px;
+            height: 25px;
+            background: blue;
+            border-radius: 50%;
+            border: 1px solid black;
+        "></div>
+
+                <!-- Escala -->
+                <div style="
+            position: absolute;
+            left: 20px;
+            top: 0;
+            font-size: 9px;
+            line-height: 20px;
+        ">
+                    100<br>80<br>60<br>40<br>20<br>0
+                </div>
+            </div>
+            {% endif %}
+
             <!-- Caja de Control Lateral -->
             <div class="level-input-box"
-                style="position: absolute; right: 105%; top: 10px; min-width: 80px; text-align: center;">
+                style="position: absolute; right: 105%; top: 0px; min-width: 50px; text-align: center;">
                 <label style="font-size: 11px; font-weight: bold;">Set %</label>
                 <input type="number" id="sp-niv-t{{ i }}-vis"
                     style="width: 100%; border-radius: 4px; border: 1px solid #ccc; padding: 2px;"
                     onchange="writeLevelSP('T{{ i }}', this.value)">
-
                 <button id="btn-mode-t{{ i }}-vis" class="mode-toggle-btn-small mode-manual"
-                    style="margin-top: 8px; width: 100%; font-size: 10px;"
+                    style="margin-top: 8px; width: 100%; font-size: 10px; cursor: pointer;"
                     onclick="toggleTankMode({{ i }}, {{ tanque.modo_auto_address }})">
                     MANUAL
                 </button>
-                <div style="margin-top: 5px; font-size: 12px; font-weight: bold; color: #1976d2;">
-                    <span id="vis-lev-t{{ i }}-val">--</span>%
-                </div>
+            </div>
+            <div class="tank-upper-lid"
+                style="position: absolute; top: 0px; left: 50%; transform: translateX(-50%); width: 60px; height: 15px; background: linear-gradient(to right, #cfcfcf, #e0e0e0, #a8a8a8); border: 2px solid black; border-radius: 50%; z-index: 2;">
             </div>
         </div>
         {% endfor %}
 
+        <!-- 🔥 MODAL GLOBAL (FUERA DEL LOOP) -->
+        <div id="tank-modal" style="
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    z-index: 99999; isolation: isolate;
+">
+            <div style="
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%); background: white; padding: 20px;
+        width: 800px; border-radius: 0px; color: black;">
+                <h3 id="modal-title">Tanque</h3>
+                <p>Dimensiones:</p>
+                <p>Temperatura: <span id="modal-temp">--</span>°C</p>
+                <p>Nivel: <span id="modal-level">--</span>%</p>
+                <p>Nivel: <span id="modal-level-abs">--</span>L</p>
+                <button onclick="closeTankDetail()">Cerrar</button>
+            </div>
+        </div>
+
         <!-- VÁLVULAS (DINÁMICAS) -->
         {% for valvula in elementos.valvulas %}
         {% set i = loop.index %}
-        {% set v_top = [57, 192, 322, 130, 325, 389, 389, 502][i-1] %}
-        {% set v_left = [293, 230, 138, 552, 620, 590, 660, 105][i-1] %}
+        {% set v_top = [57, 189, 319, 502, 130, 321, 386, 386][i-1] %}
+        {% set v_left = [289, 230, 135, 101, 549, 618, 585, 655][i-1] %}
         <div class="valve closed" id="valve{{ i }}" onclick="toggleValve({{ i }}, {{ valvula.entrada_server }})"
-            style="position:absolute; top: {{ v_top }}px; left: {{ v_left }}px; width: 22px; height: 22px; background: #ff8c00; border: 2px solid black; border-radius: 0px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; cursor: pointer; color: #000; transition: all 0.3s ease;">
-            EV{{ i }}
+            style="position:absolute; top: {{ v_top }}px; left: {{ v_left }}px; width: 25px; height: 25px; background: #ff8c00; border: 2px solid black; border-radius: 0px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: bold; cursor: pointer; color: #000; transition: all 0.3s ease;">
+            {{ i }}
         </div>
         {% endfor %}
     </div>
 </div>
+<!-- TODO tu HTML -->
+
+<script>
+    function openTankDetail(id) {
+        document.getElementById("tank-modal").style.display = "block";
+        document.body.style.overflow = "hidden"; // 🔥 bloquea fondo
+
+        document.getElementById("modal-title").innerText = "Tanque " + id;
+
+        let temp = document.getElementById("vis-temp-t" + id)?.innerText || "--";
+        let level = document.getElementById("vis-lev-t" + id + "-val")?.innerText || "--";
+
+        document.getElementById("modal-temp").innerText = temp;
+        document.getElementById("modal-level").innerText = level;
+    }
+
+    function closeTankDetail() {
+        document.getElementById("tank-modal").style.display = "none";
+        document.body.style.overflow = "auto"; // 🔥 vuelve a normal
+    }
+</script>
+
+</body>
