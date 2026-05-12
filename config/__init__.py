@@ -7,3 +7,4 @@ from .valves import *
 from .tanks import *
 from .pid import *
 from .data import *
+from .telegram_cfg import *

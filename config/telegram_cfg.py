@@ -1,0 +1,2 @@
+# Telegram Bot Configuration
+TELEGRAM_TOKEN = '8439612567:AAGX6hBDJov2PuyeljEMULHSATNvsCYpLoM'

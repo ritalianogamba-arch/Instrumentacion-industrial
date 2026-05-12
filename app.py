@@ -4,6 +4,7 @@ from config import FLASK_HOST, FLASK_PORT, DEBUG_MODE, logger
 from modbus_core import client_manager
 from api_routes import api_bp
 from supervisors import supervisor_tacho_2, supervisor_tacho_4
+from bot_telegram import main as run_bot
 
 app = Flask(__name__)
 
@@ -21,6 +22,10 @@ if __name__ == '__main__':
     
     t2_thread.start()
     t4_thread.start()
+    
+    # Iniciar bot de Telegram en hilo separado
+    bot_thread = threading.Thread(target=run_bot, daemon=True, name="BotTelegram")
+    bot_thread.start()
     
     logger.info(f"Servidores SCADA corriendo en {FLASK_HOST}:{FLASK_PORT}")
     
