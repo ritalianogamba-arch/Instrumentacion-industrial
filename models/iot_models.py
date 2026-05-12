@@ -66,7 +66,14 @@ class Tanque:
     sensor_de_temperatura: Optional[int] = None
     condicion_de_nivel: Optional[int] = None
     resistencia: Optional[int] = None 
-    pid_id: Optional[int] = None   
+    pid_id: Optional[int] = None
+    # Dimensiones físicas
+    altura: float = 2.0
+    diametro: float = 1.0
+    volumen: float = 1.5
+    material: str = "Acero Inox"
+    lado_controles: str = "izq" # "izq" o "der"
+    lado_termometro: str = "der" # "izq" o "der"
 
 @dataclass
 class PID:

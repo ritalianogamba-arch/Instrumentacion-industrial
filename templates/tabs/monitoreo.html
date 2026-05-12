@@ -143,23 +143,6 @@
                 </tbody>
             </table>
 
-            <div class="manual-control-card">
-                <h4>Control Manual</h4>
-                {% for actuador in elementos.salidas_analogicas %}
-                {% if actuador.address in [302, 303] %}
-                <div class="control-item">
-                    <label>{{ actuador.nombre }} (%MW{{ actuador.address }})</label>
-                    <input id="slider{{ actuador.address }}" type="range" min="4000" max="20000" value="4000"
-                        class="slider-supervisor"
-                        oninput="document.getElementById('valor{{ actuador.address }}').innerText = (({{ '50' if actuador.address == 302 else '100' }} * (this.value - 4000) / 16000)).toFixed(1) + '{{ ' Hz' if actuador.address == 302 else ' %' }}'"
-                        onchange="actualizarValorVariador({{ actuador.address }}, this.value)">
-                    <span id="valor{{ actuador.address }}" class="value-display">0.0 {{ 'Hz' if actuador.address == 302
-                        else
-                        '%' }}</span>
-                </div>
-                {% endif %}
-                {% endfor %}
-            </div>
         </div>
     </div>
 </div>

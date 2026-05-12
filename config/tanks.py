@@ -28,7 +28,13 @@ TANQUE_1: Tanque = Tanque(
     valvula_inferior=ELECTRO_VALVULA_3.address,
     SetPoint_Level=101,
     modo_auto_address=201,
-    boton_virtual_address=201
+    boton_virtual_address=201,
+    altura=1.8,
+    diametro=0.8,
+    volumen=0.9,
+    material="Polietileno",
+    lado_controles="izq",
+    lado_termometro="der"
 )
 
 TANQUE_2: Tanque = Tanque(
@@ -42,7 +48,13 @@ TANQUE_2: Tanque = Tanque(
     sensor_de_temperatura=SENSOR_TEMP_T2.address,
     resistencia=RESISTENCIA_T2.address,
     condicion_de_nivel= 400,
-    pid_id= 1
+    pid_id= 1,
+    altura=2.5,
+    diametro=1.2,
+    volumen=2.8,
+    material="Acero Inox",
+    lado_controles="izq",
+    lado_termometro="der"
 )
 
 TANQUE_3: Tanque = Tanque(   
@@ -52,7 +64,13 @@ TANQUE_3: Tanque = Tanque(
     valvula_inferior=ELECTRO_VALVULA_7.address, 
     SetPoint_Level= 103,           
     modo_auto_address= 203,
-    boton_virtual_address=203
+    boton_virtual_address=203,
+    altura=2.0,
+    diametro=1.0,
+    volumen=1.5,
+    material="Acero Inox",
+    lado_controles="izq",
+    lado_termometro="der"
 )   
 
 TANQUE_4: Tanque = Tanque(   
@@ -66,7 +84,13 @@ TANQUE_4: Tanque = Tanque(
     pid_id= 2,
     SetPoint_Level= 104, 
     modo_auto_address= 204,
-    boton_virtual_address=204
+    boton_virtual_address=204,
+    altura=3.0,
+    diametro=1.5,
+    volumen=5.3,
+    material="Acero Inox",
+    lado_controles="der",
+    lado_termometro="izq"
 )   
 
 TANQUE_5: Tanque = Tanque(
@@ -76,5 +100,11 @@ TANQUE_5: Tanque = Tanque(
     valvula_inferior=ELECTRO_VALVULA_5.address,
     SetPoint_Level=105,
     modo_auto_address=205,
-    boton_virtual_address=205
+    boton_virtual_address=205,
+    altura=2.2,
+    diametro=1.1,
+    volumen=2.1,
+    material="Fibra de Vidrio",
+    lado_controles="der",
+    lado_termometro="izq"
 )

@@ -216,8 +216,17 @@ function mainLoop() {
                             const rawTemp = d.registers_inputs[sTempIdx];
                             const tempC = ((rawTemp * 75 / 1000) + 0.5).toFixed(1);
                             const tempEl = document.getElementById(`vis-temp-t${index}`);
+                            const tempBarEl = document.getElementById(`temp-fill-t${index}`);
+                            const tempBulbEl = document.getElementById(`temp-bulb-t${index}`);
+                            const color = getWaterColor(parseFloat(tempC));
+
                             if (tempEl) tempEl.innerText = tempC + " C";
-                            if (levEl) levEl.style.backgroundColor = getWaterColor(parseFloat(tempC));
+                            if (tempBarEl) {
+                                tempBarEl.style.height = Math.min(100, Math.max(0, parseFloat(tempC))) + "%";
+                                tempBarEl.style.backgroundColor = color;
+                            }
+                            if (tempBulbEl) tempBulbEl.style.backgroundColor = color;
+                            if (levEl) levEl.style.backgroundColor = color;
                             
                             if (index === 2) g_tempT2 = parseFloat(tempC);
                             if (index === 4) g_tempT4 = parseFloat(tempC);
@@ -243,10 +252,76 @@ function mainLoop() {
                 
                 if (slider && !slider.matches(':active')) slider.value = val;
                 if (display && !slider.matches(':active')) {
-                    if (a.address === 302) display.innerText = ((val - 4000) / 16000 * 50).toFixed(1) + " Hz";
-                    else display.innerText = ((val - 4000) / 16000 * 100).toFixed(1) + " %";
+                    if (a.address === 302) {
+                        const hz = ((val - 4000) / 16000 * 50).toFixed(1);
+                        display.innerText = hz + " Hz";
+                        
+                        // Actualizar Bomba en Visual
+                        const pumpSpin = document.getElementById("pump-spin");
+                        const pumpLabel = document.getElementById("vfd-val-label");
+                        if (pumpLabel) pumpLabel.innerText = hz + " Hz";
+                        if (pumpSpin) {
+                            if (parseFloat(hz) > 0.5) {
+                                pumpSpin.style.transition = "transform 0.1s linear";
+                                // Rotación continua simple usando el tiempo o un contador
+                                const angle = (Date.now() / 10) % 360;
+                                pumpSpin.style.transform = `rotate(${angle}deg)`;
+                            } else {
+                                pumpSpin.style.transform = "rotate(0deg)";
+                            }
+                        }
+                    } else {
+                        const perc = ((val - 4000) / 16000 * 100).toFixed(1);
+                        display.innerText = perc + " %";
+                        
+                        // Actualizar Válvula Neumática en Visual
+                        if (a.address === 303) {
+                            const vnLabel = document.getElementById("vn-val-label");
+                            if (vnLabel) vnLabel.innerText = perc + " %";
+                        }
+                    }
                 }
             });
+        }
+
+        // --- Actualización de Modal Detallado ---
+        if (typeof g_currentModalTankId !== 'undefined' && g_currentModalTankId !== null) {
+            const id = g_currentModalTankId;
+            const t = d.elementos.tanques[id - 1];
+            const sPresionIdx = d.elementos.sensores.findIndex(s => s.address === t.sensor_de_presion);
+            
+            let levelVal = 0;
+            let tempVal = "--";
+            let levelAbs = "--";
+
+            if (sPresionIdx !== -1) {
+                const rawLevel = d.registers_inputs[sPresionIdx];
+                const tankKey = `T${id}`;
+                levelVal = escalarNivel(rawLevel, CONFIG_TANQUES[tankKey]);
+                // Cálculo de volumen actual basado en la capacidad total
+                levelAbs = (levelVal * t.volumen / 100).toFixed(2);
+            }
+
+            if (t.sensor_de_temperatura) {
+                const sTempIdx = d.elementos.sensores.findIndex(s => s.address === t.sensor_de_temperatura);
+                if (sTempIdx !== -1) {
+                    tempVal = ((d.registers_inputs[sTempIdx] * 75 / 1000) + 0.5).toFixed(1);
+                }
+            }
+
+            // Actualizar colores de válvulas en el modal (ejemplo simplificado)
+            const v1 = document.getElementById("modal-v1");
+            const v2 = document.getElementById("modal-v2");
+            // Usamos las válvulas asociadas al tanque (superior e inferior)
+            const vSupIdx = d.elementos.valvulas.findIndex(v => v.address === t.valvula_superior);
+            const vInfIdx = d.elementos.valvulas.findIndex(v => v.address === t.valvula_inferior);
+            
+            if (v1 && vSupIdx !== -1) v1.style.background = d.coils_outputs[vSupIdx] ? "#28a745" : "#ff8c00";
+            if (v2 && vInfIdx !== -1) v2.style.background = d.coils_outputs[vInfIdx] ? "#28a745" : "#ff8c00";
+
+            if (typeof updateTankModal === "function") {
+                updateTankModal(levelVal, tempVal, levelAbs);
+            }
         }
     }).catch(err => console.error("Error en mainLoop:", err));
 }

@@ -4,57 +4,63 @@ Este proyecto es una interfaz para monitorear y controlar tanques industriales a
 
 ---
 
-## 🚀 Guía Rápida para Usuarios
+## 🚀 Guía de Ejecución
 
-### 1. ¿Cómo poner en marcha el sistema?
-Si quieres probar el sistema en tu propia computadora:
-1. **Abre una terminal** (o símbolo del sistema) en la carpeta del proyecto.
-2. **Escribe este comando** y presiona Enter:
+### 1. Primera vez (Configuración inicial)
+Si es la primera vez que descargas el proyecto, sigue estos pasos para configurar tu entorno:
+
+1. **Abre una terminal** en la carpeta del proyecto.
+2. **Crea un entorno virtual** (para mantener las librerías organizadas):
+   ```bash
+   python -m venv .venv
    ```
-   python app.py
-   ```
-3. **Abre tu navegador** y escribe: `http://localhost:8080`
-   *Aquí verás los tanques, niveles y podrás controlar las válvulas.*
-
----
-
-### 2. ¿Cómo enviar cambios a la Raspberry Pi?
-Si has modificado algo y quieres que se actualice en el equipo real (Raspberry Pi):
-1. Asegúrate de que la Raspberry esté encendida y conectada a la red.
-2. Busca el archivo llamado **`deploy.bat`** en la carpeta principal.
-3. Haz **doble clic** en él.
-4. Se abrirá una ventana negra que enviará automáticamente todos los archivos nuevos, instalará lo necesario y reiniciará el sistema.
-5. Al terminar, presiona cualquier tecla para cerrar la ventana.
-
----
-
-### 3. ¿Cómo cambiar la configuración (sin saber programar)?
-Casi todo lo que puedes personalizar está dentro de la carpeta llamada `config`. No necesitas tocar el código principal, solo estos archivos:
-
-*   **¿Cambiar la IP del PLC?**: Abre `config/plc.py` y cambia el número en `PLC_IP`.
-*   **¿Configurar el Bot de Telegram?**: Abre `config/telegram_cfg.py` y pega tu token.
-*   **¿Cambiar niveles críticos o nombres?**: Revisa los archivos `config/tanks.py` o `config/sensors.py`.
-
-*Nota: Después de cambiar cualquier archivo de configuración, debes ejecutar el **deploy.bat** para que los cambios surtan efecto en la Raspberry Pi.*
-
----
-
-### 4. Uso del Bot de Telegram 🤖
-El sistema tiene un bot que te avisa el estado del servidor.
-- Busca tu bot en Telegram.
-- Escribe `/start` para ver las opciones.
-- Escribe `/link` para obtener la dirección web actual (muy útil si la IP de la Raspberry cambia).
-- Escribe `/status` para saber si el sistema está encendido y funcionando.
-
----
-
-## 🛠️ Notas para la Instalación Inicial
-Si es la primera vez que usas este proyecto en una computadora nueva:
-1. Instala **Python 3.9** o superior.
-2. Instala las librerías necesarias con este comando:
-   ```
+3. **Activa el entorno virtual**:
+   - En Windows: `.venv\Scripts\activate`
+   - En Linux/Mac: `source .venv/bin/activate`
+4. **Instala las librerías necesarias**:
+   ```bash
    pip install -r requirements.txt
    ```
+
+### 2. Ejecuciones posteriores
+Una vez configurado, cada vez que quieras iniciar el sistema:
+
+1. **Abre una terminal** en la carpeta del proyecto.
+2. **Activa el entorno** (si no está activo): `.venv\Scripts\activate`
+3. **Inicia el servidor**:
+   ```bash
+   python app.py
+   ```
+4. **Accede desde tu navegador**: `http://localhost:8080`
+
+---
+
+## 💎 Características Principales
+- **Monitoreo en Tiempo Real**: Visualización dinámica de niveles y temperaturas.
+- **Control Detallado**: Haz **doble clic** sobre cualquier tanque para abrir una ventana emergente con:
+  - Dimensiones físicas detalladas (altura, diámetro, material).
+  - Volumen actual calculado en tiempo real.
+  - Estado de las válvulas de entrada/salida.
+- **Control PID**: Gestión de temperatura mediante lazos de control configurables.
+- **Bot de Telegram**: Notificaciones de estado y acceso remoto vía `/status`, `/link` y `/start`.
+
+---
+
+## 🛰️ Despliegue a la Raspberry Pi
+Si has modificado el código y quieres actualizar la Raspberry Pi real:
+1. Busca el archivo **`deploy.bat`** en la carpeta principal.
+2. Haz **doble clic** en él. Este script se encarga de:
+   - Sincronizar los archivos.
+   - Instalar nuevas dependencias en el servidor remoto.
+   - Reiniciar el servicio SCADA automáticamente.
+
+---
+
+## 🛠️ Configuración Personalizada
+No necesitas tocar el código principal. Casi todo se ajusta en la carpeta `config`:
+- **PLC**: `config/plc.py` (Cambiar `PLC_IP`).
+- **Telegram**: `config/telegram_cfg.py` (Token del bot).
+- **Tanques**: `config/tanks.py` (Nombres, dimensiones físicas y direcciones Modbus).
 
 ---
 *Desarrollado para la materia de Instrumentación Industrial.*
