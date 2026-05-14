@@ -18,7 +18,9 @@ function getWaterColor(temp) {
 
 // LOOP PRINCIPAL
 function mainLoop() {
-    fetchStatus().then(d => {
+    fetch('/status?t=' + new Date().getTime())
+        .then(response => response.json())
+        .then(d => {
         // --- Actualización de Badge de Estado ---
         const badge = document.getElementById('status-badge');
         const badgeText = document.getElementById('status-text');
@@ -336,6 +338,6 @@ document.addEventListener('DOMContentLoaded', function () {
     initCharts();
 
     // Iniciar loops de actualización
-    setInterval(mainLoop, 2000);
+    setInterval(mainLoop, 500);
     setInterval(() => updateCharts(g_tempT2, g_tempT4), 60000);
 });

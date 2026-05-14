@@ -6,48 +6,71 @@
         <!-----------------------------------------------::::::::::::::::::::::: ------------------------------------------------------->
         <!-------- CAÑERÍA SUPERIOR --------------->
         <!-- BOMBA CENTRÍFUGA (VFD) -->
-        <div id="pump-vfd" style="position: absolute; top: -15px; left: -25px; width: 60px; height: 60px; z-index: 10; cursor: pointer;">
+        <div id="pump-vfd"
+            style="position: absolute; top: -15px; left: -25px; width: 60px; height: 60px; z-index: 10; cursor: pointer;">
             <!-- Cuerpo del motor -->
-            <div style="position: absolute; left: 0; top: 15px; width: 30px; height: 30px; background: linear-gradient(135deg, #444, #222); border-radius: 4px; border: 1px solid #000;">
+            <div
+                style="position: absolute; left: 0; top: 15px; width: 30px; height: 30px; background: linear-gradient(135deg, #444, #222); border-radius: 4px; border: 1px solid #000;">
                 <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 4px;"></div>
                 <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 4px;"></div>
             </div>
             <!-- Voluta (Carcasa de la bomba) -->
-            <div style="position: absolute; left: 20px; top: 10px; width: 40px; height: 40px; background: linear-gradient(135deg, #666, #333); border-radius: 50%; border: 2px solid #000; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            <div
+                style="position: absolute; left: 20px; top: 10px; width: 40px; height: 40px; background: linear-gradient(135deg, #666, #333); border-radius: 50%; border: 2px solid #000; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; overflow: hidden;">
                 <!-- Impulsor (Gira) -->
-                <div id="pump-spin" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
-                    <div style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px;"></div>
-                    <div style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px; transform: rotate(60deg);"></div>
-                    <div style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px; transform: rotate(120deg);"></div>
+                <div id="pump-spin"
+                    style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
+                    <div style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px;">
+                    </div>
+                    <div
+                        style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px; transform: rotate(60deg);">
+                    </div>
+                    <div
+                        style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px; transform: rotate(120deg);">
+                    </div>
                     <div style="width: 10px; height: 10px; background: #222; border-radius: 50%; z-index: 2;"></div>
                 </div>
             </div>
-            <div id="vfd-val-label" style="position: absolute; top: 55px; left: 10px; font-size: 10px; font-weight: 900; background: #d32f2f; color: white; padding: 1px 5px; border-radius: 4px; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">0 Hz</div>
+            <div id="vfd-val-label"
+                style="position: absolute; top: 55px; left: 10px; font-size: 10px; font-weight: 900; background: #d32f2f; color: white; padding: 1px 5px; border-radius: 4px; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                0 Hz</div>
         </div>
 
         <div id="line1a"
             style="position: absolute; top: 22px; left: 10px; width: 306px; height: 6px; background: #28a745;"></div>
-        
+
         <!-- VÁLVULA NEUMÁTICA INDUSTRIAL -->
-        <div id="valve-pneumatic" style="position: absolute; top: -5px; left: 160px; width: 40px; height: 50px; z-index: 10; display: flex; flex-direction: column; align-items: center;">
+        <div id="valve-pneumatic"
+            style="position: absolute; top: -5px; left: 160px; width: 40px; height: 50px; z-index: 10; display: flex; flex-direction: column; align-items: center;">
             <!-- Actuador (Cabezal neumático) -->
-            <div style="width: 34px; height: 18px; background: linear-gradient(to bottom, #777, #444); border-radius: 18px 18px 5px 5px; border: 1.5px solid #000; box-shadow: inset 0 2px 4px rgba(255,255,255,0.3);">
+            <div
+                style="width: 34px; height: 18px; background: linear-gradient(to bottom, #777, #444); border-radius: 18px 18px 5px 5px; border: 1.5px solid #000; box-shadow: inset 0 2px 4px rgba(255,255,255,0.3);">
                 <div style="width: 100%; height: 2px; background: rgba(0,0,0,0.2); margin-top: 8px;"></div>
             </div>
             <!-- Vástago -->
             <div style="width: 5px; height: 10px; background: #222;"></div>
             <!-- Cuerpo de la válvula (Símbolo P&ID) -->
-            <div style="width: 30px; height: 18px; position: relative; display: flex; align-items: center; justify-content: center;">
-                <div style="position: absolute; width: 0; height: 0; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-left: 15px solid #666; left: 0;"></div>
-                <div style="position: absolute; width: 0; height: 0; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-right: 15px solid #666; right: 0;"></div>
-                <div style="z-index: 1; font-size: 8px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000;">VN</div>
+            <div
+                style="width: 30px; height: 18px; position: relative; display: flex; align-items: center; justify-content: center;">
+                <div
+                    style="position: absolute; width: 0; height: 0; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-left: 15px solid #666; left: 0;">
+                </div>
+                <div
+                    style="position: absolute; width: 0; height: 0; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-right: 15px solid #666; right: 0;">
+                </div>
+                <div style="z-index: 1; font-size: 8px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000;">VN
+                </div>
             </div>
-            <div id="vn-val-label" style="margin-top: 3px; font-size: 9px; font-weight: 800; background: #333; color: #fff; border: 1px solid #000; padding: 0 4px; border-radius: 3px;">0%</div>
+            <div id="vn-val-label"
+                style="margin-top: 3px; font-size: 9px; font-weight: 800; background: #333; color: #fff; border: 1px solid #000; padding: 0 4px; border-radius: 3px;">
+                0%</div>
         </div>
 
         <div id="line1b"
             style="position: absolute; top: 22px; left: 306px; width: 260px; height: 6px; background: #28a745;"></div>
-        <div style="position: absolute; top: -15px; left: 350px; font-size: 18px; color: #444; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7;">Alimentación</div>
+        <div
+            style="position: absolute; top: -15px; left: 350px; font-size: 18px; color: #444; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7;">
+            Alimentación</div>
         <!-------- BORDES --------------->
         <div style="position: absolute; top: 20px; left: 10px; width: 558px; height: 2px; background: #000000;"></div>
         <div style="position: absolute; top: 27px; left: 10px; width: 556px; height: 2px; background: #000000;"></div>
@@ -152,17 +175,23 @@
         <div style="position: absolute; top: 500px; left: 800px; font-size: 20px; color: #000000;">Descarga</div>
 
         <!-- PANEL DE CONTROL DE ACTUADORES PRINCIPALES (NUEVO) -->
-        <div style="position: absolute; bottom: 15px; right: 20px; width: 260px; background: rgba(255,255,255,0.95); border: 2px solid #333; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 100; backdrop-filter: blur(5px);">
-            <h4 style="margin: 0 0 12px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #222; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; font-family: 'Outfit', sans-serif; font-weight: 800;">Control de Planta</h4>
-            
+        <div
+            style="position: absolute; bottom: 15px; right: 20px; width: 260px; background: rgba(255,255,255,0.95); border: 2px solid #333; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 100; backdrop-filter: blur(5px);">
+            <h4
+                style="margin: 0 0 12px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #222; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; font-family: 'Outfit', sans-serif; font-weight: 800;">
+                Control de Planta</h4>
+
             <!-- Control Variador (Bomba) -->
             <div style="margin-bottom: 18px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <label style="font-size: 10px; font-weight: 800; color: #444; font-family: 'Roboto', sans-serif;">VARIADOR DE FRECUENCIA</label>
-                    <span id="valor302" style="font-size: 12px; font-weight: 900; color: #d32f2f; background: rgba(211, 47, 47, 0.1); padding: 2px 6px; border-radius: 4px;">0.0 Hz</span>
+                    <label
+                        style="font-size: 10px; font-weight: 800; color: #444; font-family: 'Roboto', sans-serif;">VARIADOR
+                        DE FRECUENCIA</label>
+                    <span id="valor302"
+                        style="font-size: 12px; font-weight: 900; color: #d32f2f; background: rgba(211, 47, 47, 0.1); padding: 2px 6px; border-radius: 4px;">0.0
+                        Hz</span>
                 </div>
-                <input id="slider302" type="range" min="4000" max="20000" value="4000" 
-                    class="custom-slider"
+                <input id="slider302" type="range" min="4000" max="20000" value="4000" class="custom-slider"
                     style="width: 100%; cursor: pointer; height: 6px; border-radius: 3px;"
                     oninput="document.getElementById('valor302').innerText = ((50 * (this.value - 4000) / 16000)).toFixed(1) + ' Hz'"
                     onchange="actualizarValorVariador(302, this.value)">
@@ -171,11 +200,14 @@
             <!-- Control Válvula Neumática -->
             <div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <label style="font-size: 10px; font-weight: 800; color: #444; font-family: 'Roboto', sans-serif;">VÁLVULA NEUMÁTICA</label>
-                    <span id="valor303" style="font-size: 12px; font-weight: 900; color: #1976d2; background: rgba(25, 118, 210, 0.1); padding: 2px 6px; border-radius: 4px;">0.0 %</span>
+                    <label
+                        style="font-size: 10px; font-weight: 800; color: #444; font-family: 'Roboto', sans-serif;">VÁLVULA
+                        NEUMÁTICA</label>
+                    <span id="valor303"
+                        style="font-size: 12px; font-weight: 900; color: #1976d2; background: rgba(25, 118, 210, 0.1); padding: 2px 6px; border-radius: 4px;">0.0
+                        %</span>
                 </div>
-                <input id="slider303" type="range" min="4000" max="20000" value="4000" 
-                    class="custom-slider"
+                <input id="slider303" type="range" min="4000" max="20000" value="4000" class="custom-slider"
                     style="width: 100%; cursor: pointer; height: 6px; border-radius: 3px;"
                     oninput="document.getElementById('valor303').innerText = ((100 * (this.value - 4000) / 16000)).toFixed(1) + ' %'"
                     onchange="actualizarValorVariador(303, this.value)">
@@ -188,10 +220,8 @@
         {% set t_top = [104, 235, 370, 235, 235][i-1] %}
         {% set t_left = [272, 176, 85, 532, 730][i-1] %}
         <div class="tank-wrapper" style="position: absolute; top: {{ t_top }}px; left: {{ t_left }}px; z-index: 1;">
-            <div class="tank" id="tank{{ i }}" ondblclick="openTankDetail({{ i }})"
-                data-altura="{{ tanque.altura }}"
-                data-diametro="{{ tanque.diametro }}"
-                data-volumen="{{ tanque.volumen }}"
+            <div class="tank" id="tank{{ i }}" ondblclick="openTankDetail({{ i }})" data-altura="{{ tanque.altura }}"
+                data-diametro="{{ tanque.diametro }}" data-volumen="{{ tanque.volumen }}"
                 data-material="{{ tanque.material }}"
                 style="position: relative; width: 60px; height: 120px; background: linear-gradient(to right, #dbdbdb, #e0e0e0, #bdbdbd); border: 2px solid black; border-radius: 25px / 10px; overflow: hidden;">
                 <div class="tank-info-overlay" style="position: absolute; top: 20px; left: -2px; color: black">
@@ -241,8 +271,10 @@
                     box-shadow: inset 0 0 5px rgba(0,0,0,0.2), 2px 2px 5px rgba(0,0,0,0.1);
                 ">
                     <!-- Brillo de vidrio -->
-                    <div style="position: absolute; left: 2px; top: 5%; width: 3px; height: 90%; background: rgba(255,255,255,0.4); border-radius: 10px; z-index: 2;"></div>
-                    
+                    <div
+                        style="position: absolute; left: 2px; top: 5%; width: 3px; height: 90%; background: rgba(255,255,255,0.4); border-radius: 10px; z-index: 2;">
+                    </div>
+
                     <!-- Llenado dinámico -->
                     <div id="temp-fill-t{{ i }}" style="
                         position: absolute;
@@ -271,11 +303,14 @@
                     justify-content: center;
                 ">
                     <!-- Brillo en el bulbo -->
-                    <div style="width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; position: absolute; top: 4px; left: 6px;"></div>
+                    <div
+                        style="width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; position: absolute; top: 4px; left: 6px;">
+                    </div>
                 </div>
 
                 <!-- Escala -->
-                <div style="position: absolute; {{ 'left: 24px;' if tanque.lado_termometro == 'der' else 'right: 24px;' }} top: 0; font-size: 8px; color: #555; line-height: 20px; font-family: monospace; font-weight: bold; text-align: {{ 'left' if tanque.lado_termometro == 'der' else 'right' }};">
+                <div
+                    style="position: absolute; {{ 'left: 24px;' if tanque.lado_termometro == 'der' else 'right: 24px;' }} top: 0; font-size: 8px; color: #555; line-height: 20px; font-family: monospace; font-weight: bold; text-align: {{ 'left' if tanque.lado_termometro == 'der' else 'right' }};">
                     100<br>80<br>60<br>40<br>20<br>0
                 </div>
             </div>
@@ -284,7 +319,8 @@
             <!-- Caja de Control Lateral (Posicionamiento Dinámico) -->
             <div class="level-input-box"
                 style="position: absolute; {{ 'left: 105%;' if tanque.lado_controles == 'der' else 'right: 105%;' }} top: 0px; min-width: 60px; text-align: center; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 8px; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                <label style="font-size: 10px; font-weight: 800; color: #444; display: block; margin-bottom: 2px;">SET %</label>
+                <label style="font-size: 10px; font-weight: 800; color: #444; display: block; margin-bottom: 2px;">SET
+                    %</label>
                 <input type="number" id="sp-niv-t{{ i }}-vis"
                     style="width: 100%; border-radius: 4px; border: 1px solid #bbb; padding: 2px; font-size: 12px; text-align: center; font-weight: bold;"
                     onchange="writeLevelSP('T{{ i }}', this.value)">
@@ -307,23 +343,34 @@
             background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
             z-index: 99999; isolation: isolate;">
 
-            <div style=" position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            <div
+                style=" position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
                 background: white; padding: 25px; width: 900px; border-radius: 12px; color: black; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                
-                <h2 id="modal-title" style="text-align:center; margin-bottom: 25px; font-family: 'Outfit', sans-serif; font-weight: 800; color: #333;">TANQUE</h2>
+
+                <h2 id="modal-title"
+                    style="text-align:center; margin-bottom: 25px; font-family: 'Outfit', sans-serif; font-weight: 800; color: #333;">
+                    TANQUE</h2>
 
                 <div style=" display: flex; justify-content: center; align-items: flex-start; gap: 50px;">
                     <!-- Decoración Visual Valvulas -->
                     <div style="display:flex; flex-direction:column; gap:140px; margin-top: 50px;">
-                        <div id="modal-v1" style="width:40px; height:40px; background: #ff8c00; border: 2px solid black; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight: bold; border-radius: 4px;">EV1</div>
-                        <div id="modal-v2" style="width:40px; height:40px; background: #ff8c00; border: 2px solid black; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight: bold; border-radius: 4px;">EV2</div>
+                        <div id="modal-v1"
+                            style="width:40px; height:40px; background: #ff8c00; border: 2px solid black; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight: bold; border-radius: 4px;">
+                            EV1</div>
+                        <div id="modal-v2"
+                            style="width:40px; height:40px; background: #ff8c00; border: 2px solid black; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight: bold; border-radius: 4px;">
+                            EV2</div>
                     </div>
 
                     <!-- Dibujo del Tanque -->
                     <div style="display:flex; flex-direction:column; align-items:center;">
-                        <div class="tank-upper-lid" style="width: 180px; height: 45px; background: linear-gradient(to right, #cfcfcf, #e0e0e0, #a8a8a8); border: 3px solid black; border-radius: 50%; z-index: 2;"></div>
-                        <div style="width:180px; height:280px; border: 3px solid black; border-radius: 75px / 30px; position:relative; top: -25px; background: linear-gradient(to right, #cfcfcf, #e0e0e0, #a8a8a8); overflow:hidden;">
-                            <div id="tank-water" style="position:absolute; bottom:0; width:100%; height:0%; background:#1976d2; transition: height 0.5s, background-color 0.5s;">
+                        <div class="tank-upper-lid"
+                            style="width: 180px; height: 45px; background: linear-gradient(to right, #cfcfcf, #e0e0e0, #a8a8a8); border: 3px solid black; border-radius: 50%; z-index: 2;">
+                        </div>
+                        <div
+                            style="width:180px; height:280px; border: 3px solid black; border-radius: 75px / 30px; position:relative; top: -25px; background: linear-gradient(to right, #cfcfcf, #e0e0e0, #a8a8a8); overflow:hidden;">
+                            <div id="tank-water"
+                                style="position:absolute; bottom:0; width:100%; height:0%; background:#1976d2; transition: height 0.5s, background-color 0.5s;">
                                 <div class="water-waves">
                                     <div class="wave"></div>
                                     <div class="wave"></div>
@@ -334,37 +381,72 @@
 
                     <!-- Tablas de Datos -->
                     <div style="display:flex; flex-direction:column; gap:20px;">
-                        <table style="border-collapse: collapse; width: 280px; border: 1px solid #ddd; font-family: 'Roboto', sans-serif;">
+                        <table
+                            style="border-collapse: collapse; width: 280px; border: 1px solid #ddd; font-family: 'Roboto', sans-serif;">
                             <thead>
                                 <tr style="background: #28a745; color: white;">
                                     <th colspan="2" style="padding: 10px; text-align: left;">Estado Actual</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;">Nivel (%)</td><td id="modal-level" style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold; text-align: right;">--</td></tr>
-                                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;">Volumen Actual</td><td id="modal-level-abs" style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold; text-align: right;">--</td></tr>
-                                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;">Temperatura</td><td id="modal-temp" style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold; text-align: right;">--</td></tr>
+                                <tr>
+                                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">Nivel (%)</td>
+                                    <td id="modal-level"
+                                        style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold; text-align: right;">
+                                        --</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">Volumen Actual</td>
+                                    <td id="modal-level-abs"
+                                        style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold; text-align: right;">
+                                        --</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">Temperatura</td>
+                                    <td id="modal-temp"
+                                        style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold; text-align: right;">
+                                        --</td>
+                                </tr>
                             </tbody>
                         </table>
 
-                        <table style="border-collapse: collapse; width: 280px; border: 1px solid #ddd; font-family: 'Roboto', sans-serif;">
+                        <table
+                            style="border-collapse: collapse; width: 280px; border: 1px solid #ddd; font-family: 'Roboto', sans-serif;">
                             <thead>
                                 <tr style="background: #007bff; color: white;">
-                                    <th colspan="2" style="padding: 10px; text-align: left;">Características Físicas</th>
+                                    <th colspan="2" style="padding: 10px; text-align: left;">Características Físicas
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;">Altura</td><td id="modal-altura" style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">--</td></tr>
-                                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;">Diámetro</td><td id="modal-diametro" style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">--</td></tr>
-                                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;">Capacidad</td><td id="modal-volumen" style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">--</td></tr>
-                                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;">Material</td><td id="modal-material" style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">--</td></tr>
+                                <tr>
+                                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">Altura</td>
+                                    <td id="modal-altura"
+                                        style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">--</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">Diámetro</td>
+                                    <td id="modal-diametro"
+                                        style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">--</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">Capacidad</td>
+                                    <td id="modal-volumen"
+                                        style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">--</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">Material</td>
+                                    <td id="modal-material"
+                                        style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">--</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
                 <div style="text-align:center; margin-top:25px;">
-                    <button class="mode-toggle-btn-small" onclick="closeTankDetail()" style="padding: 10px 40px; font-size: 14px; background: #6c757d;">Cerrar</button>
+                    <button class="mode-toggle-btn-small" onclick="closeTankDetail()"
+                        style="padding: 10px 40px; font-size: 14px; background: #6c757d;">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -372,8 +454,9 @@
         <!-- VÁLVULAS (DINÁMICAS) -->
         {% for valvula in elementos.valvulas %}
         {% set i = loop.index %}
-        {% set v_top = [57, 189, 319, 502, 130, 321, 386, 386][i-1] %}
-        {% set v_left = [289, 230, 135, 101, 549, 618, 585, 720][i-1] %}
+        {# EV1, EV2, EV3, EV4, EV5, EV6, EV7, EV8 #}
+        {% set v_top = [50, 200, 189, 319, 380, 380, 500, 310][i-1] %}
+        {% set v_left = [289, 549, 230, 135, 750, 549, 101, 650][i-1] %}
         <div class="valve closed" id="valve{{ i }}" onclick="toggleValve({{ i }}, {{ valvula.entrada_server }})"
             style="position:absolute; top: {{ v_top }}px; left: {{ v_left }}px; width: 25px; height: 25px; background: #ff8c00; border: 2px solid black; border-radius: 0px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: bold; cursor: pointer; color: #000; transition: all 0.3s ease;">
             {{ i }}
@@ -390,7 +473,7 @@
         g_currentModalTankId = id;
         const modal = document.getElementById("tank-modal");
         const tankEl = document.getElementById("tank" + id);
-        
+
         modal.style.display = "block";
         document.body.style.overflow = "hidden"; // 🔥 bloquea fondo
 
@@ -420,7 +503,7 @@
         if (levelEl) levelEl.innerText = levelVal + " %";
         if (tempEl) tempEl.innerText = temp + " °C";
         if (absEl) absEl.innerText = levelAbs + " m³";
-        
+
         if (waterEl) {
             waterEl.style.height = levelVal + "%";
             // Usamos la función global si existe para el color

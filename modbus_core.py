@@ -71,33 +71,24 @@ client_manager = ModbusClientManager(PLC_IP, PLC_PORT)
 # ZONA 2: FUNCION DE ROBUSTEZ (CONEXION SEGURA CON THREAD SAFETY)
 # =========================================================================
 def safe_modbus_operation(operation_func, **kwargs):
-    """
-    Ejecuta operación Modbus de forma segura con auto-reconexión.
-    Thread-safe gracias al lock.
-    """
-    with client_lock:
-        if client_manager.is_disabled:
-            return None
+    if client_manager.is_disabled:
+        return None
 
+    with client_lock:
         try:
             if not client_manager.is_connected():
-                logger.warning("Reconectando a Modbus...")
                 if not client_manager.reconnect():
+                    client_manager.is_disabled = True
                     return None
             
             result = operation_func(client_manager.client, **kwargs)
-            
             if result and result.isError():
-                logger.warning(f"Error en operación Modbus: {result}")
                 return None
-            
             return result
-        
-        except Exception as e:
-            logger.error(f"Excepción en operación: {e}")
+        except Exception:
+            client_manager.is_disabled = True
             return None
 
-# Wrappers para las operaciones comunes
 def read_coils_safe(address, count=1):
     return safe_modbus_operation(lambda c, **kw: c.read_coils(**kw), address=address, count=count)
 
@@ -109,3 +100,11 @@ def read_registers_safe(address, count=1):
 
 def write_register_safe(address, value):
     return safe_modbus_operation(lambda c, **kw: c.write_register(**kw), address=address, value=value)
+
+def get_sensor_value(address):
+    if client_manager.is_disabled:
+        import mocks
+        return mocks.mock_read_register(address)
+    
+    res = read_registers_safe(address, count=1)
+    return res.registers[0] if res else 4000

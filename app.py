@@ -1,4 +1,5 @@
 import threading
+import os
 from flask import Flask
 from config import FLASK_HOST, FLASK_PORT, DEBUG_MODE, logger
 from modbus_core import client_manager
@@ -8,45 +9,35 @@ from bot_telegram import main as run_bot
 
 app = Flask(__name__)
 
-# Registrar las rutas desde el Blueprint
+# Registrar las rutas
 app.register_blueprint(api_bp)
 
 if __name__ == '__main__':
     logger.info("=" * 60)
-    logger.info("Iniciando Servidor SCADA Tank Control (Modular)")
+    logger.info("🚀 INICIANDO SISTEMA SCADA")
     logger.info("=" * 60)
     
-    # Iniciar supervisores en hilos separados
-    t2_thread = threading.Thread(target=supervisor_tacho_2, daemon=True, name="Supervisor-T2")
-    t4_thread = threading.Thread(target=supervisor_tacho_4, daemon=True, name="Supervisor-T4")
-    
-    t2_thread.start()
-    t4_thread.start()
-    
-    # Iniciar bot de Telegram en hilo separado
-    bot_thread = threading.Thread(target=run_bot, daemon=True, name="BotTelegram")
-    bot_thread.start()
-    
-    logger.info(f"Servidores SCADA corriendo en {FLASK_HOST}:{FLASK_PORT}")
-    
+    # Solo iniciar hilos si es el proceso principal (para evitar duplicados con el reloader)
+    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not DEBUG_MODE:
+        logger.info("📦 Iniciando servicios en segundo plano...")
+        
+        # Supervisores
+        threading.Thread(target=supervisor_tacho_2, daemon=True, name="Supervisor-T2").start()
+        threading.Thread(target=supervisor_tacho_4, daemon=True, name="Supervisor-T4").start()
+        
+        # Bot de Telegram
+        threading.Thread(target=run_bot, daemon=True, name="BotTelegram").start()
+        logger.info("✅ Supervisores y Bot activos")
+
     try:
-        # Intentar SSL primero
-        try:
-            app.run(
-                host=FLASK_HOST, 
-                port=FLASK_PORT, 
-                ssl_context=('server.crt', 'server.key'), 
-                debug=DEBUG_MODE,
-                use_reloader=False
-            )
-        except FileNotFoundError:
-            logger.warning("Certificados SSL no encontrados, ejecutando en HTTP")
-            app.run(
-                host=FLASK_HOST, 
-                port=FLASK_PORT, 
-                debug=DEBUG_MODE,
-                use_reloader=False
-            )
+        # Iniciar servidor Flask
+        app.run(
+            host=FLASK_HOST,
+            port=FLASK_PORT,
+            debug=DEBUG_MODE,
+            use_reloader=True,
+            threaded=True
+        )
     except KeyboardInterrupt:
         logger.info("Servidor detenido por el usuario")
     except Exception as e:

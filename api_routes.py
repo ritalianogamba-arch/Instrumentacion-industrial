@@ -5,18 +5,16 @@ from modbus_core import (
     read_registers_safe, write_register_safe,
     client_manager
 )
-from mocks import (
-    get_mock_status, mock_read_coil, mock_write_coil, 
-    mock_read_register, mock_write_register
-)
+import mocks
 
 # Create a Blueprint for the API
 api_bp = Blueprint('api', __name__)
 
 def check_remote_lock():
-    """Verifica si el mando remoto está bloqueado por hardware (M13)."""
+    """Verifica si el mando remoto está bloqueado por hardware (%I0.13)."""
     if client_manager.is_disabled:
-        return False # En modo simulado no bloqueamos por defecto
+        # En modo simulado, leemos de la memoria del mock
+        return mocks.mock_read_coil(13)
     
     lock_data = read_coils_safe(PLC_REMOTE_LOCK_ADDR, count=1)
     return lock_data.bits[0] if lock_data else False
@@ -46,7 +44,7 @@ def read_coil():
         result = read_coils_safe(address, count=1)
         if not result: 
             if client_manager.is_disabled:
-                return jsonify({'success': True, 'value': mock_read_coil(address)})
+                return jsonify({'success': True, 'value': mocks.mock_read_coil(address)})
             return jsonify({'success': False, 'error': 'Fallo lectura (PLC offline o timeout)'}), 503
         return jsonify({'success': True, 'value': result.bits[0]})
     except Exception as e: 
@@ -64,7 +62,7 @@ def write_coil():
             return jsonify({'success': False, 'error': 'Bloqueo Remoto Activo (Mantenimiento)'}), 403
 
         if client_manager.is_disabled:
-            mock_write_coil(address, value)
+            mocks.mock_write_coil(address, value)
             return jsonify({'success': True})
 
         result = write_coil_safe(address, value)
@@ -80,7 +78,7 @@ def read_register():
     try:
         address = int(request.args.get('address'))
         if client_manager.is_disabled:
-            return jsonify({'success': True, 'value': mock_read_register(address)})
+            return jsonify({'success': True, 'value': mocks.mock_read_register(address)})
 
         result = read_registers_safe(address, count=1)
         if not result: 
@@ -101,7 +99,7 @@ def write_register():
             return jsonify({'success': False, 'error': 'Bloqueo Remoto Activo (Mantenimiento)'}), 403
 
         if client_manager.is_disabled:
-            mock_write_register(address, value)
+            mocks.mock_write_register(address, value)
             return jsonify({'success': True})
 
         # Proteccion: 300 y 400 son coils de seguridad
@@ -122,12 +120,12 @@ def write_register():
 # =========================================================================
 @api_bp.route('/status')
 def status():
-    if client_manager.is_disabled:
-        data = get_mock_status()
-        data["mode"] = "Simulado"
-        return jsonify(data)
+    # FORZAR MOCK SI NO HAY PLC
+    if not client_manager.is_connected() or client_manager.is_disabled:
+        resp = jsonify(mocks.get_mock_status())
+        resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        return resp
 
-    # 1. Obtener datos del sistema para saber qué leer
     system_data = get_system_data()
     elementos = system_data["elementos"]
 
@@ -187,6 +185,15 @@ def status():
     mode = "Conectado" if client_manager.is_connected() and not client_manager.is_disabled else "Simulado"
     remote_lock = get_coil(PLC_REMOTE_LOCK_ADDR)
 
+    # Mapeo de Niveles por Tanque (T1 a T5) para el Frontend
+    niveles_tanques = [
+        read_registers_safe(202, 1).registers[0] if read_registers_safe(202, 1) else 4000,
+        read_registers_safe(204, 1).registers[0] if read_registers_safe(204, 1) else 4000,
+        read_registers_safe(205, 1).registers[0] if read_registers_safe(205, 1) else 4000,
+        read_registers_safe(203, 1).registers[0] if read_registers_safe(203, 1) else 4000,
+        read_registers_safe(203, 1).registers[0] if read_registers_safe(203, 1) else 4000
+    ]
+
     return jsonify({
         "mode": mode,
         "remote_lock": remote_lock,
@@ -194,7 +201,7 @@ def status():
         "coils_inputs": coils_in, 
         "coils_outputs": coils_out, 
         "pid_flags": pid_flags,
-        "registers_inputs": reg_in, 
+        "registers_inputs": niveles_tanques, 
         "registers_outputs": reg_out, 
         "sp_niveles": sp_niveles,
         "pid_t2": pids_status.get("pid_1", {}), 
@@ -272,7 +279,7 @@ def toggle_auto():
         value = bool(data['value'])
         
         if client_manager.is_disabled:
-            mock_write_coil(address, value)
+            mocks.mock_write_coil(address, value)
             return jsonify({'success': True})
             
         result = write_coil_safe(address, value)
@@ -287,14 +294,41 @@ def toggle_auto():
 @api_bp.route('/mock/toggle_input', methods=['POST'])
 def mock_toggle_input():
     if not client_manager.is_disabled:
-        return jsonify({"success": False, "error": "Not in simulation mode"}), 403
+        return jsonify({"success": False, "error": "Solo disponible en modo simulación"}), 403
     
     try:
         data = request.get_json()
         address = int(data['address'])
-        from mocks import mock_read_coil, mock_write_coil
-        current = mock_read_coil(address)
-        mock_write_coil(address, not current)
+        current = mocks.mock_read_coil(address)
+        mocks.mock_write_coil(address, not current)
         return jsonify({"success": True, "new_state": not current})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@api_bp.route('/mock/set_register', methods=['POST'])
+def mock_set_register():
+    if not client_manager.is_disabled:
+        return jsonify({"success": False, "error": "Solo disponible en modo simulación"}), 403
+    
+    try:
+        data = request.get_json()
+        address = int(data['address'])
+        value = int(data['value'])
+        mocks.mock_write_register(address, value)
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@api_bp.route('/mock/set_coil', methods=['POST'])
+def mock_set_coil():
+    if not client_manager.is_disabled:
+        return jsonify({"success": False, "error": "Solo disponible en modo simulación"}), 403
+    
+    try:
+        data = request.get_json()
+        address = int(data['address'])
+        value = bool(data['value'])
+        mocks.mock_write_coil(address, value)
+        return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
