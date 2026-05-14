@@ -21,33 +21,31 @@ if errorlevel 1 (
 echo OK: Raspberry encontrada
 echo.
 
-echo Enviando archivos base...
-:: Enviamos los archivos Python principales y requirements
-scp app.py api_routes.py bot_telegram.py mocks.py modbus_core.py supervisors.py requirements.txt %RASPBERRY_USER%@%RASPBERRY_HOST%:%RASPBERRY_DIR%/
+echo Preparando lista de archivos a transferir...
+set "ARCHIVOS=app.py api_routes.py bot_telegram.py mocks.py modbus_core.py supervisors.py requirements.txt config models static templates"
 
-:: Enviar certificados SSL solo si existen
+:: Anexar certificados si existen
 if exist server.crt (
-    echo Enviando certificados SSL...
-    scp server.crt server.key %RASPBERRY_USER%@%RASPBERRY_HOST%:%RASPBERRY_DIR%/
+    set "ARCHIVOS=%ARCHIVOS% server.crt server.key"
 )
 
 echo.
-echo Enviando carpetas de modulos y recursos...
-:: Enviamos las carpetas de configuracion, modelos, estaticos y templates
-scp -r config models static templates %RASPBERRY_USER%@%RASPBERRY_HOST%:%RASPBERRY_DIR%/
+echo ========================================
+echo [ACCION 1/2] TRANSFERENCIA DE ARCHIVOS
+echo Te pedira la clave de la Raspberry una vez.
+echo ========================================
+scp -r %ARCHIVOS% %RASPBERRY_USER%@%RASPBERRY_HOST%:%RASPBERRY_DIR%/
 
 echo.
-echo Instalando/Actualizando dependencias en Raspberry...
-ssh %RASPBERRY_USER%@%RASPBERRY_HOST% "pip install -r %RASPBERRY_DIR%/requirements.txt"
-
-echo.
-echo Reiniciando servicios en Raspberry...
-:: Reiniciar el servidor principal (ahora incluye el Bot de Telegram)
-ssh %RASPBERRY_USER%@%RASPBERRY_HOST% "sudo systemctl restart plc-server.service"
+echo ========================================
+echo [ACCION 2/2] INSTALACION Y REINICIO
+echo Te pedira la clave por ultima vez.
+echo ========================================
+ssh %RASPBERRY_USER%@%RASPBERRY_HOST% "pip install -r %RASPBERRY_DIR%/requirements.txt && sudo systemctl restart plc-server.service"
 
 echo.
 echo ACTUALIZACION COMPLETADA!
-echo El servidor ahora utiliza app.py como entrada principal (incluye Bot de Telegram).
+echo El servidor ha sido actualizado y reiniciado exitosamente.
 echo.
 echo Usa /link en Telegram para obtener la nueva URL si cambio la IP.
 echo.
