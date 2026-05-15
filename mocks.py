@@ -122,8 +122,8 @@ def physics_loop():
             store.registers[421] = raw_temp
 
             # 2. MOVIMIENTO DE AGUA INDEPENDIENTE (COMO PLANTAS INDIVIDUALES)
-            flow_speed_in = 15.0 * dt  # Llenado rápido por válvula
-            flow_speed_out = 5.0 * dt  # Vaciado constante por gravedad
+            flow_speed_in = 3.0 * dt  # Llenado suavizado
+            flow_speed_out = 1.5 * dt  # Vaciado suavizado
             l = store.physics["levels"]
             
             for i, tank in enumerate(LISTA_TANQUES):

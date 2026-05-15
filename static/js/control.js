@@ -86,12 +86,9 @@ function toggleValve(n, addr) {
                 return;
             }
             if (d.success) {
-                // En modo simulado, el cambio es casi instantáneo en el backend
-                // pero mantenemos una pequeña animación de transición
-                const delay = d.note === 'Escrito en Mock' ? 500 : 16000;
+                const delay = d.note === 'Escrito en Mock' ? 500 : 15000;
                 setTimeout(() => {
                     btn.classList.remove('transitioning');
-                    // El mainLoop se encargará de poner la clase open/closed real
                 }, delay);
             } else {
                 btn.classList.remove('transitioning');

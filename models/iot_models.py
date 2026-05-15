@@ -28,6 +28,7 @@ class SalidaDigital:
     """
     nombre: str
     address: int
+    identificador: int = 0  # Identificador visual (1, 2, 3...)
     estado: bool = False
     entrada_digital: Optional[int] = None       # Botón Fisico (Address)
     entrada_analogica: Optional[int] = None     # Entrada tipo sensor (Address)
@@ -63,6 +64,8 @@ class Tanque:
     SetPoint_Level: int   #(Address)
     modo_auto_address: int  #(Address para toggle Manual/Auto)
     boton_virtual_address: int  # Dirección del botón virtual
+    valvula_superior_identificador: int = 0 # ID Visual (1, 2, 3...)
+    valvula_inferior_identificador: int = 0 # ID Visual (1, 2, 3...)
     sensor_de_temperatura: Optional[int] = None
     condicion_de_nivel: Optional[int] = None
     resistencia: Optional[int] = None 

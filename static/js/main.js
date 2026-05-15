@@ -264,11 +264,12 @@ function mainLoop() {
                         if (pumpLabel) pumpLabel.innerText = hz + " Hz";
                         if (pumpSpin) {
                             if (parseFloat(hz) > 0.5) {
-                                pumpSpin.style.transition = "transform 0.1s linear";
-                                // Rotación continua simple usando el tiempo o un contador
-                                const angle = (Date.now() / 10) % 360;
-                                pumpSpin.style.transform = `rotate(${angle}deg)`;
+                                pumpSpin.classList.add('pump-spin-anim');
+                                // Escalar duración: 50Hz -> 0.4s (rápido), 10Hz -> 2s (lento)
+                                const duration = (20 / parseFloat(hz)).toFixed(2);
+                                pumpSpin.style.animationDuration = duration + "s";
                             } else {
+                                pumpSpin.classList.remove('pump-spin-anim');
                                 pumpSpin.style.transform = "rotate(0deg)";
                             }
                         }
