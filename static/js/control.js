@@ -40,28 +40,44 @@ function ioPID(id, action) {
 }
 
 function toggleGenericPID(id, address, type) {
-    const btn = document.getElementById(`btn-pid-${id.toLowerCase()}`);
-    if (!btn) return;
-    const isOn = btn.innerText === "ON";
+    const btnId = `side-btn-temp-${id.toLowerCase()}`;
+    const btn = document.getElementById(btnId);
+    if (!btn) {
+        console.error(`[toggleGenericPID] Botón no encontrado: #${btnId}`);
+        return;
+    }
 
-    if (type === 'coil') {
-        writeCoil(address, !isOn).then(r => {
+    // Verificar bloqueo por pointer-events (más robusto que comparar opacity como string)
+    if (btn.style.pointerEvents === 'none') {
+        mostrarBloqueoAnimado();
+        return;
+    }
+
+    const isOn = btn.innerText.trim() === 'ON';
+    console.log(`[toggleGenericPID] id=${id}, address=${address}, isOn=${isOn} -> nuevo estado=${!isOn}`);
+
+    // Ambos PIDs (T2 y T4) usan coils para su botón virtual
+    writeCoil(address, !isOn)
+        .then(r => {
+            if (!r) return;
             if (r.status === 403) {
                 mostrarBloqueoAnimado();
-                return null;
+                return;
             }
-        });
-    } else {
-        const newVal = isOn ? 0 : 1;
-        writeRegister(407, newVal) // T4 usa el registro 407 para comando
-            .then(r => {
-                if (r.status === 403) {
-                    mostrarBloqueoAnimado();
-                    return null;
+            return r.json();
+        })
+        .then(data => {
+            if (data) {
+                if (data.success) {
+                    // Actualización optimista inmediata (el loop de polling confirmará después)
+                    btn.innerText = isOn ? 'OFF' : 'ON';
+                    btn.style.background = isOn ? '#c62828' : '#2e7d32';
+                } else {
+                    console.error(`[toggleGenericPID] Error del servidor: ${data.error}`);
                 }
-                return writeCoil(address, (newVal === 1));
-            });
-    }
+            }
+        })
+        .catch(err => console.error(`[toggleGenericPID] Error de red: ${err}`));
 }
 
 function toggleValve(n, addr) {
@@ -119,25 +135,22 @@ function actualizarValorVariador(addr, val) {
 }
 
 function toggleTankMode(index, address) {
-    const btnId = `btn-mode-${index}`;
-    const btnVisId = `btn-mode-t${index}-vis`;
-    const btn = document.getElementById(btnId);
-    const btnVis = document.getElementById(btnVisId);
-
-    if (!btn) return;
-    const isAuto = btn.classList.contains('mode-auto');
+    const isAuto = _last_tank_modes && _last_tank_modes[index - 1] === 1;
     const newValue = !isAuto;
 
     toggleAutoMode(address, newValue)
         .then(r => {
             if (r.status === 403) {
-                // Bloqueado
                 mostrarBloqueoAnimado();
             } else if (!r.ok) {
                 alert("Error al cambiar modo");
             }
         });
 }
+
+// Variable global para tracking de modos
+let _last_tank_modes = [];
+
 
 /**
  * Muestra visualmente que el mando está bloqueado

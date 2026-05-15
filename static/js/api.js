@@ -3,7 +3,7 @@
  */
 
 function writeRegister(addr, val) {
-    if (addr === 300 || addr === 301 || addr === 400) {
+    if (addr === 300 || addr === 301) {
         alert("Direccion protegida");
         return Promise.reject("Protected address");
     }

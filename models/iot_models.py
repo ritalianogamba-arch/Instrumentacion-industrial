@@ -42,6 +42,9 @@ class SalidaAnalogica:
     nombre: str
     address: int
     estado: float = 0.0
+    min_val: int = 4000
+    max_val: int = 20000
+    unidad: str = "%"
 
 @dataclass
 class BotonVirtual:
@@ -77,6 +80,9 @@ class Tanque:
     material: str = "Acero Inox"
     lado_controles: str = "izq" # "izq" o "der"
     lado_termometro: str = "der" # "izq" o "der"
+    grupo: str = "A" # "A" o "B"
+    min_val: int = 4000
+    max_val: int = 20000
 
 @dataclass
 class PID:

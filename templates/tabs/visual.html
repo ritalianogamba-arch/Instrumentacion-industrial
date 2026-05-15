@@ -1,4 +1,4 @@
-<div id="tab-visual" class="tab-content" style="display: none; padding: 10px;">
+<div id="tab-visual" class="tab-content" style="display: none; padding: 0;">
     <!-- 🔥 MODAL GLOBAL (OPTIMIZADO) -->
     <div id="tank-modal" onclick="if(event.target === this) closeTankDetail()"
         style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 99999; isolation: isolate;">
@@ -83,478 +83,477 @@
         </div>
     </div>
 
-    <div class="visual-schematic-wrapper">
-        <div class="visual-schematic" id="schematic-main">
+    <div class="visual-tab-container">
+        <div class="visual-schematic-wrapper" style="flex: 1; padding: 20px;">
+            <div class="visual-schematic" id="schematic-main">
 
-            <!-----------------------------------------------::::::::::::::::::::::: -------------------------------------------------------><!----------------------------------------------- DIBUJO DE LAS LINEAS --------------------------------------------------------->
-            <!-----------------------------------------------::::::::::::::::::::::: ------------------------------------------------------->
-            <!-------- CAÑERÍA SUPERIOR --------------->
-            <!-- BOMBA CENTRÍFUGA (VFD) -->
-            <div id="pump-vfd"
-                style="position: absolute; top: -15px; left: -25px; width: 60px; height: 60px; z-index: 10; cursor: pointer;">
-                <!-- Cuerpo del motor -->
-                <div
-                    style="position: absolute; left: 0; top: 15px; width: 30px; height: 30px; background: linear-gradient(135deg, #444, #222); border-radius: 4px; border: 1px solid #000;">
-                    <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 4px;"></div>
-                    <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 4px;"></div>
+                <!----------------------------------------------- DIBUJO DE LAS LINEAS --------------------------------------------------------->
+                <!-------- CAÑERÍA SUPERIOR --------------->
+                <!-- BOMBA CENTRÍFUGA (VFD) -->
+                <div id="pump-vfd"
+                    style="position: absolute; top: -15px; left: -25px; width: 60px; height: 60px; z-index: 10; cursor: pointer;">
+                    <!-- Cuerpo del motor -->
+                    <div
+                        style="position: absolute; left: 0; top: 15px; width: 30px; height: 30px; background: linear-gradient(135deg, #444, #222); border-radius: 4px; border: 1px solid #000;">
+                        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 4px;"></div>
+                        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 4px;"></div>
+                    </div>
+                    <!-- Voluta (Carcasa de la bomba) -->
+                    <div
+                        style="position: absolute; left: 20px; top: 10px; width: 40px; height: 40px; background: linear-gradient(135deg, #666, #333); border-radius: 50%; border: 2px solid #000; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <!-- Impulsor (Gira) -->
+                        <div id="pump-spin"
+                            style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
+                            <div style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px;">
+                            </div>
+                            <div
+                                style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px; transform: rotate(60deg);">
+                            </div>
+                            <div
+                                style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px; transform: rotate(120deg);">
+                            </div>
+                            <div style="width: 10px; height: 10px; background: #222; border-radius: 50%; z-index: 2;"></div>
+                        </div>
+                    </div>
+                    <div id="vfd-val-label"
+                        style="position: absolute; top: 55px; left: 10px; font-size: 10px; font-weight: 900; background: #d32f2f; color: white; padding: 1px 5px; border-radius: 4px; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                        0 Hz</div>
                 </div>
-                <!-- Voluta (Carcasa de la bomba) -->
-                <div
-                    style="position: absolute; left: 20px; top: 10px; width: 40px; height: 40px; background: linear-gradient(135deg, #666, #333); border-radius: 50%; border: 2px solid #000; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                    <!-- Impulsor (Gira) -->
-                    <div id="pump-spin"
-                        style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
-                        <div style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px;">
+
+                <div id="line1a" class="pipe-industrial pipe-industrial-h" style="top: 20px; left: 10px; width: 306px;">
+                </div>
+
+                <!-- VÁLVULA NEUMÁTICA INDUSTRIAL -->
+                <div id="valve-pneumatic"
+                    style="position: absolute; top: -5px; left: 160px; width: 40px; height: 50px; z-index: 10; display: flex; flex-direction: column; align-items: center;">
+                    <div
+                        style="width: 34px; height: 18px; background: linear-gradient(to bottom, #777, #444); border-radius: 18px 18px 5px 5px; border: 1.5px solid #000; box-shadow: inset 0 2px 4px rgba(255,255,255,0.3);">
+                        <div style="width: 100%; height: 2px; background: rgba(0,0,0,0.2); margin-top: 8px;"></div>
+                    </div>
+                    <div style="width: 5px; height: 10px; background: #222;"></div>
+                    <div
+                        style="width: 30px; height: 18px; position: relative; display: flex; align-items: center; justify-content: center;">
+                        <div
+                            style="position: absolute; width: 0; height: 0; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-left: 15px solid #666; left: 0;">
                         </div>
                         <div
-                            style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px; transform: rotate(60deg);">
+                            style="position: absolute; width: 0; height: 0; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-right: 15px solid #666; right: 0;">
                         </div>
                         <div
-                            style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px; transform: rotate(120deg);">
+                            style="z-index: 1; font-size: 8px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000;">
+                            VN
                         </div>
-                        <div style="width: 10px; height: 10px; background: #222; border-radius: 50%; z-index: 2;"></div>
                     </div>
+                    <div id="vn-val-label"
+                        style="margin-top: 3px; font-size: 9px; font-weight: 800; background: #333; color: #fff; border: 1px solid #000; padding: 0 4px; border-radius: 3px;">
+                        0%</div>
                 </div>
-                <div id="vfd-val-label"
-                    style="position: absolute; top: 55px; left: 10px; font-size: 10px; font-weight: 900; background: #d32f2f; color: white; padding: 1px 5px; border-radius: 4px; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-                    0 Hz</div>
-            </div>
 
-            <div id="line1a" class="pipe-industrial pipe-industrial-h" style="top: 20px; left: 10px; width: 306px;">
-            </div>
-
-            <!-- VÁLVULA NEUMÁTICA INDUSTRIAL -->
-            <div id="valve-pneumatic"
-                style="position: absolute; top: -5px; left: 160px; width: 40px; height: 50px; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-                <!-- Actuador (Cabezal neumático) -->
+                <div id="line1b" class="pipe-industrial pipe-industrial-h" style="top: 20px; left: 306px; width: 260px;">
+                </div>
                 <div
-                    style="width: 34px; height: 18px; background: linear-gradient(to bottom, #777, #444); border-radius: 18px 18px 5px 5px; border: 1.5px solid #000; box-shadow: inset 0 2px 4px rgba(255,255,255,0.3);">
-                    <div style="width: 100%; height: 2px; background: rgba(0,0,0,0.2); margin-top: 8px;"></div>
+                    style="position: absolute; top: -15px; left: 350px; font-size: 18px; color: #444; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7;">
+                    Alimentación</div>
+
+                <div id="line2" class="pipe-industrial pipe-industrial-v" style="top: 26px; left: 298px; height: 78px;">
                 </div>
-                <!-- Vástago -->
-                <div style="width: 5px; height: 10px; background: #222;"></div>
-                <!-- Cuerpo de la válvula (Símbolo P&ID) -->
-                <div
-                    style="width: 30px; height: 18px; position: relative; display: flex; align-items: center; justify-content: center;">
-                    <div
-                        style="position: absolute; width: 0; height: 0; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-left: 15px solid #666; left: 0;">
-                    </div>
-                    <div
-                        style="position: absolute; width: 0; height: 0; border-top: 9px solid transparent; border-bottom: 9px solid transparent; border-right: 15px solid #666; right: 0;">
-                    </div>
-                    <div
-                        style="z-index: 1; font-size: 8px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000;">
-                        VN
-                    </div>
-                </div>
-                <div id="vn-val-label"
-                    style="margin-top: 3px; font-size: 9px; font-weight: 800; background: #333; color: #fff; border: 1px solid #000; padding: 0 4px; border-radius: 3px;">
-                    0%</div>
-            </div>
-
-            <div id="line1b" class="pipe-industrial pipe-industrial-h" style="top: 20px; left: 306px; width: 260px;">
-            </div>
-            <div
-                style="position: absolute; top: -15px; left: 350px; font-size: 18px; color: #444; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7;">
-                Alimentación</div>
-
-            <div id="line2" class="pipe-industrial pipe-industrial-v" style="top: 26px; left: 298px; height: 78px;">
-            </div>
-            <div id="line3" class="pipe-industrial pipe-industrial-v" style="top: 26px; left: 558px; height: 209px;">
-            </div>
-
-
-
-            <!------ CONEXION TANQUES 1 Y 2 -->
-            <div id="line4" class="pipe-industrial pipe-industrial-h" style="top: 198px; left: 209px; width: 64px;">
-            </div>
-            <div id="line5" class="pipe-industrial pipe-industrial-v" style="top: 209px; left: 201px; height: 40px;">
-            </div>
-            <!-- Codo T1→T2: llega desde derecha (T1), baja hacia T2 → arco en esquina top-right → rotate(90°) -->
-            <div class="pipe-fitting pipe-elbow" style="top: 197px; left: 199px; transform: rotate(90deg);"></div>
-
-            <!----- CONEXION TANQUES 2 Y 3 -->
-            <div id="line6" class="pipe-industrial pipe-industrial-h" style="top: 328px; left: 117px; width: 61px;">
-            </div>
-            <div id="line7" class="pipe-industrial pipe-industrial-v" style="top: 337px; left: 109px; height: 41px;">
-            </div>
-            <!-- Codo T2→T3: llega desde derecha, baja → esquina top-right → rotate(90°) -->
-            <div class="pipe-fitting pipe-elbow" style="top: 327px; left: 108px; transform: rotate(90deg);"></div>
-
-            <!----- CONEXION TANQUES 4 Y 5 -->
-            <div id="line9" class="pipe-industrial pipe-industrial-h" style="top: 331px; left: 593px; width: 141px;">
-            </div>
-
-            <!----- DESCARGA TANQUE 3 -->
-            <div id="line10" class="pipe-industrial pipe-industrial-v" style="top: 493px; left: 111px; height: 50px;">
-            </div>
-            <div id="line15a" class="pipe-industrial pipe-industrial-h" style="top: 535px; left: 113px; width: 520px;">
-            </div>
-            <!-- Codo T3: baja, gira a la derecha → esquina bottom-left → rotate(180°) -->
-            <div class="pipe-fitting pipe-elbow" style="top: 530px; left: 107px; transform: rotate(180deg);"></div>
-
-            <!---- DESCARGA TANQUE 4 -->
-            <div id="line11" class="pipe-industrial pipe-industrial-v" style="top: 297px; left: 558px; height: 105px;">
-            </div>
-            <div id="line13a" class="pipe-industrial pipe-industrial-h" style="top: 395px; left: 560px; width: 70px;">
-            </div>
-            <!-- Codo T4: baja, gira a la derecha → esquina bottom-left → rotate(0°) -->
-            <div class="pipe-fitting pipe-elbow" style="top: 390px; left: 554px; transform: rotate(0deg);"></div>
-
-            <!---- DESCARGA TANQUE 5 -->
-            <div id="line12" class="pipe-industrial pipe-industrial-v" style="top: 297px; left: 757px; height: 105px;">
-            </div>
-            <div id="line13b" class="pipe-industrial pipe-industrial-h" style="top: 395px; left: 656px; width: 109px;">
-            </div>
-            <!-- T-junction: descargas T4 y T5 confluyen (barra horiz + ramal hacia abajo) → rotate(0°) -->
-            <div class="pipe-fitting pipe-tee" style="top: 395px; left: 648px; transform: rotate(0deg);"></div>
-            <!-- Codo T5: baja, gira a la izquierda → esquina bottom-right → rotate(270°) -->
-            <div class="pipe-fitting pipe-elbow" style="top: 390px; left: 753px; transform: rotate(270deg);"></div>
-
-            <!---- DESCARGA TANQUES 4 Y 5 -->
-            <div id="line14" class="pipe-industrial pipe-industrial-v" style="top: 398px; left: 656px; height: 140px;">
-            </div>
-            <!-- T-junction descarga general: barra horiz + ramal sube → stem hacia arriba → rotate(180°) -->
-            <div class="pipe-fitting pipe-tee" style="top: 525px; left: 648px; transform: rotate(180deg);"></div>
-
-
-
-            <!---- DESCARGA GENERAL -->
-            <div id="line15b" class="pipe-industrial pipe-industrial-h" style="top: 535px; left: 662px; width: 238px;">
-            </div>
-
-
-
-            <div style="position: absolute; top: 500px; left: 800px; font-size: 20px; color: #000000;">Descarga</div>
-
-            <!-- PANEL DE CONTROL DE ACTUADORES PRINCIPALES (NUEVO) -->
-            <div
-                style="position: absolute; bottom: 15px; right: 20px; width: 260px; background: rgba(255,255,255,0.95); border: 2px solid #333; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 100; backdrop-filter: blur(5px);">
-                <h4
-                    style="margin: 0 0 12px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #222; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; font-family: 'Outfit', sans-serif; font-weight: 800;">
-                    Control de Planta</h4>
-
-                <!-- Control Variador (Bomba) -->
-                <div style="margin-bottom: 18px;">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <label
-                            style="font-size: 10px; font-weight: 800; color: #444; font-family: 'Roboto', sans-serif;">VARIADOR
-                            DE FRECUENCIA</label>
-                        <span id="valor302"
-                            style="font-size: 12px; font-weight: 900; color: #d32f2f; background: rgba(211, 47, 47, 0.1); padding: 2px 6px; border-radius: 4px;">0.0
-                            Hz</span>
-                    </div>
-                    <input id="slider302" type="range" min="4000" max="20000" value="4000" class="custom-slider"
-                        style="width: 100%; cursor: pointer; height: 6px; border-radius: 3px;"
-                        oninput="document.getElementById('valor302').innerText = ((50 * (this.value - 4000) / 16000)).toFixed(1) + ' Hz'"
-                        onchange="actualizarValorVariador(302, this.value)">
+                <div id="line3" class="pipe-industrial pipe-industrial-v" style="top: 26px; left: 558px; height: 209px;">
                 </div>
 
-                <!-- Control Válvula Neumática -->
-                <div>
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <label
-                            style="font-size: 10px; font-weight: 800; color: #444; font-family: 'Roboto', sans-serif;">VÁLVULA
-                            NEUMÁTICA</label>
-                        <span id="valor303"
-                            style="font-size: 12px; font-weight: 900; color: #1976d2; background: rgba(25, 118, 210, 0.1); padding: 2px 6px; border-radius: 4px;">0.0
-                            %</span>
-                    </div>
-                    <input id="slider303" type="range" min="4000" max="20000" value="4000" class="custom-slider"
-                        style="width: 100%; cursor: pointer; height: 6px; border-radius: 3px;"
-                        oninput="document.getElementById('valor303').innerText = ((100 * (this.value - 4000) / 16000)).toFixed(1) + ' %'"
-                        onchange="actualizarValorVariador(303, this.value)">
+                <!------ CONEXION TANQUES 1 Y 2 -->
+                <div id="line4" class="pipe-industrial pipe-industrial-h" style="top: 198px; left: 209px; width: 64px;">
                 </div>
-            </div>
+                <div id="line5" class="pipe-industrial pipe-industrial-v" style="top: 209px; left: 201px; height: 40px;">
+                </div>
+                <div class="pipe-fitting pipe-elbow" style="top: 197px; left: 199px; transform: rotate(90deg);"></div>
 
-            <!-- TANQUES (DINÁMICOS) -->
-            {% for tanque in elementos.tanques %}
-            {% set i = loop.index %}
-            {% set t_top = [104, 235, 370, 235, 235][i-1] %}
-            {% set t_left = [272, 176, 85, 532, 730][i-1] %}
-            <div class="tank-wrapper" style="position: absolute; top: {{ t_top }}px; left: {{ t_left }}px; z-index: 1;">
-                <div class="tank" id="tank{{ i }}" ondblclick="openTankDetail({{ i }})"
-                    data-altura="{{ tanque.altura }}" data-diametro="{{ tanque.diametro }}"
-                    data-volumen="{{ tanque.volumen }}" data-material="{{ tanque.material }}"
-                    data-valvula-in-identificador="{{ tanque.valvula_superior_identificador }}"
-                    data-valvula-out-identificador="{{ tanque.valvula_inferior_identificador }}"
-                    data-has-temp="{{ 'true' if tanque.sensor_de_temperatura else 'false' }}"
-                    style="position: relative; width: 60px; height: 120px; background: linear-gradient(to right, #dbdbdb, #e0e0e0, #bdbdbd); border: 2px solid black; border-radius: 25px / 10px; overflow: hidden;">
-                    <div class="tank-info-overlay">
-                        {{ tanque.nombre }}
-                    </div>
-                    <div class="tank-info-nivel">
-                        {% if tanque.sensor_de_presion %}
-                        <span id="vis-lev-t{{ i }}-val">--</span>%
-                        {% endif %}
-                    </div>
-                    <div class="tank-info-temp">
-                        {% if tanque.sensor_de_temperatura %}
-                        <span id="vis-temp-t{{ i }}">--</span>°C
-                        {% endif %}
-                    </div>
-                    <div class="water-fill" id="vis-lev-t{{ i }}" style="height: 0%;">
-                        <div class="water-waves">
-                            <div class="wave"></div>
-                            <div class="wave"></div>
-                            <div class="wave"></div>
+                <!----- CONEXION TANQUES 2 Y 3 -->
+                <div id="line6" class="pipe-industrial pipe-industrial-h" style="top: 328px; left: 117px; width: 61px;">
+                </div>
+                <div id="line7" class="pipe-industrial pipe-industrial-v" style="top: 337px; left: 109px; height: 41px;">
+                </div>
+                <div class="pipe-fitting pipe-elbow" style="top: 327px; left: 108px; transform: rotate(90deg);"></div>
+
+                <!----- CONEXION TANQUES 4 Y 5 -->
+                <div id="line9" class="pipe-industrial pipe-industrial-h" style="top: 331px; left: 593px; width: 141px;">
+                </div>
+
+                <!----- DESCARGA TANQUE 3 -->
+                <div id="line10" class="pipe-industrial pipe-industrial-v" style="top: 493px; left: 111px; height: 50px;">
+                </div>
+                <div id="line15a" class="pipe-industrial pipe-industrial-h" style="top: 535px; left: 113px; width: 520px;">
+                </div>
+                <div class="pipe-fitting pipe-elbow" style="top: 530px; left: 107px; transform: rotate(180deg);"></div>
+
+                <!---- DESCARGA TANQUE 4 -->
+                <div id="line11" class="pipe-industrial pipe-industrial-v" style="top: 297px; left: 558px; height: 105px;">
+                </div>
+                <div id="line13a" class="pipe-industrial pipe-industrial-h" style="top: 395px; left: 560px; width: 70px;">
+                </div>
+                <div class="pipe-fitting pipe-elbow" style="top: 390px; left: 554px; transform: rotate(0deg);"></div>
+
+                <!---- DESCARGA TANQUE 5 -->
+                <div id="line12" class="pipe-industrial pipe-industrial-v" style="top: 297px; left: 757px; height: 105px;">
+                </div>
+                <div id="line13b" class="pipe-industrial pipe-industrial-h" style="top: 395px; left: 656px; width: 109px;">
+                </div>
+                <div class="pipe-fitting pipe-tee" style="top: 395px; left: 648px; transform: rotate(0deg);"></div>
+                <div class="pipe-fitting pipe-elbow" style="top: 390px; left: 753px; transform: rotate(270deg);"></div>
+
+                <!---- DESCARGA TANQUES 4 Y 5 -->
+                <div id="line14" class="pipe-industrial pipe-industrial-v" style="top: 398px; left: 656px; height: 140px;">
+                </div>
+                <div class="pipe-fitting pipe-tee" style="top: 525px; left: 648px; transform: rotate(180deg);"></div>
+
+                <!---- DESCARGA GENERAL -->
+                <div id="line15b" class="pipe-industrial pipe-industrial-h" style="top: 535px; left: 662px; width: 238px;">
+                </div>
+
+                <div style="position: absolute; top: 500px; left: 800px; font-size: 20px; color: #000000;">Descarga</div>
+
+                <!-- TANQUES (DINÁMICOS) -->
+                {% for tanque in elementos.tanques %}
+                {% set i = loop.index %}
+                {% set t_top = [104, 235, 370, 235, 235][i-1] %}
+                {% set t_left = [272, 176, 85, 532, 730][i-1] %}
+                <div class="tank-wrapper" style="position: absolute; top: {{ t_top }}px; left: {{ t_left }}px; z-index: 1;">
+                    <div class="tank" id="tank{{ i }}" 
+                        onclick="selectTank({{ i }})"
+                        ondblclick="openTankDetail({{ i }})"
+                        data-id="{{ i }}"
+                        data-altura="{{ tanque.altura }}" data-diametro="{{ tanque.diametro }}"
+                        data-volumen="{{ tanque.volumen }}" data-material="{{ tanque.material }}"
+                        data-valvula-in-identificador="{{ tanque.valvula_superior_identificador }}"
+                        data-valvula-out-identificador="{{ tanque.valvula_inferior_identificador }}"
+                        data-has-temp="{{ 'true' if tanque.sensor_de_temperatura else 'false' }}"
+                        style="position: relative; width: 60px; height: 120px; background: linear-gradient(to right, #dbdbdb, #e0e0e0, #bdbdbd); border: 2px solid black; border-radius: 25px / 10px; overflow: hidden; cursor: pointer; transition: all 0.3s;">
+                        <div class="tank-info-overlay">{{ tanque.nombre }}</div>
+                        <div class="tank-info-nivel">
+                            {% if tanque.sensor_de_presion %}<span id="vis-lev-t{{ i }}-val">--</span>%{% endif %}
                         </div>
-                    </div>
-                </div>
-
-                <!-- 🌡️ TERMÓMETRO ESTÉTICO -->
-                {% if tanque.sensor_de_temperatura %}
-                <div style="
-                position: absolute;
-                {{ 'left: 75px;' if tanque.lado_termometro == 'der' else 'right: 75px;' }}
-                top: 0px;
-                width: 30px;
-                height: 120px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            ">
-                    <!-- Tubo de Vidrio -->
-                    <div style="
-                    position: relative;
-                    width: 14px;
-                    height: 100%;
-                    background: rgba(255, 255, 255, 0.2);
-                    border-radius: 10px;
-                    border: 1.5px solid rgba(0, 0, 0, 0.7);
-                    overflow: hidden;
-                    box-shadow: inset 0 0 5px rgba(0,0,0,0.2), 2px 2px 5px rgba(0,0,0,0.1);
-                ">
-                        <!-- Brillo de vidrio -->
-                        <div
-                            style="position: absolute; left: 2px; top: 5%; width: 3px; height: 90%; background: rgba(255,255,255,0.4); border-radius: 10px; z-index: 2;">
+                        <div class="tank-info-temp">
+                            {% if tanque.sensor_de_temperatura %}<span id="vis-temp-t{{ i }}">--</span>°C{% endif %}
                         </div>
-
-                        <!-- Llenado dinámico -->
-                        <div id="temp-fill-t{{ i }}" style="
-                        position: absolute;
-                        bottom: 0;
-                        width: 100%;
-                        height: 0%;
-                        background: #1976d2;
-                        transition: height 0.5s, background-color 0.5s;
-                    ">
+                        <div class="water-fill" id="vis-lev-t{{ i }}" style="height: 0%;">
+                            <div class="water-waves">
+                                <div class="wave"></div><div class="wave"></div><div class="wave"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Bulbo Estético -->
-                    <div id="temp-bulb-t{{ i }}" style="
-                    position: absolute;
-                    bottom: -10px;
-                    width: 28px;
-                    height: 28px;
-                    background: #1976d2;
-                    border-radius: 50%;
-                    border: 1.5px solid rgba(0, 0, 0, 0.8);
-                    box-shadow: inset -3px -3px 6px rgba(0,0,0,0.3), 2px 2px 5px rgba(0,0,0,0.2);
-                    transition: background-color 0.5s;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                ">
-                        <!-- Brillo en el bulbo -->
-                        <div
-                            style="width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; position: absolute; top: 4px; left: 6px;">
+                    <!-- 🌡️ TERMÓMETRO ESTÉTICO -->
+                    {% if tanque.sensor_de_temperatura %}
+                    <div style="position: absolute; {{ 'left: 75px;' if tanque.lado_termometro == 'der' else 'right: 75px;' }} top: 0px; width: 30px; height: 120px; display: flex; flex-direction: column; align-items: center;">
+                        <div style="position: relative; width: 14px; height: 100%; background: rgba(255, 255, 255, 0.2); border-radius: 10px; border: 1.5px solid rgba(0, 0, 0, 0.7); overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.2), 2px 2px 5px rgba(0,0,0,0.1);">
+                            <div style="position: absolute; left: 2px; top: 5%; width: 3px; height: 90%; background: rgba(255,255,255,0.4); border-radius: 10px; z-index: 2;"></div>
+                            <div id="temp-fill-t{{ i }}" style="position: absolute; bottom: 0; width: 100%; height: 0%; background: #1976d2; transition: height 0.5s, background-color 0.5s;"></div>
+                        </div>
+                        <div id="temp-bulb-t{{ i }}" style="position: absolute; bottom: -10px; width: 28px; height: 28px; background: #1976d2; border-radius: 50%; border: 1.5px solid rgba(0, 0, 0, 0.8); box-shadow: inset -3px -3px 6px rgba(0,0,0,0.3), 2px 2px 5px rgba(0,0,0,0.2); transition: background-color 0.5s; display: flex; align-items: center; justify-content: center;">
+                            <div style="width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; position: absolute; top: 4px; left: 6px;"></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="tank-upper-lid" style="position: absolute; top: 0px; left: 50%; transform: translateX(-50%); width: 60px; height: 15px; background: linear-gradient(to right, #cfcfcf, #e0e0e0, #a8a8a8); border: 2px solid black; border-radius: 50%; z-index: 2;"></div>
+                </div>
+                {% endfor %}
+
+                <!-- VÁLVULAS -->
+                {% for valvula in elementos.valvulas %}
+                {% set i = loop.index %}
+                {% set v_top = [47, 112, 185, 315, 331, 331, 500, 318][i-1] %}
+                {% set v_left = [286, 546, 224, 130, 745, 546, 99, 646][i-1] %}
+                <div class="valve-industrial closed" id="valve{{ i }}" onclick="toggleValve({{ i }}, {{ valvula.entrada_server }})" style="top: {{ v_top }}px; left: {{ v_left }}px;">{{ i }}</div>
+                {% endfor %}
+
+            </div> <!-- visual-schematic -->
+        </div> <!-- visual-schematic-wrapper -->
+
+        <!-- ═══════════════════════════════════════════════════
+             SIDEBAR DE CONTROL MAESTRO (NUEVO)
+             ═══════════════════════════════════════════════════ -->
+        <aside id="control-sidebar">
+            <button class="sidebar-toggle-btn" onclick="toggleSidebar()">
+                <span id="sidebar-chevron">▶</span>
+            </button>
+            
+            <div class="sidebar-content">
+                <!-- SECCIÓN 1: ACTUADORES GLOBALES (HORIZONTAL) -->
+                <section class="sidebar-section">
+                    <h4><span>⚙️</span> Actuadores</h4>
+                    
+                    <!-- VARIADOR -->
+                    <div class="control-master-node">
+                        <div class="control-row">
+                            <span class="control-label">BOMBA (VFD)</span>
+                            <span id="valor-vfd-side" class="dual-val-label">0.0 Hz</span>
+                        </div>
+                        <div class="dual-control-wrapper">
+                            <div class="h-slider-container">
+                                <input type="range" min="4000" max="20000" value="4000" class="h-slider" id="slider-vfd-side" 
+                                    oninput="syncDualControl('vfd', 'slider')" onchange="actualizarValorVariador(302, this.value)">
+                            </div>
+                            <div class="dual-input-box">
+                                <input type="number" id="input-vfd-side" value="0.0" step="0.1" onchange="syncDualControl('vfd', 'input')">
+                                <span style="font-size: 10px; color: #888;">Hz</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Escala -->
-                    <div
-                        style="position: absolute; {{ 'left: 24px;' if tanque.lado_termometro == 'der' else 'right: 24px;' }} top: 0; font-size: 8px; color: #555; line-height: 20px; font-family: monospace; font-weight: bold; text-align: {{ 'left' if tanque.lado_termometro == 'der' else 'right' }};">
-                        100<br>80<br>60<br>40<br>20<br>0
-                    </div>
-                </div>
-                {% endif %}
-
-                <div class="tank-upper-lid"
-                    style="position: absolute; top: 0px; left: 50%; transform: translateX(-50%); width: 60px; height: 15px; background: linear-gradient(to right, #cfcfcf, #e0e0e0, #a8a8a8); border: 2px solid black; border-radius: 50%; z-index: 2;">
-                </div>
-            </div>
-            {% endfor %}
-
-            <!-- ═══════════════════════════════════════════════════
-                 PANEL DE CONTROL POR GRUPOS (top-right, mismo estilo que VFD)
-                 Grupo A: Tanques 1-2-3  |  Grupo B: Tanques 4-5
-                 ═══════════════════════════════════════════════════ -->
-            <div id="group-control-panel" style="position: absolute; top: 15px; right: 20px; width: 280px; background: rgba(255,255,255,0.95); border: 2px solid #333; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 100; backdrop-filter: blur(5px);">
-                <h4 style="margin: 0 0 12px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #222; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; font-family: 'Outfit', sans-serif; font-weight: 800;">Control de Grupos</h4>
-
-                <!-- GRUPO A -->
-                <div style="margin-bottom: 14px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <label style="font-size: 10px; font-weight: 800; color: #444; font-family: 'Roboto', sans-serif;">GRUPO A &nbsp;<span style="font-weight:400; color:#888;">T1 · T2 · T3</span></label>
-                        <button id="btn-group-a" onclick="toggleGroupMode('A', [201,202,203])"
-                            style="font-size:9px; font-weight:900; padding:3px 12px; border-radius:20px; border:none; cursor:pointer; background:#c62828; color:#fff; letter-spacing:1px; transition: all 0.3s; font-family:'Outfit',sans-serif;">MANUAL</button>
-                    </div>
-                    <div id="sp-group-a" style="display:none; grid-template-columns:1fr 1fr 1fr; gap:6px;">
-                        {% for ti in [1,2,3] %}
-                        <div style="text-align:center;">
-                            <label style="font-size:9px; color:#666; font-weight:700; display:block; margin-bottom:2px; font-family:'Roboto',sans-serif;">T{{ ti }} SP%</label>
-                            <input type="number" id="sp-niv-t{{ ti }}-vis" min="0" max="100"
-                                style="width:100%; border-radius:4px; border:1px solid #bbb; padding:2px 4px; font-size:11px; text-align:center; font-weight:bold; color:#222;"
-                                onchange="writeLevelSP('T{{ ti }}', this.value)">
+                    <!-- VÁLVULA NEUMÁTICA -->
+                    <div class="control-master-node">
+                        <div class="control-row">
+                            <span class="control-label">V. NEUMÁTICA</span>
+                            <span id="valor-vn-side" class="dual-val-label">0.0 %</span>
                         </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div style="border-top:1px solid #eee; margin: 8px 0;"></div>
-
-                <!-- GRUPO B -->
-                <div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <label style="font-size: 10px; font-weight: 800; color: #444; font-family: 'Roboto', sans-serif;">GRUPO B &nbsp;<span style="font-weight:400; color:#888;">T4 · T5</span></label>
-                        <button id="btn-group-b" onclick="toggleGroupMode('B', [204,205])"
-                            style="font-size:9px; font-weight:900; padding:3px 12px; border-radius:20px; border:none; cursor:pointer; background:#c62828; color:#fff; letter-spacing:1px; transition: all 0.3s; font-family:'Outfit',sans-serif;">MANUAL</button>
-                    </div>
-                    <div id="sp-group-b" style="display:none; grid-template-columns:1fr 1fr; gap:6px;">
-                        {% for ti in [4,5] %}
-                        <div style="text-align:center;">
-                            <label style="font-size:9px; color:#666; font-weight:700; display:block; margin-bottom:2px; font-family:'Roboto',sans-serif;">T{{ ti }} SP%</label>
-                            <input type="number" id="sp-niv-t{{ ti }}-vis" min="0" max="100"
-                                style="width:100%; border-radius:4px; border:1px solid #bbb; padding:2px 4px; font-size:11px; text-align:center; font-weight:bold; color:#222;"
-                                onchange="writeLevelSP('T{{ ti }}', this.value)">
+                        <div class="dual-control-wrapper">
+                            <div class="h-slider-container">
+                                <input type="range" min="4000" max="20000" value="4000" class="h-slider" id="slider-vn-side" 
+                                    oninput="syncDualControl('vn', 'slider')" onchange="actualizarValorVariador(303, this.value)">
+                            </div>
+                            <div class="dual-input-box">
+                                <input type="number" id="input-vn-side" value="0.0" step="0.1" onchange="syncDualControl('vn', 'input')">
+                                <span style="font-size: 10px; color: #888;">%</span>
+                            </div>
                         </div>
-                        {% endfor %}
                     </div>
-                </div>
-            </div>
+                </section>
 
+                <!-- SECCIÓN 2: CONTROL DE NIVEL (COMPACTO) -->
+                <section class="sidebar-section">
+                    <h4><span>🌊</span> Nivel de Llenado</h4>
+                    
+                    <!-- GRUPO A -->
+                    <div class="level-group-container">
+                        <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">GRUPO A</div>
+                        <div class="level-group-header" style="margin-bottom: 5px;">
+                            <button id="btn-group-a" onclick="toggleGroupMode('A', [201,202,203])" class="btn-small btn-read" style="min-width: 60px; padding: 2px 5px; font-size: 9px; background: #c62828;">MANUAL</button>
+                            <div class="level-tank-labels">
+                                <span>T1</span><span>T2</span><span>T3</span>
+                            </div>
+                        </div>
+                        <div class="level-sp-row">
+                            <button class="btn-chevron" onclick="document.getElementById('sp-grid-a').classList.toggle('expanded')" style="padding: 0 4px; font-size: 8px;">SP ◀</button>
+                            <div id="sp-grid-a" class="level-sp-grid">
+                                <input type="number" id="side-sp-nivel-t1" class="mini-sp-input" onchange="writeLevelSP('T1', this.value)">
+                                <input type="number" id="side-sp-nivel-t2" class="mini-sp-input" onchange="writeLevelSP('T2', this.value)">
+                                <input type="number" id="side-sp-nivel-t3" class="mini-sp-input" onchange="writeLevelSP('T3', this.value)">
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- VÁLVULAS (DINÁMICAS MEJORADAS) -->
-            {% for valvula in elementos.valvulas %}
-            {% set i = loop.index %}
-            {# EV1→line2(vert), EV2→line3(vert), EV3→line4(horiz), EV4→line6(horiz), EV5→line12(vert), EV6→line11(vert),
-            EV7→line10(vert), EV8→line9(horiz) #}
-            {# Centradas sobre el eje de la tubería: horizontal → top=pipe_top-13 | vertical → left=pipe_left-12 #}
-            {% set v_top = [47, 112, 185, 315, 331, 331, 500, 318][i-1] %}
-            {% set v_left = [286, 546, 224, 130, 745, 546, 99, 646][i-1] %}
-            <div class="valve-industrial closed" id="valve{{ i }}"
-                onclick="toggleValve({{ i }}, {{ valvula.entrada_server }})"
-                style="top: {{ v_top }}px; left: {{ v_left }}px;">
-                {{ i }}
+                    <!-- GRUPO B -->
+                    <div class="level-group-container">
+                        <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">GRUPO B</div>
+                        <div class="level-group-header" style="margin-bottom: 5px;">
+                            <button id="btn-group-b" onclick="toggleGroupMode('B', [204,205])" class="btn-small btn-read" style="min-width: 60px; padding: 2px 5px; font-size: 9px; background: #c62828;">MANUAL</button>
+                            <div class="level-tank-labels two-cols">
+                                <span>T4</span><span>T5</span>
+                            </div>
+                        </div>
+                        <div class="level-sp-row">
+                            <button class="btn-chevron" onclick="document.getElementById('sp-grid-b').classList.toggle('expanded')" style="padding: 0 4px; font-size: 8px;">SP ◀</button>
+                            <div id="sp-grid-b" class="level-sp-grid two-cols">
+                                <input type="number" id="side-sp-nivel-t4" class="mini-sp-input" onchange="writeLevelSP('T4', this.value)">
+                                <input type="number" id="side-sp-nivel-t5" class="mini-sp-input" onchange="writeLevelSP('T5', this.value)">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN 3: CONTROL DE TEMPERATURA -->
+                <section class="sidebar-section">
+                    <h4><span>🌡️</span> Temperatura</h4>
+                    <div class="control-master-node">
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            {% for i in [2,4] %}
+                            {% set t_obj = elementos.tanques[i-1] %}
+                            <div style="background: #fff; border: 1px solid #eee; padding: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="font-size: 12px; font-weight: 800; color: #444; cursor: pointer;" onclick="selectTank({{ i }})">TANQUE {{ i }}</span>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div id="side-led-seguro-t{{ i }}" class="led-indicator" title="Nivel de seguridad"></div>
+                                        <button id="side-btn-temp-t{{ i }}" class="btn-small btn-read" style="background: #c62828; color: white; border-radius: 15px; padding: 2px 12px; font-size: 9px;"
+                                            onclick="toggleGenericPID('{{ 'T2' if i == 2 else 'T4' }}', {{ t_obj.boton_virtual_address }}, '{{ 'coil' if i == 2 else 'reg' }}')">OFF</button>
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="display: flex; align-items: center; gap: 5px;">
+                                        <span style="font-size: 10px; color: #888;">SP:</span>
+                                        <input type="number" id="side-sp-temp-t{{ i }}" value="0" style="width: 55px; text-align: center; border-radius: 4px; border: 1px solid #ccc; font-size: 12px;"
+                                            onchange="updatePIDSetpoint('{{ 'T2' if i == 2 else 'T4' }}', this.value)">
+                                        <span style="font-size: 10px; color: #888;">°C</span>
+                                    </div>
+                                    <button class="btn-chevron" onclick="togglePIDAccordion({{ i }})" style="font-size: 12px;">⚙️</button>
+                                </div>
+                                <!-- ACORDEON PID (CONTEXTUAL) -->
+                                <div id="side-pid-accordion-t{{ i }}" class="pid-accordion-content">
+                                    <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                        <div class="pid-grid">
+                                            <div class="pid-field"><label>Kp</label><input type="number" id="side-kp-t{{ i }}" step="0.1"></div>
+                                            <div class="pid-field"><label>Ti</label><input type="number" id="side-ti-t{{ i }}" step="1"></div>
+                                            <div class="pid-field"><label>Td</label><input type="number" id="side-td-t{{ i }}" step="1"></div>
+                                        </div>
+                                        <div style="display: flex; gap: 5px;">
+                                            <button class="btn-small btn-read" style="flex: 1; font-size: 10px; padding: 5px;" onclick="readPIDValues('{{ 'T2' if i == 2 else 'T4' }}')">LEER</button>
+                                            <button class="btn-small btn-write" style="flex: 1; font-size: 10px; padding: 5px;" onclick="saveSidePID({{ i }})">CARGAR</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
             </div>
-            {% endfor %}
-        </div> <!-- visual-schematic -->
-    </div> <!-- visual-schematic-wrapper -->
-</div> <!-- tab-visual -->
+        </aside>
+    </div>
+</div>
 
 <script>
-    // ── GROUP MODE CONTROL ─────────────────────────────────────────────
-    const _groupState = { A: 'MANUAL', B: 'MANUAL' };
+    let g_selectedTankId = null;
+    let _groupState = { A: 'MANUAL', B: 'MANUAL' };
 
+    function toggleSidebar() {
+        const sidebar = document.getElementById('control-sidebar');
+        const chevron = document.getElementById('sidebar-chevron');
+        sidebar.classList.toggle('collapsed');
+        chevron.innerText = sidebar.classList.contains('collapsed') ? '◀' : '▶';
+        setTimeout(adaptSchematic, 400);
+    }
+
+    function selectTank(id) {
+        g_selectedTankId = id;
+        // Visual feedback
+        document.querySelectorAll('.tank').forEach(t => t.style.boxShadow = 'none');
+        const tankEl = document.getElementById(`tank${id}`);
+        if (tankEl) tankEl.style.boxShadow = '0 0 15px var(--secondary)';
+        
+        // Si tiene temperatura, expandir su acordeón para mostrar que fue seleccionado
+        const accordion = document.getElementById(`side-pid-accordion-t${id}`);
+        if (accordion) accordion.classList.add('expanded');
+    }
+
+    function syncDualControl(actuator, source) {
+        const slider = document.getElementById(`slider-${actuator}-side`);
+        const input = document.getElementById(`input-${actuator}-side`);
+        const label = document.getElementById(`valor-${actuator}-side`);
+        
+        const min = 4000, max = 20000;
+        const factor = actuator === 'vfd' ? 50 : 100;
+        const unit = actuator === 'vfd' ? 'Hz' : '%';
+
+        if (source === 'slider') {
+            const val = ((factor * (slider.value - min) / (max - min))).toFixed(1);
+            input.value = val;
+            label.innerText = val + ' ' + unit;
+        } else {
+            let val = parseFloat(input.value);
+            if (isNaN(val)) val = 0;
+            if (val > factor) val = factor;
+            const raw = Math.round(min + (val * (max - min) / factor));
+            slider.value = raw;
+            label.innerText = val.toFixed(1) + ' ' + unit;
+            actualizarValorVariador(actuator === 'vfd' ? 302 : 303, raw);
+        }
+    }
+
+    function togglePIDAccordion(id) {
+        document.getElementById(`side-pid-accordion-t${id}`).classList.toggle('expanded');
+    }
+
+    function saveSidePID(id) {
+        const pidId = id == 2 ? 'T2' : 'T4';
+        const params = {
+            id: pidId,
+            setpoint: document.getElementById(`side-sp-temp-t${id}`).value,
+            kp: document.getElementById(`side-kp-t${id}`).value,
+            ti: document.getElementById(`side-ti-t${id}`).value,
+            td: document.getElementById(`side-td-t${id}`).value
+        };
+        fetch('/update_pid', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(params)
+        }).then(r => r.json()).then(d => alert(d.success ? "PID Actualizado" : "Error"));
+    }
+
+    function readPIDValues(id) {
+        // id es T2 o T4
+        fetch('/status?t=' + new Date().getTime())
+            .then(r => r.json())
+            .then(d => {
+                const pidKey = `pid_${id.toLowerCase()}`;
+                const pidData = d[pidKey];
+                if (pidData) {
+                    const tNum = id === 'T2' ? 2 : 4;
+                    document.getElementById(`side-sp-temp-t${tNum}`).value = pidData.params.setpoint;
+                    document.getElementById(`side-kp-t${tNum}`).value = pidData.params.kp;
+                    document.getElementById(`side-ti-t${tNum}`).value = pidData.params.ti;
+                    document.getElementById(`side-td-t${tNum}`).value = pidData.params.td;
+                    alert(`Valores de ${id} cargados correctamente.`);
+                }
+            });
+    }
+
+    // ── GROUP MODE CONTROL ─────────────────────────────────────────────
     function toggleGroupMode(group, addresses) {
         const isManual = _groupState[group] === 'MANUAL';
         _groupState[group] = isManual ? 'AUTO' : 'MANUAL';
-
         const btn = document.getElementById(`btn-group-${group.toLowerCase()}`);
-        const spPanel = document.getElementById(`sp-group-${group.toLowerCase()}`);
-
-        if (_groupState[group] === 'AUTO') {
-            btn.innerText = 'AUTO';
-            btn.style.background = '#2e7d32';
-            spPanel.style.display = 'grid';
-        } else {
-            btn.innerText = 'MANUAL';
-            btn.style.background = '#c62828';
-            spPanel.style.display = 'none';
-        }
-
-        // Escribir modo a todos los tanques del grupo
-        const modeVal = _groupState[group] === 'AUTO' ? 1 : 0;
+        btn.innerText = _groupState[group];
+        btn.style.background = _groupState[group] === 'AUTO' ? '#2e7d32' : '#c62828';
+        const modeVal = _groupState[group] === 'AUTO';
+        
+        // Impacto masivo en los tanques del grupo
         addresses.forEach(addr => {
-            fetch('/write', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ address: addr, value: modeVal })
-            });
+            writeCoil(addr, modeVal);
         });
     }
-    // ──────────────────────────────────────────────────────────────────
 
+    // Adapt Schematic
     function adaptSchematic() {
         const wrapper = document.querySelector('.visual-schematic-wrapper');
         const schematic = document.querySelector('.visual-schematic');
         if (!wrapper || !schematic) return;
-
-        const availableWidth = wrapper.offsetWidth - 20;
-        const baseWidth = 1300;
-
-        let scale = availableWidth / baseWidth;
-        if (scale > 1.3) scale = 1.3; // Un poco de margen para pantallas grandes
-
+        const availableWidth = wrapper.offsetWidth - 40;
+        const scale = Math.min(availableWidth / 1300, 1.3);
         schematic.style.transform = `scale(${scale})`;
-        // Ajustar el contenedor para que no sobre espacio vertical
-        wrapper.style.height = (600 * scale + 60) + 'px';
+        wrapper.style.height = (600 * scale + 40) + 'px';
     }
 
     function adaptModal() {
         const content = document.getElementById('modal-content');
         if (!content || window.getComputedStyle(document.getElementById('tank-modal')).display === 'none') return;
-
-        const availableWidth = window.innerWidth * 0.9;
-        const availableHeight = window.innerHeight * 0.9;
-        const baseWidth = 900;
-        const baseHeight = 550; // Aproximado
-
-        let scale = Math.min(availableWidth / baseWidth, availableHeight / baseHeight);
-        if (scale > 1.2) scale = 1.2;
-
+        const scale = Math.min(window.innerWidth * 0.9 / 900, window.innerHeight * 0.9 / 550, 1.2);
         content.style.transform = `translate(-50%, -50%) scale(${scale})`;
     }
 
-    window.addEventListener('resize', () => {
-        adaptSchematic();
-        adaptModal();
-    });
-
-    // Ejecutar cuando se carga y opcionalmente cuando se cambia de pestaña (vía MutationObserver o evento)
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(adaptSchematic, 100);
-    });
-
-    // Pequeño hack para detectar cuando la pestaña se vuelve visible
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.attributeName === 'style') {
-                const display = window.getComputedStyle(mutation.target).display;
-                if (display !== 'none') adaptSchematic();
-            }
-        });
+    window.addEventListener('resize', () => { adaptSchematic(); adaptModal(); });
+    document.addEventListener('DOMContentLoaded', () => { setTimeout(adaptSchematic, 100); });
+    
+    // MutationObserver to adapt when tab becomes visible
+    const observer = new MutationObserver((m) => {
+        if (m[0].attributeName === 'style' && window.getComputedStyle(m[0].target).display !== 'none') adaptSchematic();
     });
     observer.observe(document.getElementById('tab-visual'), { attributes: true });
 
-    let g_currentModalTankId = null;
+    // Global variable for current elements
+    let _elementos_cache = null;
 
+    // Tank Modal logic remains mostly the same, simplified for brevity
+    let g_currentModalTankId = null;
     function openTankDetail(id) {
         g_currentModalTankId = id;
-        const modal = document.getElementById("tank-modal");
-        const tankEl = document.getElementById("tank" + id);
-
-        modal.style.display = "block";
+        document.getElementById("tank-modal").style.display = "block";
         adaptModal();
-        document.body.style.overflow = "hidden"; // 🔥 bloquea fondo
-
-        const title = (tankEl.querySelector('.tank-info-overlay')?.innerText.trim() || "TANQUE " + id);
-        document.getElementById("modal-title").innerHTML = `<span>📊</span> DETALLE DE ${title}`;
-
-        // Etiquetas de válvulas (Nombres reales del config)
+        document.body.style.overflow = "hidden";
+        const tankEl = document.getElementById("tank" + id);
+        document.getElementById("modal-title").innerHTML = `<span>📊</span> DETALLE DE ${tankEl.querySelector('.tank-info-overlay').innerText}`;
         document.getElementById("modal-v1").innerText = tankEl.dataset.valvulaInIdentificador;
         document.getElementById("modal-v2").innerText = tankEl.dataset.valvulaOutIdentificador;
-
-        // Mostrar/Ocultar Temperatura según sensor
         const hasTemp = tankEl.dataset.hasTemp === 'true';
         document.getElementById("modal-thermometer-col").style.display = hasTemp ? "flex" : "none";
         document.getElementById("modal-temp-row").style.display = hasTemp ? "flex" : "none";
-
-        // Poblar datos estáticos
         document.getElementById("modal-altura").innerText = tankEl.dataset.altura + " m";
         document.getElementById("modal-diametro").innerText = tankEl.dataset.diametro + " m";
         document.getElementById("modal-volumen").innerText = tankEl.dataset.volumen + " m³";
@@ -564,50 +563,17 @@
     function closeTankDetail() {
         g_currentModalTankId = null;
         document.getElementById("tank-modal").style.display = "none";
-        document.body.style.overflow = "auto"; // 🔥 vuelve a normal
+        document.body.style.overflow = "auto";
     }
 
     function updateTankModal(levelVal, temp, levelAbs) {
-        const levelEl = document.getElementById("modal-level");
-        const tempEl = document.getElementById("modal-temp");
-        const absEl = document.getElementById("modal-level-abs");
-        const waterEl = document.getElementById("tank-water");
+        if (!g_currentModalTankId) return;
+        document.getElementById("modal-level").innerText = levelVal + " %";
+        document.getElementById("modal-temp").innerText = temp + " °C";
+        document.getElementById("modal-level-abs").innerText = levelAbs + " m³";
+        document.getElementById("tank-water").style.height = levelVal + "%";
         const thermEl = document.getElementById("modal-therm-fill");
-
-        const tankEl = document.getElementById("tank" + g_currentModalTankId);
-        if (!tankEl) return;
-
-        if (levelEl) levelEl.innerText = levelVal + " %";
-        if (tempEl) tempEl.innerText = temp + " °C";
-        if (absEl) absEl.innerText = levelAbs + " m³";
-
-        if (waterEl) {
-            waterEl.style.height = levelVal + "%";
-        }
-
-        const hasTemp = tankEl.dataset.hasTemp === 'true';
-        if (hasTemp && thermEl) {
-            const tempFloat = parseFloat(temp);
-            // Mapeo 20°C -> 0%, 95°C -> 100%
-            const thermHeight = Math.min(100, Math.max(0, (tempFloat - 20) * 100 / 75));
-            thermEl.style.height = thermHeight + "%";
-        }
-
-        // Sincronizar estado de válvulas en el modal
-        const vInId = tankEl.dataset.valvulaInIdentificador;
-        const vOutId = tankEl.dataset.valvulaOutIdentificador;
-
-        const vInEl = document.getElementById(`valve${vInId}`);
-        const vOutEl = document.getElementById(`valve${vOutId}`);
-        const mV1 = document.getElementById("modal-v1");
-        const mV2 = document.getElementById("modal-v2");
-
-        if (vInEl && mV1) {
-            mV1.className = vInEl.className;
-        }
-        if (vOutEl && mV2) {
-            mV2.className = vOutEl.className;
-        }
+        if (thermEl) thermEl.style.height = Math.min(100, Math.max(0, (parseFloat(temp) - 20) * 100 / 75)) + "%";
     }
 </script>
 

@@ -36,7 +36,9 @@ TANQUE_1: Tanque = Tanque(
     volumen=0.9,
     material="Polietileno",
     lado_controles="izq",
-    lado_termometro="der"
+    lado_termometro="der",
+    grupo="A",
+    max_val=10000
 )
 
 TANQUE_2: Tanque = Tanque(
@@ -58,7 +60,9 @@ TANQUE_2: Tanque = Tanque(
     volumen=2.8,
     material="Acero Inox",
     lado_controles="izq",
-    lado_termometro="der"
+    lado_termometro="der",
+    grupo="A",
+    max_val=10000
 )
 
 TANQUE_3: Tanque = Tanque(   
@@ -76,7 +80,9 @@ TANQUE_3: Tanque = Tanque(
     volumen=1.5,
     material="Acero Inox",
     lado_controles="izq",
-    lado_termometro="der"
+    lado_termometro="der",
+    grupo="A",
+    max_val=10000
 )   
 
 TANQUE_4: Tanque = Tanque(   
@@ -98,7 +104,9 @@ TANQUE_4: Tanque = Tanque(
     volumen=5.3,
     material="Acero Inox",
     lado_controles="der",
-    lado_termometro="izq"
+    lado_termometro="izq",
+    grupo="B",
+    max_val=10000
 )   
 
 TANQUE_5: Tanque = Tanque(
@@ -116,5 +124,7 @@ TANQUE_5: Tanque = Tanque(
     volumen=2.1,
     material="Fibra de Vidrio",
     lado_controles="der",
-    lado_termometro="izq"
+    lado_termometro="izq",
+    grupo="B",
+    max_val=10000
 )

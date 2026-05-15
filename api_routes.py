@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, render_template
-from config import logger, get_system_data, PLC_REMOTE_LOCK_ADDR
+from config import logger, get_system_data, PLC_REMOTE_LOCK_ADDR, raw_to_celsius, PLC_SENDS_SCALED_TEMP, PLC_SENDS_SCALED_LEVEL
 from modbus_core import (
     read_coils_safe, write_coil_safe, 
     read_registers_safe, write_register_safe,
@@ -12,12 +12,14 @@ api_bp = Blueprint('api', __name__)
 
 def check_remote_lock():
     """Verifica si el mando remoto está bloqueado por hardware (%I0.13)."""
-    if client_manager.is_disabled:
-        # En modo simulado, leemos de la memoria del mock
+    if is_sim_mode():
         return mocks.mock_read_coil(13)
-    
     lock_data = read_coils_safe(PLC_REMOTE_LOCK_ADDR, count=1)
     return lock_data.bits[0] if lock_data else False
+
+def is_sim_mode():
+    """True cuando no hay conexión real al PLC (modo simulación o desconectado)."""
+    return client_manager.is_disabled or not client_manager.is_connected()
 
 # =========================================================================
 # ZONA 3: RUTA PRINCIPAL (FRONTEND)
@@ -32,6 +34,8 @@ def index():
                            usuario="Operador", 
                            rol="supervisor", 
                            status=status,
+                           plc_sends_scaled_temp=PLC_SENDS_SCALED_TEMP,
+                           plc_sends_scaled_level=PLC_SENDS_SCALED_LEVEL,
                            **system_data)
 
 # =========================================================================
@@ -61,9 +65,9 @@ def write_coil():
         if check_remote_lock():
             return jsonify({'success': False, 'error': 'Bloqueo Remoto Activo (Mantenimiento)'}), 403
 
-        if client_manager.is_disabled:
+        if is_sim_mode():
             mocks.mock_write_coil(address, value)
-            return jsonify({'success': True})
+            return jsonify({'success': True, 'note': 'Escrito en Mock'})
 
         result = write_coil_safe(address, value)
         if not result: 
@@ -98,13 +102,13 @@ def write_register():
         if check_remote_lock():
             return jsonify({'success': False, 'error': 'Bloqueo Remoto Activo (Mantenimiento)'}), 403
 
-        if client_manager.is_disabled:
+        if is_sim_mode():
             mocks.mock_write_register(address, value)
-            return jsonify({'success': True})
+            return jsonify({'success': True, 'note': 'Escrito en Mock'})
 
-        # Proteccion: 300 y 400 son coils de seguridad
-        if address == 300 or address == 400: 
-             return jsonify({'success': False, 'error': 'Dirección reservada para supervisor.'}), 403
+        # Proteccion: solo 300 es reservada para supervisor (salida hardware)
+        if address == 300:
+             return jsonify({'success': False, 'error': 'Dirección 300 reservada para supervisor.'}), 403
 
         result = write_register_safe(address, value)
         
@@ -121,7 +125,7 @@ def write_register():
 @api_bp.route('/status')
 def status():
     # FORZAR MOCK SI NO HAY PLC
-    if not client_manager.is_connected() or client_manager.is_disabled:
+    if is_sim_mode():
         resp = jsonify(mocks.get_mock_status())
         resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
         return resp
@@ -167,13 +171,13 @@ def status():
             r = res.registers
             pids_status[f"pid_{pid['identifier']}"] = {
                 'params': {
-                    'setpoint': round((r[0]*75/1000)+0.5, 1), 
+                    'setpoint': raw_to_celsius(r[0]),
                     'kp': r[2]*0.01, 
                     'ti': r[4]*0.1, 
                     'td': r[6]*0.1
                 },
                 'status': {
-                    'temp_actual': round((r[1]*75/1000)+0.5, 1), 
+                    'temp_actual': raw_to_celsius(r[1]),
                     'error': round(r[3]*75/1000, 1), 
                     'salida': r[5]/100.0
                 }
@@ -186,13 +190,10 @@ def status():
     remote_lock = get_coil(PLC_REMOTE_LOCK_ADDR)
 
     # Mapeo de Niveles por Tanque (T1 a T5) para el Frontend
-    niveles_tanques = [
-        read_registers_safe(202, 1).registers[0] if read_registers_safe(202, 1) else 4000,
-        read_registers_safe(204, 1).registers[0] if read_registers_safe(204, 1) else 4000,
-        read_registers_safe(205, 1).registers[0] if read_registers_safe(205, 1) else 4000,
-        read_registers_safe(203, 1).registers[0] if read_registers_safe(203, 1) else 4000,
-        read_registers_safe(203, 1).registers[0] if read_registers_safe(203, 1) else 4000
-    ]
+    niveles_tanques = []
+    for t in elementos['tanques']:
+        res = read_registers_safe(t['sensor_de_presion'], count=1)
+        niveles_tanques.append(res.registers[0] if res else 4000)
 
     return jsonify({
         "mode": mode,
@@ -226,8 +227,8 @@ def get_data():
 # =========================================================================
 @api_bp.route('/update_pid', methods=['POST'])
 def update_pid():
-    if client_manager.is_disabled:
-        return jsonify({'success': True, 'note': 'Simulado'})
+    if is_sim_mode():
+        return jsonify({'success': True, 'note': 'Simulado (sin PLC)'})
     try:
         d = request.get_json()
         pid_id_str = d.get('id') # 'T2' o 'T4'
@@ -278,9 +279,9 @@ def toggle_auto():
         address = int(data['address'])
         value = bool(data['value'])
         
-        if client_manager.is_disabled:
+        if is_sim_mode():
             mocks.mock_write_coil(address, value)
-            return jsonify({'success': True})
+            return jsonify({'success': True, 'note': 'Escrito en Mock'})
             
         result = write_coil_safe(address, value)
         if not result:

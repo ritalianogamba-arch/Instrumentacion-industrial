@@ -4,7 +4,7 @@ import os
 import math
 from config import (
     LISTA_BOTONES_EV, LISTA_SENSORES, LISTA_VALVULAS, LISTA_TANQUES, LISTA_PIDS, LISTA_ACTUADORES,
-    logger
+    logger, raw_to_celsius
 )
 
 # =========================================================================
@@ -40,11 +40,11 @@ def get_mock_status():
         r = [store.registers.get(base + i, 0) for i in range(8)]
         return {
             'params': {
-                'setpoint': round((r[0]*75/1000)+0.5, 1), 
+                'setpoint': raw_to_celsius(r[0]),
                 'kp': 2.5, 'ti': 15.0, 'td': 1.0
             },
             'status': {
-                'temp_actual': round((current_temp_raw*75/1000)+0.5, 1), 
+                'temp_actual': raw_to_celsius(current_temp_raw),
                 'error': 0.0, 'salida': 0.0
             }
         }
@@ -67,7 +67,10 @@ def get_mock_status():
         "sp_niveles": [store.registers.get(t.SetPoint_Level, 0) for t in LISTA_TANQUES],
         "pid_t2": get_pid_data(LISTA_PIDS[0], store.registers.get(201, 260)),
         "pid_t4": get_pid_data(LISTA_PIDS[1], store.registers.get(200, 260)),
-        "pid_flags": {"t2_activo": True, "t4_activo": True}
+        "pid_flags": {
+            "t2_activo": store.coils.get(LISTA_PIDS[0].boton_virtual_address, False),
+            "t4_activo": store.coils.get(LISTA_PIDS[1].boton_virtual_address, False)
+        }
     }
 
 def mock_write_coil(address, value):

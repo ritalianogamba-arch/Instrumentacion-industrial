@@ -27,14 +27,12 @@
         <!-- Tabs Navigation -->
         <nav class="tabs-header">
             <button class="tab-button" onclick="openTab('tab-monitoreo', this)">Monitoreo</button>
-            <button class="tab-button" onclick="openTab('tab-pid', this)">Control PID</button>
             <button class="tab-button" onclick="openTab('tab-visual', this)">Visual</button>
             <button class="tab-button" onclick="openTab('tab-graficas', this)">Gráficas</button>
         </nav>
 
         <!-- Tab Contents -->
         {% include 'tabs/monitoreo.html' %}
-        {% include 'tabs/pid.html' %}
         {% include 'tabs/visual.html' %}
         {% include 'tabs/graficas.html' %}
     </main>
@@ -45,7 +43,32 @@
     </div>
 
     <!-- Modular Logic -->
-    <script src="{{ url_for('static', filename='js/config.js') }}"></script>
+    <script>
+        const CONFIG_TANQUES = {
+            {% for t in elementos.tanques %}
+            "T{{ t.nombre.split()[-1] }}": {
+                sensor: {{ t.sensor_de_presion }},
+                sp: {{ t.SetPoint_Level }},
+                min: {{ t.min_val }},
+                max: {{ t.max_val }}
+            }{{ ',' if not loop.last }}
+            {% endfor %}
+        };
+
+        const CONFIG_ACTUADORES = {
+            {% for a in elementos.salidas_analogicas %}
+            "{{ a.address }}": {
+                min: {{ a.min_val }},
+                max: {{ a.max_val }},
+                unidad: "{{ a.unidad }}"
+            }{{ ',' if not loop.last }}
+            {% endfor %}
+        };
+
+        // Escalamiento de temperatura y nivel — sincronizado con config/plc.py
+        window.PLC_SENDS_SCALED_TEMP = {{ 'true' if plc_sends_scaled_temp else 'false' }};
+        window.PLC_SENDS_SCALED_LEVEL = {{ 'true' if plc_sends_scaled_level else 'false' }};
+    </script>
     <script src="{{ url_for('static', filename='js/api.js') }}"></script>
     <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
     <script src="{{ url_for('static', filename='js/charts.js') }}"></script>

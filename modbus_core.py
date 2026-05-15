@@ -85,8 +85,8 @@ def safe_modbus_operation(operation_func, **kwargs):
             if result and result.isError():
                 return None
             return result
-        except Exception:
-            client_manager.is_disabled = True
+        except Exception as e:
+            logger.warning(f"Error Modbus transitorio: {e}")
             return None
 
 def read_coils_safe(address, count=1):

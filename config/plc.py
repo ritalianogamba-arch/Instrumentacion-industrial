@@ -4,3 +4,53 @@ PLC_PORT = 502
 MODBUS_TIMEOUT = 5
 MODBUS_RETRIES = 2
 PLC_REMOTE_LOCK_ADDR = 13
+
+# =========================================================================
+# ESCALAMIENTO DE TEMPERATURA
+# =========================================================================
+# Cambiar a True cuando el PLC implemente el escalamiento internamente.
+# En ese caso los %MW ya llegan con valores en °C directamente.
+PLC_SENDS_SCALED_TEMP = False
+
+def raw_to_celsius(raw_value: int) -> float:
+    """Convierte un valor raw del PLC a grados Celsius.
+    
+    Si PLC_SENDS_SCALED_TEMP=False (actual): aplica la fórmula de escalamiento.
+    Si PLC_SENDS_SCALED_TEMP=True (futuro):  el valor ya es °C, solo lo redondea.
+    """
+    if PLC_SENDS_SCALED_TEMP:
+        return round(float(raw_value), 1)
+    return round((raw_value * 75 / 1000) + 0.5, 1)
+
+# =========================================================================
+# ESCALAMIENTO DE NIVEL (Sensores de presión → % de llenado)
+# =========================================================================
+# Cambiar a True cuando el PLC implemente el escalamiento internamente.
+# En ese caso:
+#   - Los sensores ya envían el nivel en porcentaje (0-100%)
+#   - Los set-points de nivel se deben enviar en porcentaje (0-100)
+PLC_SENDS_SCALED_LEVEL = False
+
+def raw_to_level_percent(raw: int, cfg_min: int, cfg_max: int) -> float:
+    """Convierte valor raw del sensor de presión a porcentaje de nivel (0-100).
+    
+    Si PLC_SENDS_SCALED_LEVEL=False: aplica la fórmula raw→% usando min/max del tanque.
+    Si PLC_SENDS_SCALED_LEVEL=True:  el valor ya es %, solo lo clampea.
+    """
+    if PLC_SENDS_SCALED_LEVEL:
+        return round(max(0.0, min(100.0, float(raw))), 1)
+    if cfg_max == cfg_min:
+        return 0.0
+    p = ((raw - cfg_min) / (cfg_max - cfg_min)) * 100
+    return round(max(0.0, min(100.0, p)), 1)
+
+def percent_to_level_raw(percent: float, cfg_min: int, cfg_max: int) -> int:
+    """Convierte porcentaje de nivel (0-100) a valor raw para escribir el SP en el PLC.
+    
+    Si PLC_SENDS_SCALED_LEVEL=False: escala al rango raw del PLC (ej. 4000-10000).
+    Si PLC_SENDS_SCALED_LEVEL=True:  envía el porcentaje directamente.
+    """
+    p = max(0.0, min(100.0, float(percent)))
+    if PLC_SENDS_SCALED_LEVEL:
+        return int(round(p))
+    return int(round(cfg_min + (p * (cfg_max - cfg_min) / 100)))
