@@ -95,8 +95,10 @@
                     <!-- Cuerpo del motor -->
                     <div
                         style="position: absolute; left: 0; top: 15px; width: 30px; height: 30px; background: linear-gradient(135deg, #444, #222); border-radius: 4px; border: 1px solid #000;">
-                        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 4px;"></div>
-                        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 4px;"></div>
+                        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 4px;">
+                        </div>
+                        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 4px;">
+                        </div>
                     </div>
                     <!-- Voluta (Carcasa de la bomba) -->
                     <div
@@ -104,7 +106,8 @@
                         <!-- Impulsor (Gira) -->
                         <div id="pump-spin"
                             style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;">
-                            <div style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px;">
+                            <div
+                                style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px;">
                             </div>
                             <div
                                 style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px; transform: rotate(60deg);">
@@ -112,7 +115,8 @@
                             <div
                                 style="position: absolute; width: 80%; height: 3px; background: #999; border-radius: 2px; transform: rotate(120deg);">
                             </div>
-                            <div style="width: 10px; height: 10px; background: #222; border-radius: 50%; z-index: 2;"></div>
+                            <div style="width: 10px; height: 10px; background: #222; border-radius: 50%; z-index: 2;">
+                            </div>
                         </div>
                     </div>
                     <div id="vfd-val-label"
@@ -149,80 +153,95 @@
                         0%</div>
                 </div>
 
-                <div id="line1b" class="pipe-industrial pipe-industrial-h" style="top: 20px; left: 306px; width: 260px;">
+                <div id="line1b" class="pipe-industrial pipe-industrial-h"
+                    style="top: 20px; left: 306px; width: 250px;">
                 </div>
+                <div class="pipe-fitting pipe-elbow" style="top: 20px; left: 554px; transform: rotate(180deg);"></div>
                 <div
                     style="position: absolute; top: -15px; left: 350px; font-size: 18px; color: #444; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7;">
                     Alimentación</div>
 
                 <div id="line2" class="pipe-industrial pipe-industrial-v" style="top: 26px; left: 298px; height: 78px;">
                 </div>
-                <div id="line3" class="pipe-industrial pipe-industrial-v" style="top: 26px; left: 558px; height: 209px;">
+                <div class="pipe-fitting pipe-tee" style="top: 20px; left: 288px; transform: rotate(0deg);"></div>
+                <div id="line3" class="pipe-industrial pipe-industrial-v"
+                    style="top: 30px; left: 558px; height: 209px;">
                 </div>
 
                 <!------ CONEXION TANQUES 1 Y 2 -->
                 <div id="line4" class="pipe-industrial pipe-industrial-h" style="top: 198px; left: 209px; width: 64px;">
                 </div>
-                <div id="line5" class="pipe-industrial pipe-industrial-v" style="top: 209px; left: 201px; height: 40px;">
+                <div id="line5" class="pipe-industrial pipe-industrial-v"
+                    style="top: 209px; left: 201px; height: 40px;">
                 </div>
                 <div class="pipe-fitting pipe-elbow" style="top: 197px; left: 199px; transform: rotate(90deg);"></div>
 
                 <!----- CONEXION TANQUES 2 Y 3 -->
-                <div id="line6" class="pipe-industrial pipe-industrial-h" style="top: 328px; left: 117px; width: 61px;">
+                <div id="line6" class="pipe-industrial pipe-industrial-h" style="top: 327px; left: 122px; width: 61px;">
                 </div>
-                <div id="line7" class="pipe-industrial pipe-industrial-v" style="top: 337px; left: 109px; height: 41px;">
+                <div id="line7" class="pipe-industrial pipe-industrial-v"
+                    style="top: 337px; left: 109px; height: 41px;">
                 </div>
-                <div class="pipe-fitting pipe-elbow" style="top: 327px; left: 108px; transform: rotate(90deg);"></div>
+                <div class="pipe-fitting pipe-elbow" style="top: 326px; left: 108px; transform: rotate(90deg);"></div>
 
                 <!----- CONEXION TANQUES 4 Y 5 -->
-                <div id="line9" class="pipe-industrial pipe-industrial-h" style="top: 331px; left: 593px; width: 141px;">
+                <div id="line9" class="pipe-industrial pipe-industrial-h"
+                    style="top: 331px; left: 593px; width: 141px;">
                 </div>
 
                 <!----- DESCARGA TANQUE 3 -->
-                <div id="line10" class="pipe-industrial pipe-industrial-v" style="top: 493px; left: 111px; height: 50px;">
+                <div id="line10" class="pipe-industrial pipe-industrial-v"
+                    style="top: 493px; left: 111px; height: 40px;">
                 </div>
-                <div id="line15a" class="pipe-industrial pipe-industrial-h" style="top: 535px; left: 113px; width: 520px;">
+                <div id="line15a" class="pipe-industrial pipe-industrial-h"
+                    style="top: 535px; left: 124px; width: 540px;">
                 </div>
-                <div class="pipe-fitting pipe-elbow" style="top: 530px; left: 107px; transform: rotate(180deg);"></div>
+                <div class="pipe-fitting pipe-elbow" style="top: 530px; left: 110px; transform: rotate(0deg);"></div>
 
                 <!---- DESCARGA TANQUE 4 -->
-                <div id="line11" class="pipe-industrial pipe-industrial-v" style="top: 297px; left: 558px; height: 105px;">
+                <div id="line11" class="pipe-industrial pipe-industrial-v"
+                    style="top: 297px; left: 558px; height: 96px;">
                 </div>
-                <div id="line13a" class="pipe-industrial pipe-industrial-h" style="top: 395px; left: 560px; width: 70px;">
+                <div id="line13a" class="pipe-industrial pipe-industrial-h"
+                    style="top: 395px; left: 570px; width: 90px;">
                 </div>
-                <div class="pipe-fitting pipe-elbow" style="top: 390px; left: 554px; transform: rotate(0deg);"></div>
+                <div class="pipe-fitting pipe-elbow" style="top: 390px; left: 557px; transform: rotate(0deg);"></div>
 
                 <!---- DESCARGA TANQUE 5 -->
-                <div id="line12" class="pipe-industrial pipe-industrial-v" style="top: 297px; left: 757px; height: 105px;">
+                <div id="line12" class="pipe-industrial pipe-industrial-v"
+                    style="top: 297px; left: 757px; height: 95px;">
                 </div>
-                <div id="line13b" class="pipe-industrial pipe-industrial-h" style="top: 395px; left: 656px; width: 109px;">
+                <div id="line13b" class="pipe-industrial pipe-industrial-h"
+                    style="top: 395px; left: 656px; width: 98px;">
                 </div>
-                <div class="pipe-fitting pipe-tee" style="top: 395px; left: 648px; transform: rotate(0deg);"></div>
+                <div class="pipe-fitting pipe-tee" style="top: 395px; left: 646px; transform: rotate(0deg);"></div>
                 <div class="pipe-fitting pipe-elbow" style="top: 390px; left: 753px; transform: rotate(270deg);"></div>
 
                 <!---- DESCARGA TANQUES 4 Y 5 -->
-                <div id="line14" class="pipe-industrial pipe-industrial-v" style="top: 398px; left: 656px; height: 140px;">
+                <div id="line14" class="pipe-industrial pipe-industrial-v"
+                    style="top: 398px; left: 656px; height: 140px;">
                 </div>
-                <div class="pipe-fitting pipe-tee" style="top: 525px; left: 648px; transform: rotate(180deg);"></div>
+                <div class="pipe-fitting pipe-tee" style="top: 525px; left: 646px; transform: rotate(180deg);"></div>
 
                 <!---- DESCARGA GENERAL -->
-                <div id="line15b" class="pipe-industrial pipe-industrial-h" style="top: 535px; left: 662px; width: 238px;">
+                <div id="line15b" class="pipe-industrial pipe-industrial-h"
+                    style="top: 535px; left: 662px; width: 238px;">
                 </div>
 
-                <div style="position: absolute; top: 500px; left: 800px; font-size: 20px; color: #000000;">Descarga</div>
+                <div style="position: absolute; top: 500px; left: 800px; font-size: 20px; color: #000000;">Descarga
+                </div>
 
                 <!-- TANQUES (DINÁMICOS) -->
                 {% for tanque in elementos.tanques %}
                 {% set i = loop.index %}
                 {% set t_top = [104, 235, 370, 235, 235][i-1] %}
                 {% set t_left = [272, 176, 85, 532, 730][i-1] %}
-                <div class="tank-wrapper" style="position: absolute; top: {{ t_top }}px; left: {{ t_left }}px; z-index: 1;">
-                    <div class="tank" id="tank{{ i }}" 
-                        onclick="selectTank({{ i }})"
-                        ondblclick="openTankDetail({{ i }})"
-                        data-id="{{ i }}"
-                        data-altura="{{ tanque.altura }}" data-diametro="{{ tanque.diametro }}"
-                        data-volumen="{{ tanque.volumen }}" data-material="{{ tanque.material }}"
+                <div class="tank-wrapper"
+                    style="position: absolute; top: {{ t_top }}px; left: {{ t_left }}px; z-index: 1;">
+                    <div class="tank" id="tank{{ i }}" onclick="selectTank({{ i }})"
+                        ondblclick="openTankDetail({{ i }})" data-id="{{ i }}" data-altura="{{ tanque.altura }}"
+                        data-diametro="{{ tanque.diametro }}" data-volumen="{{ tanque.volumen }}"
+                        data-material="{{ tanque.material }}"
                         data-valvula-in-identificador="{{ tanque.valvula_superior_identificador }}"
                         data-valvula-out-identificador="{{ tanque.valvula_inferior_identificador }}"
                         data-has-temp="{{ 'true' if tanque.sensor_de_temperatura else 'false' }}"
@@ -236,33 +255,48 @@
                         </div>
                         <div class="water-fill" id="vis-lev-t{{ i }}" style="height: 0%;">
                             <div class="water-waves">
-                                <div class="wave"></div><div class="wave"></div><div class="wave"></div>
+                                <div class="wave"></div>
+                                <div class="wave"></div>
+                                <div class="wave"></div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 🌡️ TERMÓMETRO ESTÉTICO -->
                     {% if tanque.sensor_de_temperatura %}
-                    <div style="position: absolute; {{ 'left: 75px;' if tanque.lado_termometro == 'der' else 'right: 75px;' }} top: 0px; width: 30px; height: 120px; display: flex; flex-direction: column; align-items: center;">
-                        <div style="position: relative; width: 14px; height: 100%; background: rgba(255, 255, 255, 0.2); border-radius: 10px; border: 1.5px solid rgba(0, 0, 0, 0.7); overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.2), 2px 2px 5px rgba(0,0,0,0.1);">
-                            <div style="position: absolute; left: 2px; top: 5%; width: 3px; height: 90%; background: rgba(255,255,255,0.4); border-radius: 10px; z-index: 2;"></div>
-                            <div id="temp-fill-t{{ i }}" style="position: absolute; bottom: 0; width: 100%; height: 0%; background: #1976d2; transition: height 0.5s, background-color 0.5s;"></div>
+                    <div
+                        style="position: absolute; {{ 'left: 75px;' if tanque.lado_termometro == 'der' else 'right: 75px;' }} top: 0px; width: 30px; height: 120px; display: flex; flex-direction: column; align-items: center;">
+                        <div
+                            style="position: relative; width: 14px; height: 100%; background: rgba(255, 255, 255, 0.2); border-radius: 10px; border: 1.5px solid rgba(0, 0, 0, 0.7); overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.2), 2px 2px 5px rgba(0,0,0,0.1);">
+                            <div
+                                style="position: absolute; left: 2px; top: 5%; width: 3px; height: 90%; background: rgba(255,255,255,0.4); border-radius: 10px; z-index: 2;">
+                            </div>
+                            <div id="temp-fill-t{{ i }}"
+                                style="position: absolute; bottom: 0; width: 100%; height: 0%; background: #1976d2; transition: height 0.5s, background-color 0.5s;">
+                            </div>
                         </div>
-                        <div id="temp-bulb-t{{ i }}" style="position: absolute; bottom: -10px; width: 28px; height: 28px; background: #1976d2; border-radius: 50%; border: 1.5px solid rgba(0, 0, 0, 0.8); box-shadow: inset -3px -3px 6px rgba(0,0,0,0.3), 2px 2px 5px rgba(0,0,0,0.2); transition: background-color 0.5s; display: flex; align-items: center; justify-content: center;">
-                            <div style="width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; position: absolute; top: 4px; left: 6px;"></div>
+                        <div id="temp-bulb-t{{ i }}"
+                            style="position: absolute; bottom: -10px; width: 28px; height: 28px; background: #1976d2; border-radius: 50%; border: 1.5px solid rgba(0, 0, 0, 0.8); box-shadow: inset -3px -3px 6px rgba(0,0,0,0.3), 2px 2px 5px rgba(0,0,0,0.2); transition: background-color 0.5s; display: flex; align-items: center; justify-content: center;">
+                            <div
+                                style="width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; position: absolute; top: 4px; left: 6px;">
+                            </div>
                         </div>
                     </div>
                     {% endif %}
-                    <div class="tank-upper-lid" style="position: absolute; top: 0px; left: 50%; transform: translateX(-50%); width: 60px; height: 15px; background: linear-gradient(to right, #cfcfcf, #e0e0e0, #a8a8a8); border: 2px solid black; border-radius: 50%; z-index: 2;"></div>
+                    <div class="tank-upper-lid"
+                        style="position: absolute; top: 0px; left: 50%; transform: translateX(-50%); width: 60px; height: 15px; background: linear-gradient(to right, #cfcfcf, #e0e0e0, #a8a8a8); border: 2px solid black; border-radius: 50%; z-index: 2;">
+                    </div>
                 </div>
                 {% endfor %}
 
                 <!-- VÁLVULAS -->
                 {% for valvula in elementos.valvulas %}
                 {% set i = loop.index %}
-                {% set v_top = [47, 112, 185, 315, 331, 331, 500, 318][i-1] %}
-                {% set v_left = [286, 546, 224, 130, 745, 546, 99, 646][i-1] %}
-                <div class="valve-industrial closed" id="valve{{ i }}" onclick="toggleValve({{ i }}, {{ valvula.entrada_server }})" style="top: {{ v_top }}px; left: {{ v_left }}px;">{{ i }}</div>
+                {% set v_top = [47, 175, 185, 315, 380, 380, 520, 318][i-1] %}
+                {% set v_left = [286, 546, 224, 130, 700, 590, 150, 646][i-1] %}
+                <div class="valve-industrial closed" id="valve{{ i }}"
+                    onclick="toggleValve({{ i }}, {{ valvula.entrada_server }})"
+                    style="top: {{ v_top }}px; left: {{ v_left }}px;">{{ i }}</div>
                 {% endfor %}
 
             </div> <!-- visual-schematic -->
@@ -275,12 +309,12 @@
             <button class="sidebar-toggle-btn" onclick="toggleSidebar()">
                 <span id="sidebar-chevron">▶</span>
             </button>
-            
+
             <div class="sidebar-content">
                 <!-- SECCIÓN 1: ACTUADORES GLOBALES (HORIZONTAL) -->
                 <section class="sidebar-section">
                     <h4><span>⚙️</span> Actuadores</h4>
-                    
+
                     <!-- VARIADOR -->
                     <div class="control-master-node">
                         <div class="control-row">
@@ -289,11 +323,13 @@
                         </div>
                         <div class="dual-control-wrapper">
                             <div class="h-slider-container">
-                                <input type="range" min="4000" max="20000" value="4000" class="h-slider" id="slider-vfd-side" 
-                                    oninput="syncDualControl('vfd', 'slider')" onchange="actualizarValorVariador(302, this.value)">
+                                <input type="range" min="4000" max="20000" value="4000" class="h-slider"
+                                    id="slider-vfd-side" oninput="syncDualControl('vfd', 'slider')"
+                                    onchange="actualizarValorVariador(302, this.value)">
                             </div>
                             <div class="dual-input-box">
-                                <input type="number" id="input-vfd-side" value="0.0" step="0.1" onchange="syncDualControl('vfd', 'input')">
+                                <input type="number" id="input-vfd-side" value="0.0" step="0.1"
+                                    onchange="syncDualControl('vfd', 'input')">
                                 <span style="font-size: 10px; color: #888;">Hz</span>
                             </div>
                         </div>
@@ -307,11 +343,13 @@
                         </div>
                         <div class="dual-control-wrapper">
                             <div class="h-slider-container">
-                                <input type="range" min="4000" max="20000" value="4000" class="h-slider" id="slider-vn-side" 
-                                    oninput="syncDualControl('vn', 'slider')" onchange="actualizarValorVariador(303, this.value)">
+                                <input type="range" min="4000" max="20000" value="4000" class="h-slider"
+                                    id="slider-vn-side" oninput="syncDualControl('vn', 'slider')"
+                                    onchange="actualizarValorVariador(303, this.value)">
                             </div>
                             <div class="dual-input-box">
-                                <input type="number" id="input-vn-side" value="0.0" step="0.1" onchange="syncDualControl('vn', 'input')">
+                                <input type="number" id="input-vn-side" value="0.0" step="0.1"
+                                    onchange="syncDualControl('vn', 'input')">
                                 <span style="font-size: 10px; color: #888;">%</span>
                             </div>
                         </div>
@@ -321,40 +359,55 @@
                 <!-- SECCIÓN 2: CONTROL DE NIVEL (COMPACTO) -->
                 <section class="sidebar-section">
                     <h4><span>🌊</span> Nivel de Llenado</h4>
-                    
+
                     <!-- GRUPO A -->
                     <div class="level-group-container">
-                        <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">GRUPO A</div>
+                        <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">GRUPO
+                            A</div>
                         <div class="level-group-header" style="margin-bottom: 5px;">
-                            <button id="btn-group-a" onclick="toggleGroupMode('A', [201,202,203])" class="btn-small btn-read" style="min-width: 60px; padding: 2px 5px; font-size: 9px; background: #c62828;">MANUAL</button>
+                            <button id="btn-group-a" onclick="toggleGroupMode('A', [201,202,203])"
+                                class="btn-small btn-read"
+                                style="min-width: 60px; padding: 2px 5px; font-size: 9px; background: #c62828;">MANUAL</button>
                             <div class="level-tank-labels">
                                 <span>T1</span><span>T2</span><span>T3</span>
                             </div>
                         </div>
                         <div class="level-sp-row">
-                            <button class="btn-chevron" onclick="document.getElementById('sp-grid-a').classList.toggle('expanded')" style="padding: 0 4px; font-size: 8px;">SP ◀</button>
+                            <button class="btn-chevron"
+                                onclick="document.getElementById('sp-grid-a').classList.toggle('expanded')"
+                                style="padding: 0 4px; font-size: 8px;">SP ◀</button>
                             <div id="sp-grid-a" class="level-sp-grid">
-                                <input type="number" id="side-sp-nivel-t1" class="mini-sp-input" onchange="writeLevelSP('T1', this.value)">
-                                <input type="number" id="side-sp-nivel-t2" class="mini-sp-input" onchange="writeLevelSP('T2', this.value)">
-                                <input type="number" id="side-sp-nivel-t3" class="mini-sp-input" onchange="writeLevelSP('T3', this.value)">
+                                <input type="number" id="side-sp-nivel-t1" class="mini-sp-input"
+                                    onchange="writeLevelSP('T1', this.value)">
+                                <input type="number" id="side-sp-nivel-t2" class="mini-sp-input"
+                                    onchange="writeLevelSP('T2', this.value)">
+                                <input type="number" id="side-sp-nivel-t3" class="mini-sp-input"
+                                    onchange="writeLevelSP('T3', this.value)">
                             </div>
                         </div>
                     </div>
 
                     <!-- GRUPO B -->
                     <div class="level-group-container">
-                        <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">GRUPO B</div>
+                        <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">GRUPO
+                            B</div>
                         <div class="level-group-header" style="margin-bottom: 5px;">
-                            <button id="btn-group-b" onclick="toggleGroupMode('B', [204,205])" class="btn-small btn-read" style="min-width: 60px; padding: 2px 5px; font-size: 9px; background: #c62828;">MANUAL</button>
+                            <button id="btn-group-b" onclick="toggleGroupMode('B', [204,205])"
+                                class="btn-small btn-read"
+                                style="min-width: 60px; padding: 2px 5px; font-size: 9px; background: #c62828;">MANUAL</button>
                             <div class="level-tank-labels two-cols">
                                 <span>T4</span><span>T5</span>
                             </div>
                         </div>
                         <div class="level-sp-row">
-                            <button class="btn-chevron" onclick="document.getElementById('sp-grid-b').classList.toggle('expanded')" style="padding: 0 4px; font-size: 8px;">SP ◀</button>
+                            <button class="btn-chevron"
+                                onclick="document.getElementById('sp-grid-b').classList.toggle('expanded')"
+                                style="padding: 0 4px; font-size: 8px;">SP ◀</button>
                             <div id="sp-grid-b" class="level-sp-grid two-cols">
-                                <input type="number" id="side-sp-nivel-t4" class="mini-sp-input" onchange="writeLevelSP('T4', this.value)">
-                                <input type="number" id="side-sp-nivel-t5" class="mini-sp-input" onchange="writeLevelSP('T5', this.value)">
+                                <input type="number" id="side-sp-nivel-t4" class="mini-sp-input"
+                                    onchange="writeLevelSP('T4', this.value)">
+                                <input type="number" id="side-sp-nivel-t5" class="mini-sp-input"
+                                    onchange="writeLevelSP('T5', this.value)">
                             </div>
                         </div>
                     </div>
@@ -367,35 +420,49 @@
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             {% for i in [2,4] %}
                             {% set t_obj = elementos.tanques[i-1] %}
-                            <div style="background: #fff; border: 1px solid #eee; padding: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="font-size: 12px; font-weight: 800; color: #444; cursor: pointer;" onclick="selectTank({{ i }})">TANQUE {{ i }}</span>
+                            <div
+                                style="background: #fff; border: 1px solid #eee; padding: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="font-size: 12px; font-weight: 800; color: #444; cursor: pointer;"
+                                        onclick="selectTank({{ i }})">TANQUE {{ i }}</span>
                                     <div style="display: flex; align-items: center; gap: 8px;">
-                                        <div id="side-led-seguro-t{{ i }}" class="led-indicator" title="Nivel de seguridad"></div>
-                                        <button id="side-btn-temp-t{{ i }}" class="btn-small btn-read" style="background: #c62828; color: white; border-radius: 15px; padding: 2px 12px; font-size: 9px;"
+                                        <div id="side-led-seguro-t{{ i }}" class="led-indicator"
+                                            title="Nivel de seguridad"></div>
+                                        <button id="side-btn-temp-t{{ i }}" class="btn-small btn-read"
+                                            style="background: #c62828; color: white; border-radius: 15px; padding: 2px 12px; font-size: 9px;"
                                             onclick="toggleGenericPID('{{ 'T2' if i == 2 else 'T4' }}', {{ t_obj.boton_virtual_address }}, '{{ 'coil' if i == 2 else 'reg' }}')">OFF</button>
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div style="display: flex; align-items: center; gap: 5px;">
                                         <span style="font-size: 10px; color: #888;">SP:</span>
-                                        <input type="number" id="side-sp-temp-t{{ i }}" value="0" style="width: 55px; text-align: center; border-radius: 4px; border: 1px solid #ccc; font-size: 12px;"
+                                        <input type="number" id="side-sp-temp-t{{ i }}" value="0"
+                                            style="width: 55px; text-align: center; border-radius: 4px; border: 1px solid #ccc; font-size: 12px;"
                                             onchange="updatePIDSetpoint('{{ 'T2' if i == 2 else 'T4' }}', this.value)">
                                         <span style="font-size: 10px; color: #888;">°C</span>
                                     </div>
-                                    <button class="btn-chevron" onclick="togglePIDAccordion({{ i }})" style="font-size: 12px;">⚙️</button>
+                                    <button class="btn-chevron" onclick="togglePIDAccordion({{ i }})"
+                                        style="font-size: 12px;">⚙️</button>
                                 </div>
                                 <!-- ACORDEON PID (CONTEXTUAL) -->
                                 <div id="side-pid-accordion-t{{ i }}" class="pid-accordion-content">
                                     <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
                                         <div class="pid-grid">
-                                            <div class="pid-field"><label>Kp</label><input type="number" id="side-kp-t{{ i }}" step="0.1"></div>
-                                            <div class="pid-field"><label>Ti</label><input type="number" id="side-ti-t{{ i }}" step="1"></div>
-                                            <div class="pid-field"><label>Td</label><input type="number" id="side-td-t{{ i }}" step="1"></div>
+                                            <div class="pid-field"><label>Kp</label><input type="number"
+                                                    id="side-kp-t{{ i }}" step="0.1"></div>
+                                            <div class="pid-field"><label>Ti</label><input type="number"
+                                                    id="side-ti-t{{ i }}" step="1"></div>
+                                            <div class="pid-field"><label>Td</label><input type="number"
+                                                    id="side-td-t{{ i }}" step="1"></div>
                                         </div>
                                         <div style="display: flex; gap: 5px;">
-                                            <button class="btn-small btn-read" style="flex: 1; font-size: 10px; padding: 5px;" onclick="readPIDValues('{{ 'T2' if i == 2 else 'T4' }}')">LEER</button>
-                                            <button class="btn-small btn-write" style="flex: 1; font-size: 10px; padding: 5px;" onclick="saveSidePID({{ i }})">CARGAR</button>
+                                            <button class="btn-small btn-read"
+                                                style="flex: 1; font-size: 10px; padding: 5px;"
+                                                onclick="readPIDValues('{{ 'T2' if i == 2 else 'T4' }}')">LEER</button>
+                                            <button class="btn-small btn-write"
+                                                style="flex: 1; font-size: 10px; padding: 5px;"
+                                                onclick="saveSidePID({{ i }})">CARGAR</button>
                                         </div>
                                     </div>
                                 </div>
@@ -427,7 +494,7 @@
         document.querySelectorAll('.tank').forEach(t => t.style.boxShadow = 'none');
         const tankEl = document.getElementById(`tank${id}`);
         if (tankEl) tankEl.style.boxShadow = '0 0 15px var(--secondary)';
-        
+
         // Si tiene temperatura, expandir su acordeón para mostrar que fue seleccionado
         const accordion = document.getElementById(`side-pid-accordion-t${id}`);
         if (accordion) accordion.classList.add('expanded');
@@ -437,7 +504,7 @@
         const slider = document.getElementById(`slider-${actuator}-side`);
         const input = document.getElementById(`input-${actuator}-side`);
         const label = document.getElementById(`valor-${actuator}-side`);
-        
+
         const min = 4000, max = 20000;
         const factor = actuator === 'vfd' ? 50 : 100;
         const unit = actuator === 'vfd' ? 'Hz' : '%';
@@ -503,7 +570,7 @@
         btn.innerText = _groupState[group];
         btn.style.background = _groupState[group] === 'AUTO' ? '#2e7d32' : '#c62828';
         const modeVal = _groupState[group] === 'AUTO';
-        
+
         // Impacto masivo en los tanques del grupo
         addresses.forEach(addr => {
             writeCoil(addr, modeVal);
@@ -530,7 +597,7 @@
 
     window.addEventListener('resize', () => { adaptSchematic(); adaptModal(); });
     document.addEventListener('DOMContentLoaded', () => { setTimeout(adaptSchematic, 100); });
-    
+
     // MutationObserver to adapt when tab becomes visible
     const observer = new MutationObserver((m) => {
         if (m[0].attributeName === 'style' && window.getComputedStyle(m[0].target).display !== 'none') adaptSchematic();
