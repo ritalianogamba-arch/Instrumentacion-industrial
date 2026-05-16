@@ -30,6 +30,10 @@ body {
     background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    top: 0;
+    z-index: 500;
+    flex-wrap: wrap;
 }
 
 .header-logo {
@@ -52,19 +56,52 @@ body {
 
 /* Tabs */
 .tabs-container {
-    margin: 1.5rem auto;
+    margin: 0 auto;
     max-width: 98%;
     padding: 0 1rem;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    padding-top: 1.5rem;
 }
 
 .tabs-header {
     display: flex;
-    background: white;
-    border-radius: var(--radius);
-    padding: 5px;
-    box-shadow: var(--shadow);
-    margin-bottom: 2rem;
+    gap: 10px;
+
+    position: absolute;
+    bottom: -70px; /* 👈 sobresale del header (ajustable) */
+    left: 0;
+    right: 0;
+
+    padding: 8px;
+    background: rgb(255, 255, 255);
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+
+    z-index: 400;
+
+    /* 🔥 efecto oculto tipo Edge */
+    transform: translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* 🔥 aparece al pasar el mouse por el header */
+.page-header:hover .tabs-header {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 🔥 evita que desaparezca cuando bajás al tab */
+.tabs-header:hover {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
 
 .tab-button {
     flex: 1;
@@ -1117,6 +1154,7 @@ td.off {
     min-height: 650px;
     position: relative;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
 }
 
 #control-sidebar {
@@ -1428,4 +1466,28 @@ td.off {
     border-radius: 4px;
     text-align: center;
     font-size: 11px;
+}
+
+/* =========================================================================
+   EXPANDABLE SCHEMATIC WHEN SIDEBAR IS COLLAPSED
+   ========================================================================= */
+
+/* Base: Sidebar visible - schematic normal */
+.visual-schematic-wrapper {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.visual-schematic {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When sidebar is collapsed */
+.visual-tab-container:has(#control-sidebar.collapsed) .visual-schematic-wrapper {
+    padding: 30px calc(50vw - 770px) 30px calc(50vw - 970px) !important;
+    box-sizing: border-box;
+}
+
+/* Make schematic larger and center it */
+.visual-tab-container:has(#control-sidebar.collapsed) .visual-schematic {
+    width: 1540px;
 }

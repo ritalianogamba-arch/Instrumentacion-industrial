@@ -13,4 +13,11 @@
     {% endif %}
 
     <img src="{{ url_for('static', filename='logo_fi.png') }}" class="header-logo" alt="Logo FI">
+
+    <!-- Tabs Navigation -->
+    <nav class="tabs-header">
+        <button class="tab-button" onclick="openTab('tab-monitoreo', this)">Monitoreo</button>
+        <button class="tab-button" onclick="openTab('tab-visual', this)">Visual</button>
+        <button class="tab-button" onclick="openTab('tab-graficas', this)">Gráficas</button>
+    </nav>
 </header>
