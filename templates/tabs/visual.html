@@ -84,7 +84,7 @@
     </div>
 
     <div class="visual-tab-container">
-        <div class="visual-schematic-wrapper" style="flex: 1; padding: 20px;">
+        <div class="visual-schematic-wrapper" style="flex: 1;">
             <div class="visual-schematic" id="schematic-main">
 
                 <!----------------------------------------------- DIBUJO DE LAS LINEAS --------------------------------------------------------->
@@ -480,13 +480,17 @@
     let g_selectedTankId = null;
     let _groupState = { A: 'MANUAL', B: 'MANUAL' };
 
-    function toggleSidebar() {
-        const sidebar = document.getElementById('control-sidebar');
-        const chevron = document.getElementById('sidebar-chevron');
-        sidebar.classList.toggle('collapsed');
-        chevron.innerText = sidebar.classList.contains('collapsed') ? '◀' : '▶';
-        setTimeout(adaptSchematic, 400);
-    }
+   function toggleSidebar() {
+    const sidebar = document.getElementById('control-sidebar');
+    const chevron = document.getElementById('sidebar-chevron');
+
+    sidebar.classList.toggle('collapsed');
+    chevron.innerText = sidebar.classList.contains('collapsed') ? '◀' : '▶';
+
+    requestAnimationFrame(() => {
+        adaptSchematic();
+    });
+}
 
     function selectTank(id) {
         g_selectedTankId = id;
@@ -579,14 +583,31 @@
 
     // Adapt Schematic
     function adaptSchematic() {
-        const wrapper = document.querySelector('.visual-schematic-wrapper');
-        const schematic = document.querySelector('.visual-schematic');
-        if (!wrapper || !schematic) return;
-        const availableWidth = wrapper.offsetWidth - 40;
-        const scale = Math.min(availableWidth / 1300, 1.3);
-        schematic.style.transform = `scale(${scale})`;
-        wrapper.style.height = (600 * scale + 40) + 'px';
-    }
+    const wrapper = document.querySelector('.visual-schematic-wrapper');
+    const schematic = document.querySelector('.visual-schematic');
+
+    if (!wrapper || !schematic) return;
+
+    const baseWidth = 1300;   // 👈 ancho REAL de tu planta
+    const baseHeight = 600;   // 👈 alto REAL
+
+    const availableWidth = wrapper.clientWidth;
+    const availableHeight = wrapper.clientHeight;
+
+    // 🔥 calcular escala REAL
+    const scaleX = availableWidth / baseWidth;
+    const scaleY = availableHeight / baseHeight;
+
+    const scale = Math.min(scaleX, scaleY);
+
+    // 🔥 centrar + escalar
+    schematic.style.transform = `
+        translate(-50%, -50%) scale(${scale})
+    `;
+    schematic.style.position = "absolute";
+    schematic.style.left = "50%";
+    schematic.style.top = "50%";
+}
 
     function adaptModal() {
         const content = document.getElementById('modal-content');
