@@ -22,7 +22,7 @@ echo OK: Raspberry encontrada
 echo.
 
 echo Preparando lista de archivos a transferir...
-set "ARCHIVOS=app.py api_routes.py bot_telegram.py mocks.py modbus_core.py supervisors.py inicio_servicios.sh requirements.txt config models static templates"
+set "ARCHIVOS=app.py api_routes.py bot_telegram.py mocks.py modbus_core.py supervisors.py inicio_servicios.sh setup_red.sh requirements.txt config models static templates"
 
 :: Anexar certificados si existen
 if exist server.crt (
