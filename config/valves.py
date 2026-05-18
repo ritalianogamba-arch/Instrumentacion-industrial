@@ -1,5 +1,5 @@
 from models.iot_models import SalidaDigital
-from .buttons import (
+from .virtual_buttons import (
     BOTON_EV_1, BOTON_EV_2, BOTON_EV_3, BOTON_EV_4,
     BOTON_EV_5, BOTON_EV_6, BOTON_EV_7, BOTON_EV_8
 )
@@ -19,7 +19,7 @@ ELECTRO_VALVULA_1 = SalidaDigital(
     identificador=1,
     estado=None,
     entrada_digital=BOTON_EV_1.address,
-    entrada_server=14,
+    entrada_server=BTN_VALVULA_1.address,
 )
 
 ELECTRO_VALVULA_2 = SalidaDigital(
@@ -28,7 +28,7 @@ ELECTRO_VALVULA_2 = SalidaDigital(
     identificador=2,
     estado=None,
     entrada_digital=BOTON_EV_2.address,
-    entrada_server=15,
+    entrada_server=BTN_VALVULA_2.address,
 )
 
 ELECTRO_VALVULA_3 = SalidaDigital(
@@ -37,7 +37,7 @@ ELECTRO_VALVULA_3 = SalidaDigital(
     identificador=3,
     estado=None,
     entrada_digital=BOTON_EV_3.address,
-    entrada_server=16,
+    entrada_server=BTN_VALVULA_3.address,
 )
 
 ELECTRO_VALVULA_4 = SalidaDigital(
@@ -46,7 +46,7 @@ ELECTRO_VALVULA_4 = SalidaDigital(
     identificador=4,
     estado=None,
     entrada_digital=BOTON_EV_4.address,
-    entrada_server=17,
+    entrada_server=BTN_VALVULA_4.address,
 )
 
 ELECTRO_VALVULA_5 = SalidaDigital(
@@ -55,7 +55,7 @@ ELECTRO_VALVULA_5 = SalidaDigital(
     identificador=5,
     estado=None,
     entrada_digital=BOTON_EV_5.address,
-    entrada_server=18,
+    entrada_server=BTN_VALVULA_5.address,
 )
 
 ELECTRO_VALVULA_6 = SalidaDigital(
@@ -64,7 +64,7 @@ ELECTRO_VALVULA_6 = SalidaDigital(
     identificador=6,
     estado=None,
     entrada_digital=BOTON_EV_6.address,
-    entrada_server=19,
+    entrada_server=BTN_VALVULA_6.address,
 )
 
 ELECTRO_VALVULA_7 = SalidaDigital(
@@ -73,7 +73,7 @@ ELECTRO_VALVULA_7 = SalidaDigital(
     identificador=7,
     estado=None,
     entrada_digital=BOTON_EV_7.address,
-    entrada_server=20,
+    entrada_server=BTN_VALVULA_7.address,
 )
 
 ELECTRO_VALVULA_8 = SalidaDigital(
@@ -82,5 +82,5 @@ ELECTRO_VALVULA_8 = SalidaDigital(
     identificador=8,
     estado=None,
     entrada_digital=BOTON_EV_8.address,
-    entrada_server=21,
+    entrada_server=BTN_VALVULA_8.address,
 )

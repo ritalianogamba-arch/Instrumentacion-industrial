@@ -365,7 +365,7 @@
                         <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">GRUPO
                             A</div>
                         <div class="level-group-header" style="margin-bottom: 5px;">
-                            <button id="btn-group-a" onclick="toggleGroupMode('A', [201,202,203])"
+                            <button id="btn-group-a" onclick="toggleGroupMode('A', [20])"
                                 class="btn-small btn-read"
                                 style="min-width: 60px; padding: 2px 5px; font-size: 9px; background: #c62828;">MANUAL</button>
                             <div class="level-tank-labels">
@@ -392,7 +392,7 @@
                         <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">GRUPO
                             B</div>
                         <div class="level-group-header" style="margin-bottom: 5px;">
-                            <button id="btn-group-b" onclick="toggleGroupMode('B', [204,205])"
+                            <button id="btn-group-b" onclick="toggleGroupMode('B', [21])"
                                 class="btn-small btn-read"
                                 style="min-width: 60px; padding: 2px 5px; font-size: 9px; background: #c62828;">MANUAL</button>
                             <div class="level-tank-labels two-cols">
@@ -431,7 +431,7 @@
                                             title="Nivel de seguridad"></div>
                                         <button id="side-btn-temp-t{{ i }}" class="btn-small btn-read"
                                             style="background: #c62828; color: white; border-radius: 15px; padding: 2px 12px; font-size: 9px;"
-                                            onclick="toggleGenericPID('{{ 'T2' if i == 2 else 'T4' }}', {{ t_obj.boton_virtual_address }}, '{{ 'coil' if i == 2 else 'reg' }}')">OFF</button>
+                                            onclick="toggleGenericPID('{{ 'T2' if i == 2 else 'T4' }}', {{ elementos.pids[0].boton_virtual_address if i == 2 else elementos.pids[1].boton_virtual_address }}, '{{ 'coil' if i == 2 else 'reg' }}')">OFF</button>
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">

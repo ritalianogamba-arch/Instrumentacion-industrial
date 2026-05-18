@@ -12,15 +12,15 @@ from config import (
 # =========================================================================
 class MockMemory:
     def __init__(self):
-        self.coils = {addr: False for addr in range(1000)}
-        self.registers = {addr: 0 for addr in range(1000)}
+        self.coils = {addr: False for addr in range(10000)}
+        self.registers = {addr: 0 for addr in range(10000)}
         
-        # Inicialización base de niveles a 0%
-        for addr in [202, 203, 204, 205, 302, 303, 304, 305]:
+        # Inicialización base de niveles y actuadores a 4000 (0%)
+        for addr in [s.address for s in LISTA_SENSORES if "PRESION" in s.nombre] + [a.address for a in LISTA_ACTUADORES]:
             self.registers[addr] = 4000
             
         # Inicialización base de temperatura a 20°C
-        for addr in [200, 201, 401, 421]:
+        for addr in [s.address for s in LISTA_SENSORES if "Temperatura" in s.nombre]:
             self.registers[addr] = int((20.0 - 0.5) * 1000 / 75)
             
         self.physics = {
@@ -65,8 +65,8 @@ def get_mock_status():
         "registers_inputs": sensores_raw,
         "registers_outputs": [store.registers.get(a.address, 0) for a in LISTA_ACTUADORES],
         "sp_niveles": [store.registers.get(t.SetPoint_Level, 0) for t in LISTA_TANQUES],
-        "pid_t2": get_pid_data(LISTA_PIDS[0], store.registers.get(201, 260)),
-        "pid_t4": get_pid_data(LISTA_PIDS[1], store.registers.get(200, 260)),
+        "pid_t2": get_pid_data(LISTA_PIDS[0], store.registers.get(LISTA_PIDS[0].address_set_point + 1, 260)),
+        "pid_t4": get_pid_data(LISTA_PIDS[1], store.registers.get(LISTA_PIDS[1].address_set_point + 1, 260)),
         "pid_flags": {
             "t2_activo": store.coils.get(LISTA_PIDS[0].boton_virtual_address, False),
             "t4_activo": store.coils.get(LISTA_PIDS[1].boton_virtual_address, False)
@@ -118,11 +118,12 @@ def physics_loop():
                 store.physics["temp_cycle"] = 20.0
                 store.physics["temp_direction"] = 1
 
-            raw_temp = int((store.physics["temp_cycle"] - 0.5) * 1000 / 75)
-            store.registers[200] = raw_temp
-            store.registers[201] = raw_temp
-            store.registers[401] = raw_temp
-            store.registers[421] = raw_temp
+            for s in LISTA_SENSORES:
+                if "Temperatura" in s.nombre:
+                    store.registers[s.address] = raw_temp
+            # Simular temperatura actual también en el registro 1 del PID (Temp Actual)
+            for p in LISTA_PIDS:
+                store.registers[p.address_set_point + 1] = raw_temp
 
             # 2. MOVIMIENTO DE AGUA INDEPENDIENTE (COMO PLANTAS INDIVIDUALES)
             flow_speed_in = 3.0 * dt  # Llenado suavizado
@@ -151,13 +152,10 @@ def physics_loop():
                 
                 l[idx] = max(0.0, min(100.0, l[idx]))
 
-            # Sincronizar niveles a registros Modbus
-            store.registers[202] = int(4000 + (l[1] * 160)) # T1
-            store.registers[204] = int(4000 + (l[2] * 160)) # T2
-            store.registers[205] = int(4000 + (l[3] * 160)) # T3
-            
-            # T4 y T5 comparten el sensor 203 por diseño físico, visualmente se moverán al mismo nivel
-            store.registers[203] = int(4000 + (max(l[4], l[5]) * 160)) 
+            # Sincronizar niveles a registros Modbus dinámicamente
+            for i, tank in enumerate(LISTA_TANQUES):
+                idx = i + 1
+                store.registers[tank.sensor_de_presion] = int(4000 + (l[idx] * 160))
 
 
         except Exception as e:
