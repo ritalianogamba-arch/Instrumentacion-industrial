@@ -1,7 +1,9 @@
 from models.iot_models import SalidaDigital
 from .virtual_buttons import (
     BOTON_EV_1, BOTON_EV_2, BOTON_EV_3, BOTON_EV_4,
-    BOTON_EV_5, BOTON_EV_6, BOTON_EV_7, BOTON_EV_8
+    BOTON_EV_5, BOTON_EV_6, BOTON_EV_7, BOTON_EV_8,
+    BTN_VALVULA_1, BTN_VALVULA_2, BTN_VALVULA_3, BTN_VALVULA_4,
+    BTN_VALVULA_5, BTN_VALVULA_6, BTN_VALVULA_7, BTN_VALVULA_8
 )
 
 # =========================================================================
