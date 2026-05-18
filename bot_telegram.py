@@ -97,7 +97,7 @@ def main():
             logger.info("🤖 Bot Telegram iniciando con Menú Interactivo...")
             
             # Ejecución con control de excepciones para modo Reload de Flask
-            application.run_polling(drop_pending_updates=True)
+            application.run_polling(drop_pending_updates=True, stop_signals=())
             
             # Si sale de run_polling sin errores, rompemos el ciclo
             break

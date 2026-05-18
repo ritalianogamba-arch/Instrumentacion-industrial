@@ -22,7 +22,7 @@ echo OK: Raspberry encontrada
 echo.
 
 echo Preparando lista de archivos a transferir...
-set "ARCHIVOS=app.py api_routes.py bot_telegram.py mocks.py modbus_core.py supervisors.py requirements.txt config models static templates"
+set "ARCHIVOS=app.py api_routes.py bot_telegram.py mocks.py modbus_core.py supervisors.py inicio_servicios.sh requirements.txt config models static templates"
 
 :: Anexar certificados si existen
 if exist server.crt (
@@ -41,7 +41,9 @@ echo ========================================
 echo [ACCION 2/2] INSTALACION Y REINICIO
 echo Te pedira la clave por ultima vez.
 echo ========================================
-ssh %RASPBERRY_USER%@%RASPBERRY_HOST% "pip install -r %RASPBERRY_DIR%/requirements.txt && sudo systemctl restart plc-server.service"
+echo Sincronizando hora con la Raspberry Pi...
+for /f "usebackq tokens=*" %%i in (`powershell -command "Get-Date -Format 'yyyy-MM-dd HH:mm:ss'"`) do set CURRENT_DATE=%%i
+ssh %RASPBERRY_USER%@%RASPBERRY_HOST% "sudo date -s '%CURRENT_DATE%' && %RASPBERRY_DIR%/venv/bin/pip install -r %RASPBERRY_DIR%/requirements.txt && sed -i 's/\r$//' %RASPBERRY_DIR%/inicio_servicios.sh && chmod +x %RASPBERRY_DIR%/inicio_servicios.sh && sudo systemctl daemon-reload && sudo systemctl restart plc-server.service"
 
 echo.
 echo ACTUALIZACION COMPLETADA!
