@@ -62,7 +62,7 @@
                         <div class="data-row"><span class="data-label">Nivel</span><span id="modal-level"
                                 class="data-value">-- %</span></div>
                         <div class="data-row"><span class="data-label">Volumen</span><span id="modal-level-abs"
-                                class="data-value">-- m³</span></div>
+                                class="data-value">-- L</span></div>
                         <div class="data-row" id="modal-temp-row"><span class="data-label">Temperatura</span><span
                                 id="modal-temp" class="data-value">-- °C</span></div>
                     </div>
@@ -642,9 +642,9 @@
         const hasTemp = tankEl.dataset.hasTemp === 'true';
         document.getElementById("modal-thermometer-col").style.display = hasTemp ? "flex" : "none";
         document.getElementById("modal-temp-row").style.display = hasTemp ? "flex" : "none";
-        document.getElementById("modal-altura").innerText = tankEl.dataset.altura + " m";
-        document.getElementById("modal-diametro").innerText = tankEl.dataset.diametro + " m";
-        document.getElementById("modal-volumen").innerText = tankEl.dataset.volumen + " m³";
+        document.getElementById("modal-altura").innerText = tankEl.dataset.altura + " mm";
+        document.getElementById("modal-diametro").innerText = tankEl.dataset.diametro + " mm";
+        document.getElementById("modal-volumen").innerText = tankEl.dataset.volumen + " L";
         document.getElementById("modal-material").innerText = tankEl.dataset.material;
     }
 
@@ -658,7 +658,7 @@
         if (!g_currentModalTankId) return;
         document.getElementById("modal-level").innerText = levelVal + " %";
         document.getElementById("modal-temp").innerText = temp + " °C";
-        document.getElementById("modal-level-abs").innerText = levelAbs + " m³";
+        document.getElementById("modal-level-abs").innerText = levelAbs + " L";
         document.getElementById("tank-water").style.height = levelVal + "%";
         const thermEl = document.getElementById("modal-therm-fill");
         if (thermEl) thermEl.style.height = Math.min(100, Math.max(0, (parseFloat(temp) - 20) * 100 / 75)) + "%";

@@ -18,8 +18,7 @@
                                 %I0.{{ boton.address }} ({{ boton.nombre }})
                                 {% if boton.address == 13 %}</strong>{% endif %}
                         </td>
-                        <td id="coil-in-{{ boton.address }}" class="off" 
-                            style="cursor: pointer;"
+                        <td id="coil-in-{{ boton.address }}" class="off" style="cursor: pointer;"
                             onclick="if(document.getElementById('status-text').innerText.includes('Simul')) mockToggleInput({{ boton.address }})">
                             OFF
                         </td>
@@ -72,77 +71,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-        <div class="panel">
-            <h3>Modo de Control de Tanques</h3>
-            <table id="tank_modes">
-                <thead>
-                    <tr>
-                        <th>Tanque</th>
-                        <th>Direccion (%M)</th>
-                        <th>Estado</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for tanque in elementos.tanques %}
-                    <tr>
-                        <td>{{ tanque.nombre }}</td>
-                        <td>%M{{ tanque.modo_auto_address }}</td>
-                        <td id="mode-status-{{ loop.index }}">--</td>
-                        <td>
-                            <button id="btn-mode-{{ loop.index }}" class="mode-toggle-btn mode-manual"
-                                onclick="toggleTankMode({{ loop.index }}, {{ tanque.modo_auto_address }})">
-                                MANUAL
-                            </button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="panel">
-            <h3>Botones Virtuales del SCADA</h3>
-            <table id="virtual_buttons_table">
-                <thead>
-                    <tr>
-                        <th>Función</th>
-                        <th>Dirección (%M)</th>
-                        <th>Descripción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for bv in elementos.botones_virtuales %}
-                    <tr>
-                        <td>{{ bv.nombre }}</td>
-                        <td>%M{{ bv.address }}</td>
-                        <td>{{ bv.descripcion or '-' }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="panel control-manual">
-            <h3>Salidas Analogicas</h3>
-            <table id="registers_outputs">
-                <thead>
-                    <tr>
-                        <th>Actuador</th>
-                        <th>Direccion</th>
-                        <th>Valor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for actuador in elementos.salidas_analogicas %}
-                    <tr>
-                        <td>{{ actuador.nombre }}</td>
-                        <td>%MW{{ actuador.address }}</td>
-                        <td id="reg-out-{{ actuador.address }}" class="value">--</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
         </div>
     </div>
 </div>

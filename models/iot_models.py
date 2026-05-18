@@ -76,13 +76,20 @@ class Tanque:
     # Dimensiones físicas
     altura: float = 2.0
     diametro: float = 1.0
-    volumen: float = 1.5
+    volumen: float = field(init=False)
     material: str = "Acero Inox"
     lado_controles: str = "izq" # "izq" o "der"
     lado_termometro: str = "der" # "izq" o "der"
     grupo: str = "A" # "A" o "B"
     min_val: int = 4000
     max_val: int = 20000
+
+    def __post_init__(self):
+        import math
+        # Dimensiones en mm, volumen calculado en Litros
+        radio = self.diametro / 2.0
+        volumen_mm3 = math.pi * (radio ** 2) * self.altura
+        self.volumen = round(volumen_mm3 / 1000000.0, 2)
 
 @dataclass
 class PID:

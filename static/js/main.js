@@ -173,7 +173,7 @@ function mainLoop() {
                     setVisLevel(`t${index}`, rawLevel, cfg);
                     
                     const levValEl = document.getElementById(`vis-lev-t${index}-val`);
-                    if (levValEl) levValEl.innerText = escalarNivel(rawLevel, cfg) + "%";
+                    if (levValEl) levValEl.innerText = escalarNivel(rawLevel, cfg);
                     
                     const levEl = document.getElementById(`vis-lev-t${index}`);
                     if (t.sensor_de_temperatura) {
@@ -184,7 +184,7 @@ function mainLoop() {
                             const color = getWaterColor(parseFloat(tempC));
                             
                             const tempEl = document.getElementById(`vis-temp-t${index}`);
-                            if (tempEl) tempEl.innerText = tempC + "°C";
+                            if (tempEl) tempEl.innerText = tempC;
                             
                             const tempBarEl = document.getElementById(`temp-fill-t${index}`);
                             if (tempBarEl) {
