@@ -1,0 +1,236 @@
+{
+  "plc": {
+    "connection": {
+      "ip": "192.168.1.10",
+      "port": 502,
+      "timeout": 5,
+      "retries": 2
+    },
+    "remote_lock_address": 13
+  },
+  "temperature_scaling": {
+    "enabled": false,
+    "description": "Si es False, aplica fórmula de escalamiento: °C = (raw × 75/1000) + 0.5. Si es True, el PLC envía valores ya escalados.",
+    "formula": {
+      "disabled": "degrees_celsius = (raw_value * 75 / 1000) + 0.5",
+      "enabled": "degrees_celsius = raw_value (already scaled in PLC)"
+    }
+  },
+  "level_scaling": {
+    "enabled": false,
+    "description": "Si es False, convierte presión a % usando min/max del tanque. Si es True, el PLC envía % directamente.",
+    "formula": {
+      "disabled": "level_percent = ((raw - cfg_min) / (cfg_max - cfg_min)) * 100",
+      "enabled": "level_percent = raw_value (already in percentage)"
+    }
+  },
+  "flask": {
+    "host": "0.0.0.0",
+    "port": 8080,
+    "debug_mode": false
+  },
+  "sensors": {
+    "temperature": {
+      "T2": {
+        "register": 302,
+        "name": "Temperatura Tanque 2",
+        "type": "analog"
+      },
+      "T4": {
+        "register": 304,
+        "name": "Temperatura Tanque 4",
+        "type": "analog"
+      }
+    },
+    "pressure": {
+      "T1": {
+        "register": 201,
+        "name": "Presión Tanque 1",
+        "type": "analog"
+      },
+      "T2": {
+        "register": 202,
+        "name": "Presión Tanque 2",
+        "type": "analog"
+      },
+      "T3": {
+        "register": 203,
+        "name": "Presión Tanque 3",
+        "type": "analog"
+      },
+      "T4_T5": {
+        "register": 204,
+        "name": "Presión Tanques 4 y 5",
+        "type": "analog"
+      }
+    }
+  },
+  "valves": {
+    "electrovalves": [
+      {"id": 1, "coil": 100, "name": "Electro Válvula 1"},
+      {"id": 2, "coil": 101, "name": "Electro Válvula 2"},
+      {"id": 3, "coil": 102, "name": "Electro Válvula 3"},
+      {"id": 4, "coil": 103, "name": "Electro Válvula 4"},
+      {"id": 5, "coil": 104, "name": "Electro Válvula 5"},
+      {"id": 6, "coil": 105, "name": "Electro Válvula 6"},
+      {"id": 7, "coil": 106, "name": "Electro Válvula 7"},
+      {"id": 8, "coil": 107, "name": "Electro Válvula 8"}
+    ]
+  },
+  "virtual_buttons": {
+    "group_modes": {
+      "group_a": {
+        "coil": 20,
+        "name": "Modo Auto Grupo A",
+        "description": "Activa modo automático para Grupo A (T1, T2, T3)"
+      },
+      "group_b": {
+        "coil": 21,
+        "name": "Modo Auto Grupo B",
+        "description": "Activa modo automático para Grupo B (T4, T5)"
+      }
+    },
+    "valve_commands": [
+      {"id": 1, "coil": 1, "name": "Comando Válvula 1", "associated_valve": 100},
+      {"id": 2, "coil": 2, "name": "Comando Válvula 2", "associated_valve": 101},
+      {"id": 3, "coil": 3, "name": "Comando Válvula 3", "associated_valve": 102},
+      {"id": 4, "coil": 4, "name": "Comando Válvula 4", "associated_valve": 103},
+      {"id": 5, "coil": 5, "name": "Comando Válvula 5", "associated_valve": 104},
+      {"id": 6, "coil": 6, "name": "Comando Válvula 6", "associated_valve": 105},
+      {"id": 7, "coil": 7, "name": "Comando Válvula 7", "associated_valve": 106},
+      {"id": 8, "coil": 8, "name": "Comando Válvula 8", "associated_valve": 107}
+    ],
+    "pid_activation": [
+      {"pid_id": 1, "coil": 321, "name": "Activar PID Tanque 2"},
+      {"pid_id": 2, "coil": 341, "name": "Activar PID Tanque 4"}
+    ],
+    "input_monitoring": {
+      "description": "Entradas digitales del hardware copiadas a %M por el PLC para monitoreo",
+      "inputs": [
+        {"id": 1, "coil": 30, "name": "Monitor Botón EV 1", "hardware": "%I0.0"},
+        {"id": 2, "coil": 31, "name": "Monitor Botón EV 2", "hardware": "%I0.1"},
+        {"id": 3, "coil": 32, "name": "Monitor Botón EV 3", "hardware": "%I0.2"},
+        {"id": 4, "coil": 33, "name": "Monitor Botón EV 4", "hardware": "%I0.3"},
+        {"id": 5, "coil": 34, "name": "Monitor Botón EV 5", "hardware": "%I0.4"},
+        {"id": 6, "coil": 35, "name": "Monitor Botón EV 6", "hardware": "%I0.5"},
+        {"id": 7, "coil": 36, "name": "Monitor Botón EV 7", "hardware": "%I0.6"},
+        {"id": 8, "coil": 37, "name": "Monitor Botón EV 8", "hardware": "%I0.7"},
+        {"id": 9, "coil": 38, "name": "Monitor Llave Mando Remoto", "hardware": "%I0.13"}
+      ]
+    }
+  },
+  "tanks": {
+    "tank_1": {
+      "name": "Tanque 1",
+      "group": "A",
+      "setpoint_level_register": 101,
+      "pressure_sensor": 201,
+      "valve_in": 100,
+      "valve_out": 102,
+      "height_mm": 500,
+      "diameter_mm": 328,
+      "material": "Aluminio",
+      "max_level": 10000
+    },
+    "tank_2": {
+      "name": "Tanque 2",
+      "group": "A",
+      "setpoint_level_register": 102,
+      "pressure_sensor": 202,
+      "temperature_sensor": 302,
+      "valve_in": 102,
+      "valve_out": 103,
+      "level_condition_register": 320,
+      "pid_id": 1,
+      "height_mm": 500,
+      "diameter_mm": 328,
+      "material": "Aluminio",
+      "max_level": 10000
+    },
+    "tank_3": {
+      "name": "Tanque 3",
+      "group": "A",
+      "setpoint_level_register": 103,
+      "pressure_sensor": 203,
+      "valve_in": 103,
+      "valve_out": 106,
+      "height_mm": 500,
+      "diameter_mm": 328,
+      "material": "Aluminio",
+      "max_level": 10000
+    },
+    "tank_4": {
+      "name": "Tanque 4",
+      "group": "B",
+      "setpoint_level_register": 104,
+      "pressure_sensor": 204,
+      "temperature_sensor": 304,
+      "valve_in": 101,
+      "valve_out": 105,
+      "level_condition_register": 340,
+      "pid_id": 2,
+      "height_mm": 750,
+      "diameter_mm": 325,
+      "material": "Aluminio",
+      "max_level": 10000
+    },
+    "tank_5": {
+      "name": "Tanque 5",
+      "group": "B",
+      "setpoint_level_register": 105,
+      "pressure_sensor": 204,
+      "valve_in": 107,
+      "valve_out": 104,
+      "height_mm": 750,
+      "diameter_mm": 325,
+      "material": "Fibra de Vidrio",
+      "max_level": 10000
+    }
+  },
+  "pids": {
+    "pid_tank_2": {
+      "id": 1,
+      "name": "PID Tanque 2",
+      "setpoint_register": 420,
+      "kp_register": 422,
+      "ti_register": 424,
+      "td_register": 426,
+      "activation_coil": 321
+    },
+    "pid_tank_4": {
+      "id": 2,
+      "name": "PID Tanque 4",
+      "setpoint_register": 440,
+      "kp_register": 442,
+      "ti_register": 444,
+      "td_register": 446,
+      "activation_coil": 341
+    }
+  },
+  "heaters": {
+    "T2": {
+      "register": 402,
+      "name": "Resistencia Térmica T2",
+      "tank": 2
+    },
+    "T4": {
+      "register": 404,
+      "name": "Resistencia Térmica T4",
+      "tank": 4
+    }
+  },
+  "documentation": {
+    "created": "2026-05-19",
+    "last_updated": "2026-05-19",
+    "reference_files": [
+      "config/plc.py",
+      "config/sensors.py",
+      "config/valves.py",
+      "config/virtual_buttons.py",
+      "config/tanks.py",
+      "config/pid.py",
+      "MODBUS_MAPPING.md",
+      "validate_addresses.py"
+    ]
+  }
+}

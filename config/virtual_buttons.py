@@ -24,15 +24,17 @@ BTN_PID_T2 = BotonVirtual(nombre="Activar PID T2", address=321)
 BTN_PID_T4 = BotonVirtual(nombre="Activar PID T4", address=341)
 
 # =========================================================================
-# ENTRADAS VIRTUALES
+# ENTRADAS DIGITALES MONITOREADAS
 # =========================================================================
-BOTON_EV_1 = EntradaDigital(nombre='Boton EV 1',address=0, estado=None)
-BOTON_EV_2 = EntradaDigital(nombre='Boton EV 2',address=1, estado=None)
-BOTON_EV_3 = EntradaDigital(nombre='Boton EV 3',address=2, estado=None)
-BOTON_EV_4 = EntradaDigital(nombre='Boton EV 4',address=3, estado=None)
-BOTON_EV_5 = EntradaDigital(nombre='Boton EV 5',address=4, estado=None)
-BOTON_EV_6 = EntradaDigital(nombre='Boton EV 6',address=5, estado=None)
-BOTON_EV_7 = EntradaDigital(nombre='Boton EV 7',address=6, estado=None)
-BOTON_EV_8 = EntradaDigital(nombre='Boton EV 8',address=7, estado=None)
-LLAVE_MANDO_REMOTO = EntradaDigital(nombre='Llave Mando Remoto', address=13, estado=None)
+# NOTA: Las entradas físicas del PLC (%I0.x) se copian a estas direcciones
+# de memoria (%M 30-38) para que el SCADA pueda monitorearlas
+BOTON_EV_1 = EntradaDigital(nombre='Boton EV 1',address=30, estado=None)
+BOTON_EV_2 = EntradaDigital(nombre='Boton EV 2',address=31, estado=None)
+BOTON_EV_3 = EntradaDigital(nombre='Boton EV 3',address=32, estado=None)
+BOTON_EV_4 = EntradaDigital(nombre='Boton EV 4',address=33, estado=None)
+BOTON_EV_5 = EntradaDigital(nombre='Boton EV 5',address=34, estado=None)
+BOTON_EV_6 = EntradaDigital(nombre='Boton EV 6',address=35, estado=None)
+BOTON_EV_7 = EntradaDigital(nombre='Boton EV 7',address=36, estado=None)
+BOTON_EV_8 = EntradaDigital(nombre='Boton EV 8',address=37, estado=None)
+LLAVE_MANDO_REMOTO = EntradaDigital(nombre='Llave Mando Remoto', address=38, estado=None)
 
