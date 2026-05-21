@@ -118,6 +118,8 @@ def physics_loop():
                 store.physics["temp_cycle"] = 20.0
                 store.physics["temp_direction"] = 1
 
+            raw_temp = int((store.physics["temp_cycle"] - 0.5) * 1000 / 75)
+            
             for s in LISTA_SENSORES:
                 if "Temperatura" in s.nombre:
                     store.registers[s.address] = raw_temp

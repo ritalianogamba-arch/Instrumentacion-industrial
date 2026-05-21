@@ -101,7 +101,7 @@ Si PLC_SENDS_SCALED_TEMP = True:
 | 35 | BOTON_EV_6 | %I0.5 | Monitor: Botón EV 6 |
 | 36 | BOTON_EV_7 | %I0.6 | Monitor: Botón EV 7 |
 | 37 | BOTON_EV_8 | %I0.7 | Monitor: Botón EV 8 |
-| 38 | LLAVE_MANDO_REMOTO | %I0.13 | Monitor: Llave de Control Remoto |
+| 13 | LLAVE_MANDO_REMOTO | %I0.13 | Monitor: Llave de Control Remoto |
 
 ---
 

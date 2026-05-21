@@ -72,7 +72,7 @@ config/
 │                                                  │
 │ INPUT REGISTERS (Lectura):                       │
 │   201-204: Sensores de presión (T1-T5)           │
-│   302, 304: Sensores de temperatura (T2, T4)    │
+│   302, 304: Sensores de temperatura (T2, T4)     │
 │                                                  │
 │ HOLDING REGISTERS (Lectura/Escritura):           │
 │   101-105: SetPoints de nivel (T1-T5)            │
