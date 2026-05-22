@@ -3,9 +3,16 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 from telegram.error import Conflict
-from config import TELEGRAM_TOKEN, LISTA_TANQUES, logger
-from modbus_core import get_sensor_value, client_manager
+from config import TELEGRAM_TOKEN, LISTA_TANQUES, LISTA_VALVULAS, LISTA_ACTUADORES, logger
+from modbus_core import get_sensor_value, client_manager, read_coils_safe
 import time
+
+def get_coil_value(address):
+    if client_manager.is_disabled:
+        import mocks
+        return mocks.mock_read_coil(address)
+    res = read_coils_safe(address, count=1)
+    return res.bits[0] if res else False
 
 def obtener_url_ngrok():
     try:
@@ -32,20 +39,36 @@ def generar_reporte_telemetria():
         tiene_datos = False
         
         if t.sensor_de_presion:
-            raw_nivel = get_sensor_value(t.sensor_de_presion)
-            nivel = max(0.0, min(100.0, (raw_nivel - 4000) / 160.0))
+            nivel = get_sensor_value(t.sensor_de_presion)
             reporte += f"  💧 Nivel: `{nivel:.1f} %`\n"
             tiene_datos = True
             
         if t.sensor_de_temperatura:
-            raw_temp = get_sensor_value(t.sensor_de_temperatura)
-            temp = (raw_temp * 75.0 / 1000.0) + 0.5
+            temp = get_sensor_value(t.sensor_de_temperatura)
             reporte += f"  🌡️ Temp: `{temp:.1f} °C`\n"
             tiene_datos = True
             
         if not tiene_datos:
             reporte += "  (Sin sensores analógicos)\n"
         reporte += "\n"
+
+    # ACTUADORES ANALÓGICOS
+    reporte += "⚙️ *ACTUADORES ANALÓGICOS*:\n"
+    for a in LISTA_ACTUADORES:
+        if "Resistencia" not in a.nombre:
+            raw_val = get_sensor_value(a.address)
+            scale = 50.0 if a.unidad == 'Hz' else 100.0
+            divisor = (a.max_val - a.min_val) / scale
+            val = max(0.0, min(scale, (raw_val - a.min_val) / divisor))
+            reporte += f"  🔸 {a.nombre}: `{val:.1f} {a.unidad}`\n"
+    reporte += "\n"
+
+    # VÁLVULAS (SALIDAS DIGITALES)
+    reporte += "🚰 *VÁLVULAS (ESTADO REAL)*:\n"
+    for v in LISTA_VALVULAS:
+        estado = get_coil_value(v.address)
+        icono = "🟢 ABIERTA" if estado else "🔴 CERRADA"
+        reporte += f"  🔹 {v.nombre}: {icono}\n"
         
     return reporte
 

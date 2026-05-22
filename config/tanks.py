@@ -38,7 +38,7 @@ TANQUE_1: Tanque = Tanque(
     lado_controles="izq",
     lado_termometro="der",
     grupo="A",
-    max_val=10000
+    max_val=100
 )
 
 TANQUE_2: Tanque = Tanque(
@@ -61,7 +61,7 @@ TANQUE_2: Tanque = Tanque(
     lado_controles="izq",
     lado_termometro="der",
     grupo="A",
-    max_val=10000
+    max_val=100
 )
 
 TANQUE_3: Tanque = Tanque(   
@@ -80,7 +80,7 @@ TANQUE_3: Tanque = Tanque(
     lado_controles="izq",
     lado_termometro="der",
     grupo="A",
-    max_val=10000
+    max_val=100
 )   
 
 TANQUE_4: Tanque = Tanque(   
@@ -103,7 +103,7 @@ TANQUE_4: Tanque = Tanque(
     lado_controles="der",
     lado_termometro="izq",
     grupo="B",
-    max_val=10000
+    max_val=100
 )   
 
 TANQUE_5: Tanque = Tanque(
@@ -122,5 +122,5 @@ TANQUE_5: Tanque = Tanque(
     lado_controles="der",
     lado_termometro="izq",
     grupo="None",
-    max_val=10000
+    max_val=100
 )

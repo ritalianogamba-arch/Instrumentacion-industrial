@@ -451,100 +451,74 @@
                 <section class="sidebar-section">
                     <h4><span>⚙️</span> Actuadores</h4>
 
-                    <!-- VARIADOR -->
+                    {% for a in elementos.salidas_analogicas %}
+                    {% if "Resistencia" not in a.nombre %}
                     <div class="control-master-node">
                         <div class="control-row">
-                            <span class="control-label">BOMBA (VFD)</span>
-                            <span id="valor-vfd-side" class="dual-val-label">0.0 Hz</span>
+                            <span class="control-label">{{ a.nombre | upper }}</span>
+                            <span id="valor-{{ a.address }}-side" class="dual-val-label">0.0 {{ a.unidad }}</span>
                         </div>
                         <div class="dual-control-wrapper">
                             <div class="h-slider-container">
-                                <input type="range" min="4000" max="20000" value="4000" class="h-slider"
-                                    id="slider-vfd-side" oninput="syncDualControl('vfd', 'slider')"
-                                    onchange="actualizarValorVariador(207, this.value)">
+                                <input type="range" min="{{ a.min_val }}" max="{{ a.max_val }}" value="{{ a.min_val }}" class="h-slider"
+                                    id="slider-{{ a.address }}-side" oninput="syncDualControl('{{ a.address }}', 'slider', '{{ a.unidad }}', {{ 50 if a.unidad == 'Hz' else 100 }}, {{ a.min_val }}, {{ a.max_val }})"
+                                    onchange="actualizarValorVariador({{ a.address }}, this.value)">
                             </div>
                             <div class="dual-input-box">
-                                <input type="number" id="input-vfd-side" value="0.0" step="0.1"
-                                    onchange="syncDualControl('vfd', 'input')">
-                                <span style="font-size: 10px; color: #888;">Hz</span>
+                                <input type="number" id="input-{{ a.address }}-side" value="0.0" step="0.1"
+                                    onchange="syncDualControl('{{ a.address }}', 'input', '{{ a.unidad }}', {{ 50 if a.unidad == 'Hz' else 100 }}, {{ a.min_val }}, {{ a.max_val }})">
+                                <span style="font-size: 10px; color: #888;">{{ a.unidad }}</span>
                             </div>
                         </div>
                     </div>
-
-                    <!-- VÁLVULA NEUMÁTICA -->
-                    <div class="control-master-node">
-                        <div class="control-row">
-                            <span class="control-label">V. NEUMÁTICA</span>
-                            <span id="valor-vn-side" class="dual-val-label">0.0 %</span>
-                        </div>
-                        <div class="dual-control-wrapper">
-                            <div class="h-slider-container">
-                                <input type="range" min="4000" max="20000" value="4000" class="h-slider"
-                                    id="slider-vn-side" oninput="syncDualControl('vn', 'slider')"
-                                    onchange="actualizarValorVariador(303, this.value)">
-                            </div>
-                            <div class="dual-input-box">
-                                <input type="number" id="input-vn-side" value="0.0" step="0.1"
-                                    onchange="syncDualControl('vn', 'input')">
-                                <span style="font-size: 10px; color: #888;">%</span>
-                            </div>
-                        </div>
-                    </div>
+                    {% endif %}
+                    {% endfor %}
                 </section>
 
                 <!-- SECCIÓN 2: CONTROL DE NIVEL (COMPACTO) -->
                 <section class="sidebar-section">
                     <h4><span>🌊</span> Nivel de Llenado</h4>
 
-                    <!-- GRUPO A -->
-                    <div class="level-group-container">
-                        <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">GRUPO
-                            A</div>
-                        <div class="level-group-header" style="margin-bottom: 5px;">
-                            <button id="btn-group-a" onclick="toggleGroupMode('A', [20])" class="btn-small btn-read"
-                                style="min-width: 60px; padding: 2px 5px; font-size: 9px; background: #c62828;">MANUAL</button>
-                            <div class="level-tank-labels">
-                                <span>T1</span><span>T2</span><span>T3</span>
-                            </div>
-                        </div>
-                        <div class="level-sp-row">
-                            <button class="btn-chevron"
-                                onclick="document.getElementById('sp-grid-a').classList.toggle('expanded')"
-                                style="padding: 0 4px; font-size: 8px;">SP ◀</button>
-                            <div id="sp-grid-a" class="level-sp-grid">
-                                <input type="number" id="side-sp-nivel-t1" class="mini-sp-input"
-                                    onchange="writeLevelSP('T1', this.value)">
-                                <input type="number" id="side-sp-nivel-t2" class="mini-sp-input"
-                                    onchange="writeLevelSP('T2', this.value)">
-                                <input type="number" id="side-sp-nivel-t3" class="mini-sp-input"
-                                    onchange="writeLevelSP('T3', this.value)">
-                            </div>
-                        </div>
-                    </div>
+                    {% set ns = namespace(groups={}) %}
+                    {% for t in elementos.tanques %}
+                        {% set g = t.grupo if t.grupo and t.grupo != "None" else "INDIVIDUAL" %}
+                        {% if g not in ns.groups %}
+                            {% set _ = ns.groups.update({g: []}) %}
+                        {% endif %}
+                        {% set _ = ns.groups[g].append(t) %}
+                    {% endfor %}
 
-                    <!-- GRUPO B -->
+                    {% for g_name, g_tanks in ns.groups.items() %}
                     <div class="level-group-container">
-                        <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">GRUPO
-                            B</div>
+                        <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">
+                            {{ 'GRUPO ' ~ g_name if g_name != 'INDIVIDUAL' else 'TANQUES INDIVIDUALES' }}
+                        </div>
                         <div class="level-group-header" style="margin-bottom: 5px;">
-                            <button id="btn-group-b" onclick="toggleGroupMode('B', [21])" class="btn-small btn-read"
+                            {% if g_name != 'INDIVIDUAL' and g_tanks|length > 0 %}
+                            <button id="btn-group-{{ g_name|lower }}" onclick="toggleGroupMode('{{ g_name }}', [{{ g_tanks[0].modo_auto_address }}])" class="btn-small btn-read"
                                 style="min-width: 60px; padding: 2px 5px; font-size: 9px; background: #c62828;">MANUAL</button>
-                            <div class="level-tank-labels two-cols">
-                                <span>T4</span><span>T5</span>
+                            {% else %}
+                            <div style="min-width: 60px;"></div>
+                            {% endif %}
+                            <div class="level-tank-labels {% if g_tanks|length == 2 %}two-cols{% endif %}">
+                                {% for t in g_tanks %}
+                                <span>{{ t.nombre.replace('Tanque ', 'T') }}</span>
+                                {% endfor %}
                             </div>
                         </div>
                         <div class="level-sp-row">
                             <button class="btn-chevron"
-                                onclick="document.getElementById('sp-grid-b').classList.toggle('expanded')"
+                                onclick="document.getElementById('sp-grid-{{ g_name|lower }}').classList.toggle('expanded')"
                                 style="padding: 0 4px; font-size: 8px;">SP ◀</button>
-                            <div id="sp-grid-b" class="level-sp-grid two-cols">
-                                <input type="number" id="side-sp-nivel-t4" class="mini-sp-input"
-                                    onchange="writeLevelSP('T4', this.value)">
-                                <input type="number" id="side-sp-nivel-t5" class="mini-sp-input"
-                                    onchange="writeLevelSP('T5', this.value)">
+                            <div id="sp-grid-{{ g_name|lower }}" class="level-sp-grid {% if g_tanks|length == 2 %}two-cols{% endif %}">
+                                {% for t in g_tanks %}
+                                <input type="number" id="side-sp-nivel-{{ t.nombre.replace('Tanque ', 't').lower() }}" class="mini-sp-input"
+                                    onchange="writeLevelSP('{{ t.nombre.replace('Tanque ', 'T') }}', this.value)">
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </section>
 
                 <!-- SECCIÓN 3: CONTROL DE TEMPERATURA -->
@@ -638,14 +612,10 @@
         if (accordion) accordion.classList.add('expanded');
     }
 
-    function syncDualControl(actuator, source) {
-        const slider = document.getElementById(`slider-${actuator}-side`);
-        const input = document.getElementById(`input-${actuator}-side`);
-        const label = document.getElementById(`valor-${actuator}-side`);
-
-        const min = 4000, max = 20000;
-        const factor = actuator === 'vfd' ? 50 : 100;
-        const unit = actuator === 'vfd' ? 'Hz' : '%';
+    function syncDualControl(address, source, unit, factor, min, max) {
+        const slider = document.getElementById(`slider-${address}-side`);
+        const input = document.getElementById(`input-${address}-side`);
+        const label = document.getElementById(`valor-${address}-side`);
 
         if (source === 'slider') {
             const val = ((factor * (slider.value - min) / (max - min))).toFixed(1);
@@ -658,7 +628,7 @@
             const raw = Math.round(min + (val * (max - min) / factor));
             slider.value = raw;
             label.innerText = val.toFixed(1) + ' ' + unit;
-            actualizarValorVariador(actuator === 'vfd' ? 302 : 303, raw);
+            actualizarValorVariador(parseInt(address), raw);
         }
     }
 

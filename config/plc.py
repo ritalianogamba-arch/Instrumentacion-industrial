@@ -6,11 +6,31 @@ MODBUS_RETRIES = 2
 PLC_REMOTE_LOCK_ADDR = 13
 
 # =========================================================================
-# ESCALAMIENTO DE TEMPERATURA
+# ESCALAMIENTO DE TEMPERATURA  (Sensor analógico → °C)
 # =========================================================================
-# Cambiar a True cuando el PLC implemente el escalamiento internamente.
-# En ese caso los %MW ya llegan con valores en °C directamente.
-PLC_SENDS_SCALED_TEMP = False
+#
+# El PLC debe ejecutar la siguiente ecuación en el bloque de programa
+# que lee la entrada analógica del sensor de temperatura (ej. PT100/NTC):
+#
+#   ┌─────────────────────────────────────────────────────────────┐
+#   │  Temp_°C = (RAW_ADC * 75 / 1000) + 0.5                    │
+#   │                                                             │
+#   │  Donde:                                                     │
+#   │    RAW_ADC  = Valor crudo del conversor A/D  (0 … ~1333)    │
+#   │    75/1000  = Factor de escala del sensor                   │
+#   │    0.5      = Offset de calibración                         │
+#   │                                                             │
+#   │  Ejemplo:  RAW_ADC = 600                                    │
+#   │            Temp_°C = (600 * 75 / 1000) + 0.5 = 45.5 °C     │
+#   │                                                             │
+#   │  El resultado (Temp_°C) se escribe en el %MW correspondiente│
+#   │  como un entero (ej. 45) o x10 si se necesita 1 decimal    │
+#   │  (ej. 455 = 45.5°C).                                       │
+#   └─────────────────────────────────────────────────────────────┘
+#
+# Cuando PLC_SENDS_SCALED_TEMP = True, el SCADA asume que el %MW
+# ya contiene el valor en °C y NO aplica ninguna conversión.
+PLC_SENDS_SCALED_TEMP = True
 
 def raw_to_celsius(raw_value: int) -> float:
     """Convierte un valor raw del PLC a grados Celsius.
@@ -29,7 +49,7 @@ def raw_to_celsius(raw_value: int) -> float:
 # En ese caso:
 #   - Los sensores ya envían el nivel en porcentaje (0-100%)
 #   - Los set-points de nivel se deben enviar en porcentaje (0-100)
-PLC_SENDS_SCALED_LEVEL = False
+PLC_SENDS_SCALED_LEVEL = True
 
 def raw_to_level_percent(raw: int, cfg_min: int, cfg_max: int) -> float:
     """Convierte valor raw del sensor de presión a porcentaje de nivel (0-100).

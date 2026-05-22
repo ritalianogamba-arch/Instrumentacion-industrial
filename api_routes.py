@@ -141,7 +141,7 @@ def status():
         return coils_data.bits[addr] if coils_data and addr < len(coils_data.bits) else False
 
     coils_in = [get_coil(b['address']) for b in elementos['botones_ev']]
-    coils_out = [get_coil(v['entrada_server']) for v in elementos['valvulas']]
+    coils_out = [get_coil(v['address']) for v in elementos['valvulas']]
 
     # 3. Analogicos (Sensores y Actuadores)
     reg_in = []
@@ -157,10 +157,17 @@ def status():
     # 4. SetPoints de Nivel y Modos Auto
     sp_niveles = []
     tank_modes = []
+    condiciones_nivel = []
     for t in elementos['tanques']:
         res_sp = read_registers_safe(t['SetPoint_Level'], count=1)
         sp_niveles.append(res_sp.registers[0] if res_sp else 0)
         tank_modes.append(get_coil(t['modo_auto_address']))
+        # Condición de nivel (coil 0/1) – si no está definida, usar 0 (seguro)
+        addr_cond = t.get('condicion_de_nivel')
+        if addr_cond:
+            condiciones_nivel.append(get_coil(addr_cond))
+        else:
+            condiciones_nivel.append(0)
 
     # 5. PIDs (Lectura dinámica por PID)
     pids_status = {}
@@ -193,7 +200,7 @@ def status():
     niveles_tanques = []
     for t in elementos['tanques']:
         res = read_registers_safe(t['sensor_de_presion'], count=1)
-        niveles_tanques.append(res.registers[0] if res else 4000)
+        niveles_tanques.append(res.registers[0] if res else 0)
 
     return jsonify({
         "mode": mode,
@@ -205,6 +212,7 @@ def status():
         "registers_inputs": niveles_tanques, 
         "registers_outputs": reg_out, 
         "sp_niveles": sp_niveles,
+        "condiciones_nivel": condiciones_nivel,
         "pid_t2": pids_status.get("pid_1", {}), 
         "pid_t4": pids_status.get("pid_2", {}),
         "elementos": elementos
@@ -241,7 +249,10 @@ def update_pid():
             return jsonify({'success': False, 'error': f'PID {pid_id_str} no encontrado'}), 404
             
         base = pid_obj['address_set_point']
-        sp_raw = int(((float(d['setpoint']) - 0.5) * 1000) / 75)
+        if PLC_SENDS_SCALED_TEMP:
+            sp_raw = int(round(float(d['setpoint'])))
+        else:
+            sp_raw = int(((float(d['setpoint']) - 0.5) * 1000) / 75)
         kp_raw = int(float(d['kp']) / 0.01)
         ti_raw = int(float(d['ti']) / 0.1)
         td_raw = int(float(d['td']) / 0.1)

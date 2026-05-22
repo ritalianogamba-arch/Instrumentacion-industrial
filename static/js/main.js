@@ -75,20 +75,19 @@ function mainLoop() {
                 const scaledVal = ((val - cfg.min) / (cfg.max - cfg.min) * scale).toFixed(1);
 
                 // Update Sidebar Horizontal Controls
-                const sideId = a.address === 302 ? 'vfd' : 'vn';
-                const sideSlider = document.getElementById(`slider-${sideId}-side`);
-                const sideInput = document.getElementById(`input-${sideId}-side`);
-                const sideLabel = document.getElementById(`valor-${sideId}-side`);
+                const sideSlider = document.getElementById(`slider-${a.address}-side`);
+                const sideInput = document.getElementById(`input-${a.address}-side`);
+                const sideLabel = document.getElementById(`valor-${a.address}-side`);
 
                 if (sideSlider && !sideSlider.matches(':active')) sideSlider.value = val;
                 if (sideInput && document.activeElement !== sideInput) sideInput.value = scaledVal;
-                if (sideLabel) sideLabel.innerText = scaledVal + " " + (cfg.unidad || cfg.unit || (a.address === 302 ? 'Hz' : '%'));
+                if (sideLabel) sideLabel.innerText = scaledVal + " " + (cfg.unidad || cfg.unit || '%');
 
                 // Sync Visual Schematic Labels
-                const vLabel = document.getElementById(a.address === 302 ? "vfd-val-label" : "vn-val-label");
-                if (vLabel) vLabel.innerText = scaledVal + (a.address === 302 ? " Hz" : " %");
+                const vLabel = document.getElementById(a.unidad === 'Hz' ? "vfd-val-label" : "vn-val-label");
+                if (vLabel && !a.nombre.includes("Resistencia")) vLabel.innerText = scaledVal + " " + (cfg.unidad || cfg.unit || '%');
 
-                if (a.address === 302) {
+                if (a.unidad === 'Hz') {
                     const pumpSpin = document.getElementById("pump-spin");
                     if (pumpSpin) {
                         if (parseFloat(scaledVal) > 0.5) {
@@ -126,9 +125,17 @@ function mainLoop() {
             const sPresionIdx = d.elementos.sensores.findIndex(s => s.address === tObj.sensor_de_presion);
             
             // LED Seguro
+            // LED Seguro (usando condición de nivel del PLC si está disponible)
             const led = document.getElementById(`side-led-seguro-t${tIdx}`);
-            const rawLevel = d.registers_inputs[sPresionIdx];
-            const isSafe = rawLevel > (tObj.condicion_de_nivel || 400);
+            let isSafe;
+            if (Array.isArray(d.condiciones_nivel) && typeof d.condiciones_nivel[tIdx-1] !== 'undefined') {
+                // Valor 1 = seguro, 0 = peligro
+                isSafe = d.condiciones_nivel[tIdx-1] === 1;
+            } else {
+                // Fallback a la lógica anterior usando presión cruda
+                const rawLevel = d.registers_inputs[sPresionIdx];
+                isSafe = rawLevel > (tObj.condicion_de_nivel || 400);
+            }
             if (led) led.className = 'led-indicator ' + (isSafe ? 'active' : 'danger');
 
             // Botón Resistance

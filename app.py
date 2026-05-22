@@ -4,7 +4,6 @@ from flask import Flask
 from config import FLASK_HOST, FLASK_PORT, DEBUG_MODE, logger
 from modbus_core import client_manager
 from api_routes import api_bp
-from supervisors import supervisor_tacho_2, supervisor_tacho_4
 from bot_telegram import main as run_bot
 
 app = Flask(__name__)
@@ -21,13 +20,9 @@ if __name__ == '__main__':
     if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not DEBUG_MODE:
         logger.info("📦 Iniciando servicios en segundo plano...")
         
-        # Supervisores
-        threading.Thread(target=supervisor_tacho_2, daemon=True, name="Supervisor-T2").start()
-        threading.Thread(target=supervisor_tacho_4, daemon=True, name="Supervisor-T4").start()
-        
         # Bot de Telegram
         threading.Thread(target=run_bot, daemon=True, name="BotTelegram").start()
-        logger.info("✅ Supervisores y Bot activos")
+        logger.info("✅ Bot Telegram activo")
 
     try:
         # Iniciar servidor Flask
