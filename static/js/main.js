@@ -109,7 +109,9 @@ function mainLoop() {
                 const input = document.getElementById(`side-sp-nivel-t${tankIdx}`);
                 if (input && document.activeElement !== input) {
                     const cfg = CONFIG_TANQUES[`T${tankIdx}`];
-                    input.value = Math.round(((sp - cfg.min) / (cfg.max - cfg.min)) * 100);
+                    input.value = PLC_SENDS_SCALED_LEVEL
+                        ? Math.round(sp)
+                        : Math.round(((sp - cfg.min) / (cfg.max - cfg.min)) * 100);
                 }
             });
         }

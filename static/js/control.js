@@ -2,6 +2,10 @@
  * Control Logic - PID, Valves, and Actuators
  */
 
+const PLC_SENDS_SCALED_LEVEL = (typeof window.PLC_SENDS_SCALED_LEVEL !== 'undefined')
+    ? window.PLC_SENDS_SCALED_LEVEL
+    : false;
+
 function ioPID(id, action) {
     const suffix = id.toLowerCase();
     if (action === 'read') {
@@ -121,8 +125,13 @@ function writeLevelSP(tankId, percent) {
     const cfg = CONFIG_TANQUES[tankId];
     if (!cfg) return;
     let p = parseFloat(percent);
-    if (p < 0) p = 0; if (p > 100) p = 100;
-    const rawVal = Math.round(cfg.min + (p * (cfg.max - cfg.min) / 100));
+    if (isNaN(p)) p = 0;
+    p = Math.max(0, Math.min(100, p));
+
+    const rawVal = PLC_SENDS_SCALED_LEVEL
+        ? Math.round(p)
+        : Math.round(cfg.min + (p * (cfg.max - cfg.min) / 100));
+
     writeRegister(cfg.sp, rawVal).then(r => {
         if (r && r.status === 403) mostrarBloqueoAnimado();
     });
