@@ -2,10 +2,12 @@ import threading
 import time
 import os
 import math
-from config import (
-    LISTA_BOTONES_EV, LISTA_SENSORES, LISTA_VALVULAS, LISTA_TANQUES, LISTA_PIDS, LISTA_ACTUADORES,
-    logger, raw_to_celsius
+from config.data import (
+    LISTA_BOTONES_EV, LISTA_SENSORES, LISTA_VALVULAS, LISTA_TANQUES, LISTA_PIDS, LISTA_ACTUADORES
 )
+from config.logging_cfg import logger
+from config.plc import raw_to_celsius
+from config.addresses import LLAVE_MANDO_REMOTO, BOTON_VN, VALVULA_NEUMATICA
 
 # =========================================================================
 # MEMORIA CENTRALIZADA DEL SIMULADOR (VERSIÓN VISUAL / OFFLINE)
@@ -32,7 +34,7 @@ class MockMemory:
 store = MockMemory()
 
 def get_mock_status():
-    from config import get_system_data
+    from config.data import get_system_data
     system_data = get_system_data()
     
     def get_pid_data(pid_obj, current_temp_raw):
@@ -55,15 +57,22 @@ def get_mock_status():
     for s in system_data["elementos"]["sensores"]:
         sensores_raw.append(store.registers.get(s['address'], 0))
 
+    registers_outputs = [store.registers.get(a.address, 0) for a in LISTA_ACTUADORES]
+    if store.coils.get(LLAVE_MANDO_REMOTO, False):
+        vn_on = store.coils.get(BOTON_VN, False)
+        pneumatica_idx = next((idx for idx, a in enumerate(LISTA_ACTUADORES) if a.address == VALVULA_NEUMATICA), None)
+        if pneumatica_idx is not None:
+            registers_outputs[pneumatica_idx] = 20000 if vn_on else 4000
+
     return {
         "mode": "Simulado",
         "elementos": system_data["elementos"],
-        "remote_lock": store.coils.get(13, False), 
+        "remote_lock": store.coils.get(LLAVE_MANDO_REMOTO, False), 
         "tank_modes": [store.coils.get(t.modo_auto_address, False) for t in LISTA_TANQUES],
         "coils_inputs": [store.coils.get(b.address, False) for b in LISTA_BOTONES_EV],
         "coils_outputs": [store.coils.get(v.entrada_server, False) for v in LISTA_VALVULAS],
         "registers_inputs": sensores_raw,
-        "registers_outputs": [store.registers.get(a.address, 0) for a in LISTA_ACTUADORES],
+        "registers_outputs": registers_outputs,
         "sp_niveles": [store.registers.get(t.SetPoint_Level, 0) for t in LISTA_TANQUES],
         "pid_t2": get_pid_data(LISTA_PIDS[0], store.registers.get(LISTA_PIDS[0].address_set_point + 1, 260)),
         "pid_t4": get_pid_data(LISTA_PIDS[1], store.registers.get(LISTA_PIDS[1].address_set_point + 1, 260)),

@@ -6,7 +6,9 @@ import json
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 from telegram.error import Conflict
-from config import TELEGRAM_TOKEN, LISTA_TANQUES, LISTA_VALVULAS, LISTA_ACTUADORES, logger
+from config.telegram_cfg import TELEGRAM_TOKEN
+from config.data import LISTA_TANQUES, LISTA_VALVULAS, LISTA_ACTUADORES
+from config.logging_cfg import logger
 from modbus_core import get_sensor_value, client_manager, read_coils_safe
 import time
 

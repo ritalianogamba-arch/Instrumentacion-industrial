@@ -20,34 +20,41 @@ BTN_GRUPO_A = 20
 BTN_GRUPO_B = 21
 
 BTN_PID_T2 = 321
-BTN_PID_T4 = 341
+BTN_PID_T4 = 341 
 
 # -------------------------------------------------------------------------
 # ENTRADAS DIGITALES MONITOREADAS (COILS - Read)
 # (Botones físicos copiados a %M por el PLC)
 # -------------------------------------------------------------------------
-BOTON_EV_1 = 30
-BOTON_EV_2 = 31
-BOTON_EV_3 = 32
-BOTON_EV_4 = 33
-BOTON_EV_5 = 34
-BOTON_EV_6 = 35
-BOTON_EV_7 = 36
-BOTON_EV_8 = 37
+BOTON_EV_1 = 101
+BOTON_EV_2 = 102
+BOTON_EV_3 = 103
+BOTON_EV_4 = 104
+BOTON_EV_5 = 105
+BOTON_EV_6 = 106
+BOTON_EV_7 = 107
+BOTON_EV_8 = 108
 
-LLAVE_MANDO_REMOTO = 38
+LLAVE_MANDO_REMOTO = 114
+BOTON_VN = 112
 
 # -------------------------------------------------------------------------
 # ELECTRO VALVULAS - SALIDAS DIGITALES (COILS - Write)
 # -------------------------------------------------------------------------
-ELECTRO_VALVULA_1 = 100
-ELECTRO_VALVULA_2 = 101
-ELECTRO_VALVULA_3 = 102
-ELECTRO_VALVULA_4 = 103
-ELECTRO_VALVULA_5 = 104
-ELECTRO_VALVULA_6 = 105
-ELECTRO_VALVULA_7 = 106
-ELECTRO_VALVULA_8 = 107
+ELECTRO_VALVULA_1 = 121
+ELECTRO_VALVULA_2 = 122
+ELECTRO_VALVULA_3 = 123
+ELECTRO_VALVULA_4 = 124
+ELECTRO_VALVULA_5 = 125
+ELECTRO_VALVULA_6 = 126
+ELECTRO_VALVULA_7 = 127
+ELECTRO_VALVULA_8 = 128
+
+# -------------------------------------------------------------------------
+# TANQUES - CONDICIONES DE NIVEL (COILS - Read)
+# -------------------------------------------------------------------------
+TANQUE_2_CONDICION = 320
+TANQUE_4_CONDICION = 340
 
 # -------------------------------------------------------------------------
 # SENSORES (INPUT REGISTERS - Read)
@@ -57,11 +64,11 @@ SENSOR_PRESION_T2 = 202
 SENSOR_PRESION_T3 = 203
 SENSOR_PRESION_T4_T5 = 204
 
-SENSOR_TEMP_T2 = 302
-SENSOR_TEMP_T4 = 304
+SENSOR_TEMP_T2 = 212
+SENSOR_TEMP_T4 = 214
 
 # -------------------------------------------------------------------------
-# TANQUES - SETPOINTS Y CONDICIONES (HOLDING REGISTERS - Read/Write)
+# TANQUES - SETPOINTS (HOLDING REGISTERS - Read/Write)
 # -------------------------------------------------------------------------
 TANQUE_1_SP = 101
 TANQUE_2_SP = 102
@@ -69,13 +76,10 @@ TANQUE_3_SP = 103
 TANQUE_4_SP = 104
 TANQUE_5_SP = 105
 
-TANQUE_2_CONDICION = 320
-TANQUE_4_CONDICION = 340
-
 # -------------------------------------------------------------------------
 # PIDs (HOLDING REGISTERS - Read/Write)
 # -------------------------------------------------------------------------
-PID_T2_SP = 420
+PID_T2_SP = 420 
 PID_T2_KP = 422
 PID_T2_TI = 424
 PID_T2_TD = 426
@@ -88,7 +92,7 @@ PID_T4_TD = 446
 # -------------------------------------------------------------------------
 # ACTUADORES ANALOGICOS (SALIDAS ANALOGICAS - Write)
 # -------------------------------------------------------------------------
-RESISTENCIA_T2 = 5000
-RESISTENCIA_T4 = 5001
-VALVULA_NEUMATICA = 206
-VFD = 207
+RESISTENCIA_T2 = 222
+RESISTENCIA_T4 = 224
+VALVULA_NEUMATICA = 230
+VFD = 231
