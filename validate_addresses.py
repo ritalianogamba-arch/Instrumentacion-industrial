@@ -136,10 +136,10 @@ class ModbusAddressValidator:
         print("📍 Extrayendo direcciones de TANQUES...")
         self.register_holding_register(TANQUE_1.SetPoint_Level, "TANQUE_1::SetPoint_Level", "Tanque")
         self.register_holding_register(TANQUE_2.SetPoint_Level, "TANQUE_2::SetPoint_Level", "Tanque")
-        self.register_holding_register(TANQUE_2.condicion_de_nivel, "TANQUE_2::condicion_de_nivel", "Tanque")
+        self.register_coil(TANQUE_2.condicion_de_nivel, "TANQUE_2::condicion_de_nivel", "Condición de Nivel")
         self.register_holding_register(TANQUE_3.SetPoint_Level, "TANQUE_3::SetPoint_Level", "Tanque")
         self.register_holding_register(TANQUE_4.SetPoint_Level, "TANQUE_4::SetPoint_Level", "Tanque")
-        self.register_holding_register(TANQUE_4.condicion_de_nivel, "TANQUE_4::condicion_de_nivel", "Tanque")
+        self.register_coil(TANQUE_4.condicion_de_nivel, "TANQUE_4::condicion_de_nivel", "Condición de Nivel")
         self.register_holding_register(TANQUE_5.SetPoint_Level, "TANQUE_5::SetPoint_Level", "Tanque")
         
         print("📍 Extrayendo direcciones de PIDs...")

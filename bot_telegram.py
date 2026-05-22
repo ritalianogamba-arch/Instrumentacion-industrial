@@ -6,7 +6,9 @@ import json
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 from telegram.error import Conflict
-from config import TELEGRAM_TOKEN, LISTA_TANQUES, LISTA_VALVULAS, LISTA_ACTUADORES, logger
+from config.telegram_cfg import TELEGRAM_TOKEN
+from config.data import LISTA_TANQUES, LISTA_VALVULAS, LISTA_ACTUADORES
+from config.logging_cfg import logger
 from modbus_core import get_sensor_value, client_manager, read_coils_safe
 import time
 
@@ -29,7 +31,7 @@ def obtener_url_ngrok():
         return None
 
 
-def update_enlace_json(owner, repo, path, ngrok_url, commit_msg="Update enlace.json from bot"):
+def update_enlace_json(owner, repo, path, ngrok_url, branch='main', commit_msg="Update enlace.json from bot"):
     """Actualiza (o crea) el archivo `path` en el repo especificado usando la GitHub API.
     Requiere las variables de entorno `GITHUB_TOKEN` (token con permiso `repo`).
     Devuelve True si la operación tuvo éxito.
@@ -40,12 +42,40 @@ def update_enlace_json(owner, repo, path, ngrok_url, commit_msg="Update enlace.j
         return False
 
     api = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
-    content = json.dumps({"url_ngrok": ngrok_url}, ensure_ascii=False).encode('utf-8')
-    b64 = base64.b64encode(content).decode('utf-8')
     headers = {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"}
 
+    # Ensure target branch exists; if not and branch != 'main', try to create it from 'main'
+    if branch != 'main':
+        ref_api = f"https://api.github.com/repos/{owner}/{repo}/git/refs/heads/{branch}"
+        try:
+            rref = requests.get(ref_api, headers=headers, timeout=5)
+            if rref.status_code == 404:
+                # create branch from main
+                main_ref_api = f"https://api.github.com/repos/{owner}/{repo}/git/refs/heads/main"
+                rmain = requests.get(main_ref_api, headers=headers, timeout=5)
+                if rmain.status_code == 200:
+                    main_sha = rmain.json().get('object', {}).get('sha')
+                    if main_sha:
+                        create_ref_api = f"https://api.github.com/repos/{owner}/{repo}/git/refs"
+                        payload_ref = {"ref": f"refs/heads/{branch}", "sha": main_sha}
+                        rcreate = requests.post(create_ref_api, headers=headers, json=payload_ref, timeout=10)
+                        if rcreate.status_code not in (201, 200):
+                            logging.error(f'No se pudo crear la rama {branch} en el repo: {rcreate.status_code} {rcreate.text}')
+                            return False
+                    else:
+                        logging.error('No se pudo obtener SHA de main para crear nueva rama')
+                        return False
+                else:
+                    logging.error('No existe la rama main para basar la nueva rama')
+                    return False
+        except Exception as e:
+            logging.error(f'Error verificando/creando rama en GitHub: {e}')
+            return False
+    content = json.dumps({"url_ngrok": ngrok_url}, ensure_ascii=False).encode('utf-8')
+    b64 = base64.b64encode(content).decode('utf-8')
     try:
-        r = requests.get(api, headers=headers, timeout=5)
+        # Try to fetch existing file in the target branch
+        r = requests.get(api, headers=headers, params={'ref': branch}, timeout=5)
         sha = None
         if r.status_code == 200:
             sha = r.json().get('sha')
@@ -58,6 +88,8 @@ def update_enlace_json(owner, repo, path, ngrok_url, commit_msg="Update enlace.j
         payload["sha"] = sha
 
     try:
+        # include branch in payload so commit goes to the right branch
+        payload['branch'] = branch
         r = requests.put(api, headers=headers, json=payload, timeout=10)
         if r.status_code in (200, 201):
             logging.info('docs/enlace.json actualizado en GitHub')
@@ -145,8 +177,9 @@ async def manejar_botones(update: Update, context: ContextTypes.DEFAULT_TYPE):
             mensaje = f"🌐 *Enlace Seguro a SCADA:*\n{url}"
             owner = os.environ.get('GITHUB_OWNER')
             repo = os.environ.get('GITHUB_REPO')
+            target_branch = os.environ.get('GITHUB_TARGET_BRANCH', 'main')
             if owner and repo:
-                saved = update_enlace_json(owner, repo, 'docs/enlace.json', url)
+                saved = update_enlace_json(owner, repo, 'docs/enlace.json', url, branch=target_branch)
                 if saved:
                     mensaje += "\n\n🔁 Enlace guardado en repo (docs/enlace.json)."
                 else:

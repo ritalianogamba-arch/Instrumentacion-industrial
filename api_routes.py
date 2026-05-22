@@ -1,5 +1,8 @@
 from flask import Blueprint, request, jsonify, render_template
-from config import logger, get_system_data, PLC_REMOTE_LOCK_ADDR, raw_to_celsius, PLC_SENDS_SCALED_TEMP, PLC_SENDS_SCALED_LEVEL
+from config.logging_cfg import logger
+from config.data import get_system_data
+from config.plc import PLC_REMOTE_LOCK_ADDR, raw_to_celsius, PLC_SENDS_SCALED_TEMP, PLC_SENDS_SCALED_LEVEL
+from config.addresses import BOTON_VN, VALVULA_NEUMATICA
 from modbus_core import (
     read_coils_safe, write_coil_safe, 
     read_registers_safe, write_register_safe,
@@ -11,9 +14,9 @@ import mocks
 api_bp = Blueprint('api', __name__)
 
 def check_remote_lock():
-    """Verifica si el mando remoto está bloqueado por hardware (%I0.13)."""
+    """Verifica si el mando remoto está bloqueado por hardware."""
     if is_sim_mode():
-        return mocks.mock_read_coil(13)
+        return mocks.mock_read_coil(PLC_REMOTE_LOCK_ADDR)
     lock_data = read_coils_safe(PLC_REMOTE_LOCK_ADDR, count=1)
     return lock_data.bits[0] if lock_data else False
 
@@ -142,6 +145,7 @@ def status():
 
     coils_in = [get_coil(b['address']) for b in elementos['botones_ev']]
     coils_out = [get_coil(v['address']) for v in elementos['valvulas']]
+    remote_lock = get_coil(PLC_REMOTE_LOCK_ADDR)
 
     # 3. Analogicos (Sensores y Actuadores)
     reg_in = []
@@ -153,6 +157,16 @@ def status():
     for a in elementos['salidas_analogicas']:
         res = read_registers_safe(a['address'], count=1)
         reg_out.append(res.registers[0] if res else 0)
+
+    # For maintenance/local manual mode, map BOTON_VN to pneumatic valve output
+    if remote_lock:
+        vn_button_idx = next((idx for idx, b in enumerate(elementos['botones_ev']) if b['address'] == BOTON_VN), None)
+        pneumatica_idx = next((idx for idx, a in enumerate(elementos['salidas_analogicas']) if a['address'] == VALVULA_NEUMATICA), None)
+        if vn_button_idx is not None and pneumatica_idx is not None and vn_button_idx < len(coils_in):
+            vn_on = coils_in[vn_button_idx]
+            min_val = elementos['salidas_analogicas'][pneumatica_idx].get('min_val', 4000)
+            max_val = elementos['salidas_analogicas'][pneumatica_idx].get('max_val', 20000)
+            reg_out[pneumatica_idx] = max_val if vn_on else min_val
     
     # 4. SetPoints de Nivel y Modos Auto
     sp_niveles = []
@@ -194,7 +208,6 @@ def status():
         pid_flags[f"t{2 if pid['identifier'] == 1 else 4}_activo"] = get_coil(pid['boton_virtual_address'])
 
     mode = "Conectado" if client_manager.is_connected() and not client_manager.is_disabled else "Simulado"
-    remote_lock = get_coil(PLC_REMOTE_LOCK_ADDR)
 
     # Mapeo de Niveles por Tanque (T1 a T5) para el Frontend
     niveles_tanques = []
