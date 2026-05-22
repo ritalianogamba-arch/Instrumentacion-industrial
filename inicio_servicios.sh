@@ -5,6 +5,12 @@ echo "⏳ Esperando que la red esté lista..."
 sleep 5
 
 cd /home/admin/plc_server
+if [ -f /home/admin/plc_server/.env ]; then
+    echo "🔐 Cargando variables de entorno desde .env..."
+    set -a
+    . /home/admin/plc_server/.env
+    set +a
+fi
 source venv/bin/activate
 
 echo "📡 Iniciando Ngrok en segundo plano..."

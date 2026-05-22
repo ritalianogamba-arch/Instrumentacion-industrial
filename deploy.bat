@@ -24,6 +24,11 @@ echo.
 echo Preparando lista de archivos a transferir...
 set "ARCHIVOS=app.py api_routes.py bot_telegram.py mocks.py modbus_core.py supervisors.py validate_addresses.py inicio_servicios.sh setup_red.sh requirements.txt config models static templates MODBUS_MAPPING.md ARCHITECTURE.md README.md"
 
+:: Anexar .env si existe (no está en git)
+if exist .env (
+    set "ARCHIVOS=%ARCHIVOS% .env"
+)
+
 :: Anexar certificados si existen
 if exist server.crt (
     set "ARCHIVOS=%ARCHIVOS% server.crt server.key"
