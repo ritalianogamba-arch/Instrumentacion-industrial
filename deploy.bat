@@ -22,7 +22,7 @@ echo OK: Raspberry encontrada
 echo.
 
 echo Preparando lista de archivos a transferir...
-set "ARCHIVOS=app.py api_routes.py bot_telegram.py mocks.py modbus_core.py supervisors.py validate_addresses.py inicio_servicios.sh setup_red.sh requirements.txt config models static templates MODBUS_MAPPING.md ARCHITECTURE.md README.md"
+set "ARCHIVOS=app.py api_routes.py bot_telegram.py mocks.py modbus_core.py validate_addresses.py inicio_servicios.sh setup_red.sh requirements.txt config models static templates MODBUS_MAPPING.md ARCHITECTURE.md README.md"
 
 :: Anexar .env si existe (no está en git)
 if exist .env (
@@ -48,7 +48,7 @@ echo Te pedira la clave por ultima vez.
 echo ========================================
 echo Sincronizando hora con la Raspberry Pi...
 for /f "usebackq tokens=*" %%i in (`powershell -command "Get-Date -Format 'yyyy-MM-dd HH:mm:ss'"`) do set CURRENT_DATE=%%i
-ssh %RASPBERRY_USER%@%RASPBERRY_HOST% "sudo date -s '%CURRENT_DATE%' && %RASPBERRY_DIR%/venv/bin/pip install -r %RASPBERRY_DIR%/requirements.txt && sed -i 's/\r$//' %RASPBERRY_DIR%/inicio_servicios.sh && chmod +x %RASPBERRY_DIR%/inicio_servicios.sh && sudo systemctl daemon-reload && sudo systemctl restart plc-server.service"
+ssh %RASPBERRY_USER%@%RASPBERRY_HOST% "sudo date -s '%CURRENT_DATE%' && %RASPBERRY_DIR%/venv/bin/pip install -r %RASPBERRY_DIR%/requirements.txt && if [ -f %RASPBERRY_DIR%/.env ]; then sed -i 's/\r$//' %RASPBERRY_DIR%/.env; fi && sed -i 's/\r$//' %RASPBERRY_DIR%/inicio_servicios.sh && chmod +x %RASPBERRY_DIR%/inicio_servicios.sh && sudo systemctl daemon-reload && sudo systemctl restart plc-server.service"
 
 echo.
 echo ACTUALIZACION COMPLETADA!

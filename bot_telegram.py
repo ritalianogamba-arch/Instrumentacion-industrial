@@ -42,7 +42,7 @@ def get_coil_value(address):
 
 def obtener_url_ngrok():
     try:
-        response = requests.get('http://localhost:4040/api/tunnels', timeout=2)
+        response = requests.get('http://127.0.0.1:4040/api/tunnels', timeout=2)
         response.raise_for_status()
         data = response.json()
         if data.get('tunnels'):
@@ -196,9 +196,9 @@ async def manejar_botones(update: Update, context: ContextTypes.DEFAULT_TYPE):
         url = obtener_url_ngrok()
         if url:
             mensaje = f"🌐 *Enlace Seguro a SCADA:*\n{url}"
-            owner = os.environ.get('GITHUB_OWNER')
-            repo = os.environ.get('GITHUB_REPO')
-            target_branch = os.environ.get('GITHUB_TARGET_BRANCH', 'main')
+            owner = os.environ.get('GITHUB_OWNER', '').strip()
+            repo = os.environ.get('GITHUB_REPO', '').strip()
+            target_branch = os.environ.get('GITHUB_TARGET_BRANCH', 'main').strip()
             if owner and repo:
                 saved = update_enlace_json(owner, repo, 'docs/enlace.json', url, branch=target_branch)
                 if saved:

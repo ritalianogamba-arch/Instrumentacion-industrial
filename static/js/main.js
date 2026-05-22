@@ -167,10 +167,56 @@ function mainLoop() {
         // --- Visualización de Tanques y Válvulas ---
         d.coils_outputs.forEach((v, i) => {
             const btn = document.getElementById(`valve${i + 1}`);
-            if (btn && !btn.classList.contains('transitioning')) {
-                btn.className = v ? 'valve-industrial open' : 'valve-industrial closed';
+            if (btn) {
+                const wasOpen = btn.classList.contains('open');
+                const isTransitioning = btn.classList.contains('transitioning');
+                
+                // Si cambió de estado externamente (no estamos nosotros transicionando)
+                if (v !== wasOpen && !isTransitioning) {
+                    btn.classList.add('transitioning');
+                    setTimeout(() => {
+                        btn.classList.remove('transitioning');
+                        btn.className = v ? 'valve-industrial open' : 'valve-industrial closed';
+                    }, 15000); // Parpadeo de 15 segundos
+                } else if (!isTransitioning) {
+                    btn.className = v ? 'valve-industrial open' : 'valve-industrial closed';
+                }
             }
         });
+
+        // --- Actualización de Tablas de Monitoreo ---
+        if (d.coils_inputs && d.elementos && d.elementos.botones_ev) {
+            d.coils_inputs.forEach((v, i) => {
+                const b = d.elementos.botones_ev[i];
+                if (b) {
+                    const el = document.getElementById(`coil-in-${b.address}`);
+                    if (el) {
+                        el.innerText = v ? 'ON' : 'OFF';
+                        el.className = v ? 'on' : 'off';
+                        el.style.color = v ? '#2e7d32' : '#d32f2f';
+                    }
+                }
+            });
+        }
+        if (d.coils_outputs) {
+            d.coils_outputs.forEach((v, i) => {
+                const el = document.getElementById(`coil-out-${i}`);
+                if (el) {
+                    el.innerText = v ? 'ON' : 'OFF';
+                    el.className = v ? 'on' : 'off';
+                    el.style.color = v ? '#2e7d32' : '#d32f2f';
+                }
+            });
+        }
+        if (d.registers_inputs && d.elementos && d.elementos.sensores) {
+            d.registers_inputs.forEach((v, i) => {
+                const s = d.elementos.sensores[i];
+                if (s) {
+                    const el = document.getElementById(`reg-in-${s.address}`);
+                    if (el) el.innerText = v;
+                }
+            });
+        }
 
         if (d.elementos && d.elementos.tanques) {
             d.elementos.tanques.forEach((t, i) => {
@@ -182,7 +228,7 @@ function mainLoop() {
                     setVisLevel(`t${index}`, rawLevel, cfg);
                     
                     const levValEl = document.getElementById(`vis-lev-t${index}-val`);
-                    if (levValEl) levValEl.innerText = escalarNivel(rawLevel, cfg);
+                    if (levValEl) levValEl.innerText = rawLevel;
                     
                     const levEl = document.getElementById(`vis-lev-t${index}`);
                     if (t.sensor_de_temperatura) {

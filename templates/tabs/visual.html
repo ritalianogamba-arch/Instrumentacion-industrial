@@ -382,7 +382,7 @@
                             style="position: relative; width: 60px; height: 120px; background: linear-gradient(to right, #dbdbdb, #e0e0e0, #bdbdbd); border: 2px solid black; border-radius: 25px / 10px; overflow: hidden; cursor: pointer; transition: all 0.3s;">
                             <div class="tank-info-overlay">{{ tanque.nombre }}</div>
                             <div class="tank-info-nivel">
-                                {% if tanque.sensor_de_presion %}<span id="vis-lev-t{{ i }}-val">--</span>%{% endif %}
+                                {% if tanque.sensor_de_presion %}<span id="vis-lev-t{{ i }}-val">--</span>{% endif %}
                             </div>
                             <div class="tank-info-temp">
                                 {% if tanque.sensor_de_temperatura %}<span id="vis-temp-t{{ i }}">--</span>°C{% endif %}

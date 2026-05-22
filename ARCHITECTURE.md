@@ -207,12 +207,6 @@ plc_port = config['plc']['connection']['port']
         │  - POST /control/setpoint│
         └────────┬─────────────────┘
                  │
-        ┌────────▼──────────────────┐
-        │  Supervisores            │ (supervisors.py)
-        │  - supervisor_tacho_2    │
-        │  - supervisor_tacho_4    │
-        └────────┬──────────────────┘
-                 │
         ┌────────▼────────────────────────┐
         │  Modbus Core                    │ (modbus_core.py)
         │  - ModbusClientManager          │
@@ -278,7 +272,6 @@ plc_port = config['plc']['connection']['port']
 | `app.py` | Punto de entrada, inicializa Flask y hilos |
 | `modbus_core.py` | Gestión de conexión Modbus con thread safety |
 | `api_routes.py` | Rutas Flask para API |
-| `supervisors.py` | Bucles de control para PIDs |
 | `bot_telegram.py` | Bot de Telegram para notificaciones |
 | `config/plc.py` | Configuración de PLC y escalamiento |
 | `config/*.py` | Definición de elementos (sensores, válvulas, tanques) |
