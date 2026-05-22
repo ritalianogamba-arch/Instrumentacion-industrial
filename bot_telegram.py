@@ -12,6 +12,27 @@ from config.logging_cfg import logger
 from modbus_core import get_sensor_value, client_manager, read_coils_safe
 import time
 
+
+def _load_dotenv(filepath='.env'):
+    if not os.path.exists(filepath):
+        return
+    try:
+        with open(filepath, encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith('#') or '=' not in line:
+                    continue
+                key, value = line.split('=', 1)
+                key = key.strip()
+                value = value.strip().strip('"').strip("'")
+                if key and key not in os.environ:
+                    os.environ[key] = value
+    except Exception:
+        logging.warning(f'No se pudo leer el archivo de entorno: {filepath}')
+
+
+_load_dotenv()
+
 def get_coil_value(address):
     if client_manager.is_disabled:
         import mocks
