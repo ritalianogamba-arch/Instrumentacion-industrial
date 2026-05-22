@@ -1,5 +1,8 @@
 import requests
 import logging
+import os
+import base64
+import json
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 from telegram.error import Conflict
@@ -24,6 +27,46 @@ def obtener_url_ngrok():
         return None
     except Exception:
         return None
+
+
+def update_enlace_json(owner, repo, path, ngrok_url, commit_msg="Update enlace.json from bot"):
+    """Actualiza (o crea) el archivo `path` en el repo especificado usando la GitHub API.
+    Requiere las variables de entorno `GITHUB_TOKEN` (token con permiso `repo`).
+    Devuelve True si la operación tuvo éxito.
+    """
+    token = os.environ.get('GITHUB_TOKEN')
+    if not token:
+        logging.warning('GITHUB_TOKEN no configurado; no se puede actualizar el repo.')
+        return False
+
+    api = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
+    content = json.dumps({"url_ngrok": ngrok_url}, ensure_ascii=False).encode('utf-8')
+    b64 = base64.b64encode(content).decode('utf-8')
+    headers = {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"}
+
+    try:
+        r = requests.get(api, headers=headers, timeout=5)
+        sha = None
+        if r.status_code == 200:
+            sha = r.json().get('sha')
+    except Exception as e:
+        logging.error(f'Error consultando archivo en GitHub: {e}')
+        sha = None
+
+    payload = {"message": commit_msg, "content": b64}
+    if sha:
+        payload["sha"] = sha
+
+    try:
+        r = requests.put(api, headers=headers, json=payload, timeout=10)
+        if r.status_code in (200, 201):
+            logging.info('docs/enlace.json actualizado en GitHub')
+            return True
+        logging.error(f'GitHub update failed {r.status_code} {r.text}')
+        return False
+    except Exception as e:
+        logging.error(f'Error actualizando archivo en GitHub: {e}')
+        return False
 
 def generar_reporte_telemetria():
     """Genera un reporte formateado leyendo directamente los sensores."""
@@ -100,6 +143,14 @@ async def manejar_botones(update: Update, context: ContextTypes.DEFAULT_TYPE):
         url = obtener_url_ngrok()
         if url:
             mensaje = f"🌐 *Enlace Seguro a SCADA:*\n{url}"
+            owner = os.environ.get('GITHUB_OWNER')
+            repo = os.environ.get('GITHUB_REPO')
+            if owner and repo:
+                saved = update_enlace_json(owner, repo, 'docs/enlace.json', url)
+                if saved:
+                    mensaje += "\n\n🔁 Enlace guardado en repo (docs/enlace.json)."
+                else:
+                    mensaje += "\n\n⚠️ No se pudo guardar en repo (ver logs)."
         else:
             mensaje = "❌ *El servidor web externo (ngrok) está offline.*"
         await query.edit_message_text(text=mensaje, parse_mode='Markdown', reply_markup=get_main_menu())
