@@ -209,11 +209,7 @@ def status():
 
     mode = "Conectado" if client_manager.is_connected() and not client_manager.is_disabled else "Simulado"
 
-    # Mapeo de Niveles por Tanque (T1 a T5) para el Frontend
-    niveles_tanques = []
-    for t in elementos['tanques']:
-        res = read_registers_safe(t['sensor_de_presion'], count=1)
-        niveles_tanques.append(res.registers[0] if res else 0)
+    # Eliminado mapeo de niveles_tanques redundante e incorrecto.
 
     return jsonify({
         "mode": mode,
@@ -222,7 +218,7 @@ def status():
         "coils_inputs": coils_in, 
         "coils_outputs": coils_out, 
         "pid_flags": pid_flags,
-        "registers_inputs": niveles_tanques, 
+        "registers_inputs": reg_in, 
         "registers_outputs": reg_out, 
         "sp_niveles": sp_niveles,
         "condiciones_nivel": condiciones_nivel,

@@ -112,7 +112,7 @@ TANQUE_4: Tanque = Tanque(
 
 TANQUE_5: Tanque = Tanque(
     nombre='Tanque 5',
-    sensor_de_presion=SENSOR_PRESION_T4_T5.address,
+    sensor_de_presion=None,
     valvula_superior=ELECTRO_VALVULA_8.address,
     valvula_inferior=ELECTRO_VALVULA_5.address,
     valvula_superior_identificador=8,

@@ -10,6 +10,7 @@ from config.telegram_cfg import TELEGRAM_TOKEN
 from config.data import LISTA_TANQUES, LISTA_VALVULAS, LISTA_ACTUADORES
 from config.logging_cfg import logger
 from modbus_core import get_sensor_value, client_manager, read_coils_safe
+from config.plc import raw_to_celsius, raw_to_level_percent
 import time
 
 
@@ -135,12 +136,14 @@ def generar_reporte_telemetria():
         tiene_datos = False
         
         if t.sensor_de_presion:
-            nivel = get_sensor_value(t.sensor_de_presion)
+            raw_nivel = get_sensor_value(t.sensor_de_presion)
+            nivel = raw_to_level_percent(raw_nivel, t.min_val, t.max_val)
             reporte += f"  💧 Nivel: `{nivel:.1f} %`\n"
             tiene_datos = True
             
         if t.sensor_de_temperatura:
-            temp = get_sensor_value(t.sensor_de_temperatura)
+            raw_temp = get_sensor_value(t.sensor_de_temperatura)
+            temp = raw_to_celsius(raw_temp)
             reporte += f"  🌡️ Temp: `{temp:.1f} °C`\n"
             tiene_datos = True
             

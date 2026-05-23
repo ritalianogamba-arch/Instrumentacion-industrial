@@ -94,5 +94,5 @@ PID_T4_TD = 446
 # -------------------------------------------------------------------------
 RESISTENCIA_T2 = 222
 RESISTENCIA_T4 = 224
-VALVULA_NEUMATICA = 230
-VFD = 231
+VALVULA_NEUMATICA = 206
+VFD = 207

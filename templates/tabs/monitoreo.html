@@ -5,7 +5,8 @@
             <table id="coils_inputs">
                 <thead>
                     <tr>
-                        <th>Direccion</th>
+                        <th>Elemento</th>
+                        <th>Dirección</th>
                         <th>Estado</th>
                         <th class="sim-only-header" style="display:none;">Simular</th>
                     </tr>
@@ -15,9 +16,10 @@
                     <tr {% if boton.address==13 %}style="border-top: 2px solid #eee; background: #fffcfc;" {% endif %}>
                         <td>
                             {% if boton.address == 13 %}<strong>{% endif %}
-                                %I0.{{ boton.address }} ({{ boton.nombre }})
-                                {% if boton.address == 13 %}</strong>{% endif %}
+                                {{ boton.nombre }}
+                            {% if boton.address == 13 %}</strong>{% endif %}
                         </td>
+                        <td>%M{{ boton.address }}</td>
                         <td id="coil-in-{{ boton.address }}" class="off" style="cursor: pointer;"
                             onclick="if(document.getElementById('status-text').innerText.includes('Simul')) mockToggleInput({{ boton.address }})">
                             OFF
@@ -35,8 +37,8 @@
             <table id="coils_outputs">
                 <thead>
                     <tr>
-                        <th>Actuador</th>
-                        <th>Direccion</th>
+                        <th>Elemento</th>
+                        <th>Dirección</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
@@ -44,7 +46,7 @@
                     {% for valvula in elementos.valvulas %}
                     <tr>
                         <td>{{ valvula.nombre }}</td>
-                        <td>%Q0.{{ loop.index0 }}</td>
+                        <td>%Q0.{{ loop.index0 }} (Coil {{ valvula.entrada_server }})</td>
                         <td id="coil-out-{{ loop.index0 }}" class="off">OFF</td>
                     </tr>
                     {% endfor %}
@@ -56,8 +58,8 @@
             <table id="registers_inputs">
                 <thead>
                     <tr>
-                        <th>Sensor</th>
-                        <th>Direccion</th>
+                        <th>Elemento</th>
+                        <th>Dirección</th>
                         <th>Valor</th>
                     </tr>
                 </thead>
