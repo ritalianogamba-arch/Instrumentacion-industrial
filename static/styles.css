@@ -1494,3 +1494,75 @@ td.off {
 .visual-tab-container:has(#control-sidebar.collapsed) .visual-schematic-wrapper {
     padding: 30px 0;
 }
+
+/* =========================================================================
+   PLC DISCONNECT OVERLAY
+   ========================================================================= */
+.plc-disconnect-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.plc-disconnect-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px 50px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 2px solid #e53935;
+    position: relative;
+    overflow: hidden;
+}
+
+.plc-disconnect-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+    animation: plc-icon-pulse 2s ease-in-out infinite;
+}
+
+.plc-disconnect-card h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.5rem;
+    color: #c62828;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.plc-disconnect-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+.plc-disconnect-pulse {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #e53935, transparent);
+    animation: plc-scan 2s linear infinite;
+}
+
+@keyframes plc-scan {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+@keyframes plc-icon-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+}

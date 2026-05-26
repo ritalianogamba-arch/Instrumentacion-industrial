@@ -35,6 +35,16 @@
         ⚠️ Mando Remoto Deshabilitado (Mantenimiento)
     </div>
 
+    <!-- PLC Desconectado Overlay -->
+    <div id="plc-disconnect-overlay" class="plc-disconnect-overlay" style="display: none;">
+        <div class="plc-disconnect-card">
+            <div class="plc-disconnect-icon">⚡</div>
+            <h2>PLC Desconectado</h2>
+            <p>No se puede establecer comunicación con el PLC.<br>Verificá la conexión de red y el estado del equipo.</p>
+            <div class="plc-disconnect-pulse"></div>
+        </div>
+    </div>
+
     <!-- Modular Logic -->
     <script>
         const CONFIG_TANQUES = {
