@@ -153,16 +153,21 @@ function mainLoop() {
                 }
             });
 
-            // Setpoint e Inputs PID
-            const spInput = document.getElementById(`side-sp-temp-t${tIdx}`);
-            if (spInput && document.activeElement !== spInput) spInput.value = pidData.params.setpoint;
+            // Setpoint e Inputs PID — solo sincronizar si el acordeón está cerrado
+            const accordion = document.getElementById(`side-pid-accordion-t${tIdx}`);
+            const isEditing = accordion && accordion.classList.contains('expanded');
 
-            const kp = document.getElementById(`side-kp-t${tIdx}`);
-            const ti = document.getElementById(`side-ti-t${tIdx}`);
-            const td = document.getElementById(`side-td-t${tIdx}`);
-            if (kp && document.activeElement !== kp) kp.value = pidData.params.kp;
-            if (ti && document.activeElement !== ti) ti.value = pidData.params.ti;
-            if (td && document.activeElement !== td) td.value = pidData.params.td;
+            const spInput = document.getElementById(`side-sp-temp-t${tIdx}`);
+            if (spInput && document.activeElement !== spInput && !isEditing) spInput.value = pidData.params.setpoint;
+
+            if (!isEditing) {
+                const kp = document.getElementById(`side-kp-t${tIdx}`);
+                const ti = document.getElementById(`side-ti-t${tIdx}`);
+                const td = document.getElementById(`side-td-t${tIdx}`);
+                if (kp) kp.value = pidData.params.kp;
+                if (ti) ti.value = pidData.params.ti;
+                if (td) td.value = pidData.params.td;
+            }
         });
 
         // --- Visualización de Tanques y Válvulas ---
