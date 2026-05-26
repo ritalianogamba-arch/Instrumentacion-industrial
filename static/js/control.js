@@ -38,7 +38,7 @@ function ioPID(id, action) {
                 return r.json();
             })
             .then(d => {
-                if (d) alert(d.success ? "Guardado" : "Error");
+                if (d) alert(d.success ? "Guardado" : "Error: " + (d.error || 'Desconocido'));
             });
     }
 }
@@ -112,7 +112,7 @@ function toggleValve(n, addr) {
                 }, delay);
             } else {
                 btn.classList.remove('transitioning');
-                alert('Error al accionar');
+                alert('Error al accionar: ' + (d.error || ''));
             }
         })
         .catch(err => {

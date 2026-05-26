@@ -83,6 +83,7 @@ def safe_modbus_operation(operation_func, **kwargs):
             
             result = operation_func(client_manager.client, **kwargs)
             if result and result.isError():
+                logger.error(f"Modbus Exception from PLC: {result}")
                 return None
             return result
         except Exception as e:
