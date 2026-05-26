@@ -175,11 +175,11 @@ def status():
     for t in elementos['tanques']:
         res_sp = read_registers_safe(t['SetPoint_Level'], count=1)
         sp_niveles.append(res_sp.registers[0] if res_sp else 0)
-        tank_modes.append(get_coil(t['modo_auto_address']))
+        tank_modes.append(1 if get_coil(t['modo_auto_address']) else 0)
         # Condición de nivel (coil 0/1) – si no está definida, usar 0 (seguro)
         addr_cond = t.get('condicion_de_nivel')
         if addr_cond:
-            condiciones_nivel.append(get_coil(addr_cond))
+            condiciones_nivel.append(1 if get_coil(addr_cond) else 0)
         else:
             condiciones_nivel.append(0)
 
@@ -222,8 +222,8 @@ def status():
         "registers_outputs": reg_out, 
         "sp_niveles": sp_niveles,
         "condiciones_nivel": condiciones_nivel,
-        "pid_t2": pids_status.get("pid_1", {}), 
-        "pid_t4": pids_status.get("pid_2", {}),
+        "pid_t2": pids_status.get("pid_1", None), 
+        "pid_t4": pids_status.get("pid_2", None),
         "elementos": elementos
     })
 

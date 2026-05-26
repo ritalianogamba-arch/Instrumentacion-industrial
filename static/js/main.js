@@ -132,7 +132,7 @@ function mainLoop() {
             let isSafe;
             if (Array.isArray(d.condiciones_nivel) && typeof d.condiciones_nivel[tIdx-1] !== 'undefined') {
                 // Valor 1 = seguro, 0 = peligro
-                isSafe = d.condiciones_nivel[tIdx-1] === 1;
+                isSafe = d.condiciones_nivel[tIdx-1] === 1 || d.condiciones_nivel[tIdx-1] === true;
             } else {
                 // Fallback a la lógica anterior usando presión cruda
                 const rawLevel = d.registers_inputs[sPresionIdx];

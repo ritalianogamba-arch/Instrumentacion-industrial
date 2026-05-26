@@ -59,10 +59,10 @@ TANQUE_4_CONDICION = 340
 # -------------------------------------------------------------------------
 # SENSORES (INPUT REGISTERS - Read)
 # -------------------------------------------------------------------------
-SENSOR_PRESION_T1 = 201
-SENSOR_PRESION_T2 = 202
-SENSOR_PRESION_T3 = 203
-SENSOR_PRESION_T4_T5 = 204
+SENSOR_PRESION_T1 = 10
+SENSOR_PRESION_T2 = 20
+SENSOR_PRESION_T3 = 30
+SENSOR_PRESION_T4= 40
 
 SENSOR_TEMP_T2 = 212
 SENSOR_TEMP_T4 = 214

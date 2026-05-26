@@ -144,7 +144,7 @@ function actualizarValorVariador(addr, val) {
 }
 
 function toggleTankMode(index, address) {
-    const isAuto = _last_tank_modes && _last_tank_modes[index - 1] === 1;
+    const isAuto = _last_tank_modes && (_last_tank_modes[index - 1] === 1 || _last_tank_modes[index - 1] === true);
     const newValue = !isAuto;
 
     toggleAutoMode(address, newValue)
