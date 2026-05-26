@@ -35,9 +35,6 @@ def _load_dotenv(filepath='.env'):
 _load_dotenv()
 
 def get_coil_value(address):
-    if client_manager.is_disabled:
-        import mocks
-        return mocks.mock_read_coil(address)
     res = read_coils_safe(address, count=1)
     return res.bits[0] if res else False
 
@@ -125,7 +122,7 @@ def update_enlace_json(owner, repo, path, ngrok_url, branch='main', commit_msg="
 def generar_reporte_telemetria():
     """Genera un reporte formateado leyendo directamente los sensores."""
     # Determinar si estamos usando datos físicos o el simulador
-    modo_actual = "SIMULADO 🟡" if (not client_manager.is_connected() or client_manager.is_disabled) else "REAL (PLC) 🟢"
+    modo_actual = "REAL (PLC) 🟢" if client_manager.is_connected() else "DESCONECTADO 🔴"
     
     reporte = "🏭 *REPORTE DE PLANTA SCADA*\n"
     reporte += f"📡 Modo de Operación: *{modo_actual}*\n"

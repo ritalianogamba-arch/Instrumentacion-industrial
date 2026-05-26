@@ -39,11 +39,12 @@ function mainLoop() {
         // --- Actualización de Badge de Estado y Lock ---
         const badge = document.getElementById('status-badge');
         const badgeText = document.getElementById('status-text');
+        const plcOverlay = document.getElementById('plc-disconnect-overlay');
         if (badge && badgeText && d.mode) {
-            const isSim = d.mode === "Simulado";
-            badge.className = isSim ? 'status-badge status-offline' : 'status-badge status-online';
-            badgeText.innerText = isSim ? 'Modo Simulación' : 'Sistema Online';
-            document.querySelectorAll('.sim-only-header, .sim-only-cell').forEach(el => el.style.display = isSim ? '' : 'none');
+            const isOffline = d.mode === "Desconectado";
+            badge.className = isOffline ? 'status-badge status-offline' : 'status-badge status-online';
+            badgeText.innerText = isOffline ? 'PLC Desconectado' : 'Sistema Online';
+            if (plcOverlay) plcOverlay.style.display = isOffline ? 'flex' : 'none';
         }
 
         const lockNotice = document.getElementById('remote-lock-notice');
@@ -284,7 +285,15 @@ function mainLoop() {
 
             updateTankModal(levelVal, tempVal, levelAbs);
         }
-    }).catch(err => console.error("Error en mainLoop:", err));
+    }).catch(err => {
+        console.error("Error en mainLoop:", err);
+        const badge = document.getElementById('status-badge');
+        const badgeText = document.getElementById('status-text');
+        const plcOverlay = document.getElementById('plc-disconnect-overlay');
+        if (badge) badge.className = 'status-badge status-offline';
+        if (badgeText) badgeText.innerText = 'Sin conexión';
+        if (plcOverlay) plcOverlay.style.display = 'flex';
+    });
 }
 
 // INICIALIZACIÓN

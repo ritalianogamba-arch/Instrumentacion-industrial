@@ -106,7 +106,7 @@ function toggleValve(n, addr) {
                 return;
             }
             if (d.success) {
-                const delay = d.note === 'Escrito en Mock' ? 500 : 15000;
+                const delay = 15000;
                 setTimeout(() => {
                     btn.classList.remove('transitioning');
                 }, delay);
@@ -174,10 +174,3 @@ function mostrarBloqueoAnimado() {
     }, 2000);
 }
 
-function mockToggleInput(address) {
-    fetch('/mock/toggle_input', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address: address })
-    }).catch(err => console.error("Error toggling mock coil:", err));
-}

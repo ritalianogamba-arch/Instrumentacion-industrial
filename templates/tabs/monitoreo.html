@@ -8,7 +8,6 @@
                         <th>Elemento</th>
                         <th>Dirección</th>
                         <th>Estado</th>
-                        <th class="sim-only-header" style="display:none;">Simular</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -20,12 +19,8 @@
                             {% if boton.address == 13 %}</strong>{% endif %}
                         </td>
                         <td>%M{{ boton.address }}</td>
-                        <td id="coil-in-{{ boton.address }}" class="off" style="cursor: pointer;"
-                            onclick="if(document.getElementById('status-text').innerText.includes('Simul')) mockToggleInput({{ boton.address }})">
+                        <td id="coil-in-{{ boton.address }}" class="off">
                             OFF
-                        </td>
-                        <td class="sim-only-cell" style="display:none;">
-                            <button class="btn-small" onclick="mockToggleInput({{ boton.address }})">Forzar</button>
                         </td>
                     </tr>
                     {% endfor %}
