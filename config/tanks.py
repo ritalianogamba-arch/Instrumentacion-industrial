@@ -2,7 +2,7 @@ from models.iot_models import Tanque
 from . import addresses
 from .sensors import (
     SENSOR_PRESION_T1, SENSOR_PRESION_T2, SENSOR_PRESION_T3, 
-    SENSOR_PRESION_T4_T5, SENSOR_TEMP_T2, SENSOR_TEMP_T4
+    SENSOR_PRESION_T4, SENSOR_TEMP_T2, SENSOR_TEMP_T4
 )
 from .valves import (
     ELECTRO_VALVULA_1, ELECTRO_VALVULA_2, ELECTRO_VALVULA_3, 
@@ -88,7 +88,7 @@ TANQUE_3: Tanque = Tanque(
 
 TANQUE_4: Tanque = Tanque(   
     nombre= 'Tanque 4',
-    sensor_de_presion=SENSOR_PRESION_T4_T5.address,         
+    sensor_de_presion=SENSOR_PRESION_T4.address,         
     sensor_de_temperatura=SENSOR_TEMP_T4.address,   
     valvula_superior=ELECTRO_VALVULA_2.address,           
     valvula_inferior=ELECTRO_VALVULA_6.address,    

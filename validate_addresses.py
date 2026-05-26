@@ -15,7 +15,7 @@ try:
     from config.plc import PLC_IP, PLC_PORT
     from config.sensors import (
         SENSOR_PRESION_T1, SENSOR_PRESION_T2, SENSOR_PRESION_T3,
-        SENSOR_PRESION_T4_T5, SENSOR_TEMP_T2, SENSOR_TEMP_T4
+        SENSOR_PRESION_T4, SENSOR_TEMP_T2, SENSOR_TEMP_T4
     )
     from config.valves import (
         ELECTRO_VALVULA_1, ELECTRO_VALVULA_2, ELECTRO_VALVULA_3,
@@ -93,7 +93,7 @@ class ModbusAddressValidator:
         self.register_input_register(SENSOR_PRESION_T1.address, "SENSOR_PRESION_T1", "Sensor")
         self.register_input_register(SENSOR_PRESION_T2.address, "SENSOR_PRESION_T2", "Sensor")
         self.register_input_register(SENSOR_PRESION_T3.address, "SENSOR_PRESION_T3", "Sensor")
-        self.register_input_register(SENSOR_PRESION_T4_T5.address, "SENSOR_PRESION_T4_T5", "Sensor")
+        self.register_input_register(SENSOR_PRESION_T4.address, "SENSOR_PRESION_T4", "Sensor")
         self.register_input_register(SENSOR_TEMP_T2.address, "SENSOR_TEMP_T2", "Sensor")
         self.register_input_register(SENSOR_TEMP_T4.address, "SENSOR_TEMP_T4", "Sensor")
         

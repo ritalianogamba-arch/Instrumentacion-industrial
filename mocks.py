@@ -17,8 +17,11 @@ class MockMemory:
         self.coils = {addr: False for addr in range(10000)}
         self.registers = {addr: 0 for addr in range(10000)}
         
-        # Inicialización base de niveles y actuadores a 4000 (0%)
-        for addr in [s.address for s in LISTA_SENSORES if "PRESION" in s.nombre] + [a.address for a in LISTA_ACTUADORES]:
+        # Inicialización base de sensores de nivel a 0 (el PLC envía 0-100%)
+        for addr in [s.address for s in LISTA_SENSORES if "PRESION" in s.nombre.upper() or "NIVEL" in s.nombre.upper()]:
+            self.registers[addr] = 0
+        # Inicialización base de actuadores a 4000 (rango 4000-20000 mA)
+        for addr in [a.address for a in LISTA_ACTUADORES]:
             self.registers[addr] = 4000
             
         # Inicialización base de temperatura a 20°C
@@ -52,7 +55,6 @@ def get_mock_status():
         }
 
     # Sincronizar todos los sensores en el orden exacto de config/sensors.py
-    # 0: Temp T2 (201), 1: Temp T4 (200), 2: Pres T1 (202), 3: Pres T2 (204), 4: Pres T3 (205), 5: Pres T4_T5 (203)
     sensores_raw = []
     for s in system_data["elementos"]["sensores"]:
         sensores_raw.append(store.registers.get(s['address'], 0))
@@ -64,6 +66,15 @@ def get_mock_status():
         if pneumatica_idx is not None:
             registers_outputs[pneumatica_idx] = 20000 if vn_on else 4000
 
+    # Condiciones de nivel: 1=seguro (nivel > 20%), 0=peligro
+    condiciones_nivel = []
+    for i, t in enumerate(LISTA_TANQUES):
+        if t.condicion_de_nivel:
+            level = store.physics["levels"][i + 1]
+            condiciones_nivel.append(1 if level > 20.0 else 0)
+        else:
+            condiciones_nivel.append(0)
+
     return {
         "mode": "Simulado",
         "elementos": system_data["elementos"],
@@ -74,6 +85,7 @@ def get_mock_status():
         "registers_inputs": sensores_raw,
         "registers_outputs": registers_outputs,
         "sp_niveles": [store.registers.get(t.SetPoint_Level, 0) for t in LISTA_TANQUES],
+        "condiciones_nivel": condiciones_nivel,
         "pid_t2": get_pid_data(LISTA_PIDS[0], store.registers.get(LISTA_PIDS[0].address_set_point + 1, 260)),
         "pid_t4": get_pid_data(LISTA_PIDS[1], store.registers.get(LISTA_PIDS[1].address_set_point + 1, 260)),
         "pid_flags": {
@@ -163,10 +175,11 @@ def physics_loop():
                 
                 l[idx] = max(0.0, min(100.0, l[idx]))
 
-            # Sincronizar niveles a registros Modbus dinámicamente
+            # Sincronizar niveles a registros Modbus (0-100%, escalado por PLC)
             for i, tank in enumerate(LISTA_TANQUES):
                 idx = i + 1
-                store.registers[tank.sensor_de_presion] = int(4000 + (l[idx] * 160))
+                if tank.sensor_de_presion is not None:
+                    store.registers[tank.sensor_de_presion] = int(round(l[idx]))
 
 
         except Exception as e:
