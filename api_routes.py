@@ -252,7 +252,8 @@ def update_pid():
         
         # Encontrar el PID en la configuración
         system_data = get_system_data()
-        pid_obj = next((p for p in system_data["elementos"]["pids"] if p['nombre'].split()[-1] == pid_id_str), None)
+        pid_id_clean = pid_id_str.replace('T', '').strip()
+        pid_obj = next((p for p in system_data["elementos"]["pids"] if p['nombre'].split()[-1] == pid_id_clean), None)
         
         if not pid_obj:
             return jsonify({'success': False, 'error': f'PID {pid_id_str} no encontrado'}), 404

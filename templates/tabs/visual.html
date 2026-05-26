@@ -362,7 +362,9 @@
                         style="top: 535px; left: 662px; width: 238px;">
                     </div>
 
-                    <div style="position: absolute; top: 500px; left: 800px; font-size: 18px; color: #444; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7;">Descarga
+                    <div
+                        style="position: absolute; top: 500px; left: 800px; font-size: 18px; color: #444; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7;">
+                        Descarga
                     </div>
 
                     <!-- TANQUES (DINÁMICOS) -->
@@ -460,8 +462,9 @@
                         </div>
                         <div class="dual-control-wrapper">
                             <div class="h-slider-container">
-                                <input type="range" min="{{ a.min_val }}" max="{{ a.max_val }}" value="{{ a.min_val }}" class="h-slider"
-                                    id="slider-{{ a.address }}-side" oninput="syncDualControl('{{ a.address }}', 'slider', '{{ a.unidad }}', {{ 50 if a.unidad == 'Hz' else 100 }}, {{ a.min_val }}, {{ a.max_val }})"
+                                <input type="range" min="{{ a.min_val }}" max="{{ a.max_val }}" value="{{ a.min_val }}"
+                                    class="h-slider" id="slider-{{ a.address }}-side"
+                                    oninput="syncDualControl('{{ a.address }}', 'slider', '{{ a.unidad }}', {{ 50 if a.unidad == 'Hz' else 100 }}, {{ a.min_val }}, {{ a.max_val }})"
                                     onchange="actualizarValorVariador({{ a.address }}, this.value)">
                             </div>
                             <div class="dual-input-box">
@@ -481,21 +484,24 @@
 
                     {% set ns = namespace(groups={}) %}
                     {% for t in elementos.tanques %}
-                        {% set g = t.grupo if t.grupo and t.grupo != "None" else "INDIVIDUAL" %}
-                        {% if g not in ns.groups %}
-                            {% set _ = ns.groups.update({g: []}) %}
-                        {% endif %}
-                        {% set _ = ns.groups[g].append(t) %}
+                    {% set g = t.grupo if t.grupo and t.grupo != "None" else "INDIVIDUAL" %}
+                    {% if g not in ns.groups %}
+                    {% set _ = ns.groups.update({g: []}) %}
+                    {% endif %}
+                    {% set _ = ns.groups[g].append(t) %}
                     {% endfor %}
 
                     {% for g_name, g_tanks in ns.groups.items() %}
+                    {% if g_name != 'INDIVIDUAL' %}
                     <div class="level-group-container">
                         <div style="font-size: 11px; font-weight: 900; color: var(--primary); margin-bottom: 5px;">
                             {{ 'GRUPO ' ~ g_name if g_name != 'INDIVIDUAL' else 'TANQUES INDIVIDUALES' }}
                         </div>
                         <div class="level-group-header" style="margin-bottom: 5px;">
                             {% if g_name != 'INDIVIDUAL' and g_tanks|length > 0 %}
-                            <button id="btn-group-{{ g_name|lower }}" onclick="toggleGroupMode('{{ g_name }}', [{{ g_tanks[0].modo_auto_address }}])" class="btn-small btn-read"
+                            <button id="btn-group-{{ g_name|lower }}"
+                                onclick="toggleGroupMode('{{ g_name }}', [{{ g_tanks[0].modo_auto_address }}])"
+                                class="btn-small btn-read"
                                 style="min-width: 60px; padding: 2px 5px; font-size: 9px; background: #c62828;">MANUAL</button>
                             {% else %}
                             <div style="min-width: 60px;"></div>
@@ -510,14 +516,17 @@
                             <button class="btn-chevron"
                                 onclick="document.getElementById('sp-grid-{{ g_name|lower }}').classList.toggle('expanded')"
                                 style="padding: 0 4px; font-size: 8px;">SP ◀</button>
-                            <div id="sp-grid-{{ g_name|lower }}" class="level-sp-grid {% if g_tanks|length == 2 %}two-cols{% endif %}">
+                            <div id="sp-grid-{{ g_name|lower }}"
+                                class="level-sp-grid {% if g_tanks|length == 2 %}two-cols{% endif %}">
                                 {% for t in g_tanks %}
-                                <input type="number" id="side-sp-nivel-{{ t.nombre.replace('Tanque ', 't').lower() }}" class="mini-sp-input"
+                                <input type="number" id="side-sp-nivel-{{ t.nombre.replace('Tanque ', 't').lower() }}"
+                                    class="mini-sp-input"
                                     onchange="writeLevelSP('{{ t.nombre.replace('Tanque ', 'T') }}', this.value)">
                                 {% endfor %}
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     {% endfor %}
                 </section>
 
@@ -636,6 +645,19 @@
         document.getElementById(`side-pid-accordion-t${id}`).classList.toggle('expanded');
     }
 
+    function updatePIDSetpoint(pidId, value) {
+        const cfg = CONFIG_PIDS[pidId];
+        if (!cfg || !cfg.sp) return;
+        let val = parseFloat(value);
+        if (isNaN(val)) val = 0;
+        const rawVal = window.PLC_SENDS_SCALED_TEMP
+            ? Math.round(val)
+            : Math.round(((val - 0.5) * 1000) / 75);
+        writeRegister(cfg.sp, rawVal).then(r => {
+            if (r && r.status === 403) mostrarBloqueoAnimado();
+        });
+    }
+
     function saveSidePID(id) {
         const pidId = id == 2 ? 'T2' : 'T4';
         const params = {
@@ -649,7 +671,7 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(params)
-        }).then(r => r.json()).then(d => alert(d.success ? "PID Actualizado" : "Error"));
+        }).then(r => r.json()).then(d => alert(d.success ? "PID Actualizado" : "Error: " + (d.error || "Desconocido")));
     }
 
     function readPIDValues(id) {

@@ -40,10 +40,10 @@
         const CONFIG_TANQUES = {
             {% for t in elementos.tanques %}
             "T{{ t.nombre.split()[-1] }}": {
-                sensor: {{ t.sensor_de_presion }},
-                sp: {{ t.SetPoint_Level }},
-                min: {{ t.min_val }},
-                max: {{ t.max_val }}
+                sensor: {{ t.sensor_de_presion or 'null' }},
+                sp: {{ t.SetPoint_Level or 'null' }},
+                min: {{ t.min_val or 0 }},
+                max: {{ t.max_val or 100 }}
             }{{ ',' if not loop.last }}
             {% endfor %}
         };
@@ -54,6 +54,17 @@
                 min: {{ a.min_val }},
                 max: {{ a.max_val }},
                 unidad: "{{ a.unidad }}"
+            }{{ ',' if not loop.last }}
+            {% endfor %}
+        };
+
+        const CONFIG_PIDS = {
+            {% for p in elementos.pids %}
+            "T{{ p.nombre.split()[-1] }}": {
+                sp: {{ p.address_set_point or 'null' }},
+                kp: {{ p.address_kp or 'null' }},
+                ti: {{ p.address_ti or 'null' }},
+                td: {{ p.address_td or 'null' }}
             }{{ ',' if not loop.last }}
             {% endfor %}
         };
