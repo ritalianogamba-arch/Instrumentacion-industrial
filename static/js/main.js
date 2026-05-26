@@ -234,7 +234,7 @@ function mainLoop() {
                     setVisLevel(`t${index}`, rawLevel, cfg);
                     
                     const levValEl = document.getElementById(`vis-lev-t${index}-val`);
-                    if (levValEl) levValEl.innerText = rawLevel;
+                    if (levValEl) levValEl.innerText = escalarNivel(rawLevel, cfg) + "%";
                     
                     const levEl = document.getElementById(`vis-lev-t${index}`);
                     if (t.sensor_de_temperatura) {

@@ -39,7 +39,7 @@ class ModbusClientManager:
                     self.client.close()
                 
                 logger.info(f"Intento de reconexión {attempt}/{MODBUS_RETRIES}...")
-                time.sleep(0.5) 
+                time.sleep(0.05) 
                 
                 if self._connect():
                     return True
@@ -56,19 +56,28 @@ client_manager = ModbusClientManager(PLC_IP, PLC_PORT)
 # =========================================================================
 def safe_modbus_operation(operation_func, **kwargs):
     with client_lock:
-        try:
-            if not client_manager.is_connected():
-                if not client_manager.reconnect():
+        # Intentar hasta 2 veces (1 intento original + 1 reintento tras falla)
+        for attempt in range(2):
+            try:
+                if not client_manager.is_connected():
+                    if not client_manager.reconnect():
+                        return None
+                
+                result = operation_func(client_manager.client, **kwargs)
+                if result and result.isError():
+                    logger.error(f"Modbus Exception from PLC: {result}")
                     return None
-            
-            result = operation_func(client_manager.client, **kwargs)
-            if result and result.isError():
-                logger.error(f"Modbus Exception from PLC: {result}")
-                return None
-            return result
-        except Exception as e:
-            logger.warning(f"Error Modbus transitorio: {e}")
-            return None
+                return result
+            except Exception as e:
+                logger.warning(f"Error Modbus transitorio (intento {attempt+1}/2): {e}")
+                # Forzar cierre del socket para que el proximo ciclo o intento reconecte de cero
+                if client_manager.client:
+                    client_manager.client.close()
+                
+                if attempt == 1: # Si ya era el reintento, fallar
+                    return None
+                time.sleep(0.1) # Pequeña pausa antes de reintentar
+        return None
 
 def read_coils_safe(address, count=1):
     return safe_modbus_operation(lambda c, **kw: c.read_coils(**kw), address=address, count=count)

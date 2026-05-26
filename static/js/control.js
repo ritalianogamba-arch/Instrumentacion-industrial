@@ -58,6 +58,14 @@ function toggleGenericPID(id, address, type) {
     }
 
     const isOn = btn.innerText.trim() === 'ON';
+
+    // Chequeo de seguridad: No permitir encender si el nivel es bajo (LED en rojo)
+    const ledId = `side-led-seguro-${id.toLowerCase()}`;
+    const led = document.getElementById(ledId);
+    if (!isOn && led && !led.classList.contains('active')) {
+        alert("⚠️ No se puede encender la resistencia.\nEl nivel de agua es insuficiente (condición de seguridad no cumplida).");
+        return;
+    }
     console.log(`[toggleGenericPID] id=${id}, address=${address}, isOn=${isOn} -> nuevo estado=${!isOn}`);
 
     // Ambos PIDs (T2 y T4) usan coils para su botón virtual

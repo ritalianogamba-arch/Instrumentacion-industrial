@@ -4,8 +4,8 @@ from . import addresses
 # PLC Connection Settings
 PLC_IP = '192.168.1.10'
 PLC_PORT = 502
-MODBUS_TIMEOUT = 5
-MODBUS_RETRIES = 2
+MODBUS_TIMEOUT = 1
+MODBUS_RETRIES = 1
 PLC_REMOTE_LOCK_ADDR = addresses.LLAVE_MANDO_REMOTO
 
 # =========================================================================

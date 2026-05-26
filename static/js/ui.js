@@ -10,10 +10,15 @@ function openTab(name, btn) {
 }
 
 function escalarNivel(v, cfg) {
-    if (!cfg) return "0.0";
+    if (window.PLC_SENDS_SCALED_LEVEL) {
+        let p = parseFloat(v);
+        if (p < 0) p = 0; if (p > 100) p = 100;
+        return Math.round(p);
+    }
+    if (!cfg) return 0;
     let p = ((v - cfg.min) / (cfg.max - cfg.min)) * 100;
     if (p < 0) p = 0; if (p > 100) p = 100;
-    return p.toFixed(1);
+    return Math.round(p);
 }
 
 function setVisLevel(id, v, cfg) {
