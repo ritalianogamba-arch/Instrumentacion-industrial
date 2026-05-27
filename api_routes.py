@@ -258,9 +258,10 @@ def update_pid():
             
         base = pid_obj['address_set_point']
         if PLC_SENDS_SCALED_TEMP:
-            sp_raw = int(round(float(d['setpoint']) * 10))
+            sp_raw = int(round(float(d['setpoint']) * 100))
         else:
             sp_raw = int(((float(d['setpoint']) - 0.5) * 1000) / 75)
+            
         kp_raw = int(float(d['kp']) / (0.01*10)) #el *10 esta explicado en guia rapida
         ti_raw = int(float(d['ti']) / 0.1)
         td_raw = int(float(d['td']) / 0.1)
