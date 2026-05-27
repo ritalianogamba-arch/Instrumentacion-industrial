@@ -193,7 +193,7 @@ def status():
             pids_status[f"pid_{pid['identifier']}"] = {
                 'params': {
                     'setpoint': raw_to_celsius(r[0]),
-                    'kp': r[2]*(0.01/10), #el /10 esta explicado en guia rapida
+                    'kp': r[2]*(0.01*10), #el *10 esta explicado en guia rapida
                     'ti': r[4]*0.1, 
                     'td': r[6]*0.1
                 },
