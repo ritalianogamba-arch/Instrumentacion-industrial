@@ -39,10 +39,10 @@ def raw_to_celsius(raw_value: int) -> float:
     """Convierte un valor raw del PLC a grados Celsius.
     
     Si PLC_SENDS_SCALED_TEMP=False (actual): aplica la fórmula de escalamiento.
-    Si PLC_SENDS_SCALED_TEMP=True (futuro):  el valor ya es °C, solo lo redondea.
+    Si PLC_SENDS_SCALED_TEMP=True (futuro):  el PLC envía el valor x10, se divide por 10.
     """
     if PLC_SENDS_SCALED_TEMP:
-        return round(float(raw_value), 1)
+        return round(float(raw_value) / 10.0, 1)
     return round((raw_value * 75 / 1000) + 0.5, 1)
 
 # =========================================================================

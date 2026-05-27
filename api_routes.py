@@ -199,7 +199,7 @@ def status():
                 },
                 'status': {
                     'temp_actual': raw_to_celsius(r[1]),
-                    'error': round(r[3]*75/1000, 1), 
+                    'error': round(r[3] / 10.0, 1) if PLC_SENDS_SCALED_TEMP else round(r[3]*75/1000, 1), 
                     'salida': r[5]/100.0
                 }
             }
@@ -258,7 +258,7 @@ def update_pid():
             
         base = pid_obj['address_set_point']
         if PLC_SENDS_SCALED_TEMP:
-            sp_raw = int(round(float(d['setpoint'])))
+            sp_raw = int(round(float(d['setpoint']) * 10))
         else:
             sp_raw = int(((float(d['setpoint']) - 0.5) * 1000) / 75)
         kp_raw = int(float(d['kp']) / 0.01)
