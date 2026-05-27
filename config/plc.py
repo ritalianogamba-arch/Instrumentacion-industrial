@@ -33,7 +33,7 @@ PLC_REMOTE_LOCK_ADDR = addresses.LLAVE_MANDO_REMOTO
 #
 # Cuando PLC_SENDS_SCALED_TEMP = True, el SCADA asume que el %MW
 # ya contiene el valor en °C y NO aplica ninguna conversión.
-PLC_SENDS_SCALED_TEMP = False   
+PLC_SENDS_SCALED_TEMP = True   
 
 def raw_to_celsius(raw_value: int) -> float:
     """Convierte un valor raw del PLC a grados Celsius.
