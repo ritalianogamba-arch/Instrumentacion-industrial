@@ -9,7 +9,7 @@ const PLC_SENDS_SCALED_TEMP = (typeof window.PLC_SENDS_SCALED_TEMP !== 'undefine
     : false; // default: escalamiento en el SCADA (PLC envía raw)
 
 function rawToCelsius(raw) {
-    if (PLC_SENDS_SCALED_TEMP) return parseFloat(raw).toFixed(1);
+    if (PLC_SENDS_SCALED_TEMP) return (parseFloat(raw) / 10.0).toFixed(1);
     return ((raw * 75 / 1000) + 0.5).toFixed(1);
 }
 

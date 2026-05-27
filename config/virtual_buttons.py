@@ -1,4 +1,4 @@
-﻿from models.iot_models import BotonVirtual
+from models.iot_models import BotonVirtual
 from models.iot_models import EntradaDigital
 from . import addresses
 

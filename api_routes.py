@@ -164,9 +164,9 @@ def status():
         pneumatica_idx = next((idx for idx, a in enumerate(elementos['salidas_analogicas']) if a['address'] == VALVULA_NEUMATICA), None)
         if vn_button_idx is not None and pneumatica_idx is not None and vn_button_idx < len(coils_in):
             vn_on = coils_in[vn_button_idx]
-            min_val = elementos['salidas_analogicas'][pneumatica_idx].get('min_val', 4000)
+            min_val = elementos['salidas_analogicas'][pneumatica_idx].get('min_val', 9600)
             max_val = elementos['salidas_analogicas'][pneumatica_idx].get('max_val', 20000)
-            reg_out[pneumatica_idx] = max_val if vn_on else min_val
+            reg_out[pneumatica_idx] = min_val if vn_on else max_val
     
     # 4. SetPoints de Nivel y Modos Auto
     sp_niveles = []
