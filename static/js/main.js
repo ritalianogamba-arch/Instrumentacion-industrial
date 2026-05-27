@@ -312,5 +312,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Iniciar loops de actualización
     setInterval(mainLoop, 500);
-    setInterval(() => updateCharts(g_tempT2, g_tempT4), 60000);
+    setInterval(() => updateCharts(g_tempT2, g_tempT4), 5000); // Actualiza la gráfica cada 5 segundos
 });
