@@ -29,8 +29,8 @@ if __name__ == '__main__':
         app.run(
             host=FLASK_HOST,
             port=FLASK_PORT,
-            debug=DEBUG_MODE,
-            use_reloader=True,
+            debug=False,
+            use_reloader=False,
             threaded=True
         )
     except KeyboardInterrupt:
