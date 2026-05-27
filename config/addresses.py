@@ -36,7 +36,7 @@ BOTON_EV_7 = 107
 BOTON_EV_8 = 108
 
 LLAVE_MANDO_REMOTO = 114
-BOTON_VN = 112
+BOTON_VN = 113
 
 # -------------------------------------------------------------------------
 # ELECTRO VALVULAS - SALIDAS DIGITALES (COILS - Write)
