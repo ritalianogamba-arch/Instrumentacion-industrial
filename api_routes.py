@@ -193,7 +193,7 @@ def status():
             pids_status[f"pid_{pid['identifier']}"] = {
                 'params': {
                     'setpoint': raw_to_celsius(r[0]),
-                    'kp': r[2]*0.01, 
+                    'kp': r[2]*(0.01/10), #el /10 esta explicado en guia rapida
                     'ti': r[4]*0.1, 
                     'td': r[6]*0.1
                 },
@@ -261,7 +261,7 @@ def update_pid():
             sp_raw = int(round(float(d['setpoint']) * 10))
         else:
             sp_raw = int(((float(d['setpoint']) - 0.5) * 1000) / 75)
-        kp_raw = int(float(d['kp']) / 0.01)
+        kp_raw = int(float(d['kp']) / (0.01*10)) #el *10 esta explicado en guia rapida
         ti_raw = int(float(d['ti']) / 0.1)
         td_raw = int(float(d['td']) / 0.1)
         
