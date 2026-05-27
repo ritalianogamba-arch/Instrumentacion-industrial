@@ -48,7 +48,7 @@ echo Te pedira la clave por ultima vez.
 echo ========================================
 echo Sincronizando hora con la Raspberry Pi...
 for /f "usebackq tokens=*" %%i in (`powershell -command "Get-Date -Format 'yyyy-MM-dd HH:mm:ss'"`) do set CURRENT_DATE=%%i
-ssh %RASPBERRY_USER%@%RASPBERRY_HOST% "sudo date -s '%CURRENT_DATE%'; if [ -f %RASPBERRY_DIR%/.env ]; then sed -i 's/\r$//' %RASPBERRY_DIR%/.env; fi; sed -i 's/\r$//' %RASPBERRY_DIR%/inicio_servicios.sh; chmod +x %RASPBERRY_DIR%/inicio_servicios.sh; sudo systemctl restart plc-server.service"
+ssh %RASPBERRY_USER%@%RASPBERRY_HOST% "sudo date -s '%CURRENT_DATE%'; if [ -f %RASPBERRY_DIR%/.env ]; then sed -i 's/\r$//' %RASPBERRY_DIR%/.env; fi; sed -i 's/\r$//' %RASPBERRY_DIR%/inicio_servicios.sh; chmod +x %RASPBERRY_DIR%/inicio_servicios.sh; sudo systemctl stop plc-server.service; sudo killall -9 python3 2>/dev/null; sleep 1; sudo systemctl start plc-server.service"
 
 echo.
 echo ACTUALIZACION COMPLETADA!
