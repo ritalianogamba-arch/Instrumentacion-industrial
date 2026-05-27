@@ -64,8 +64,8 @@ SENSOR_PRESION_T2 = 20
 SENSOR_PRESION_T3 = 30
 SENSOR_PRESION_T4= 40
 
-SENSOR_TEMP_T2 = 212
-SENSOR_TEMP_T4 = 214
+SENSOR_TEMP_T2 = 232
+SENSOR_TEMP_T4 = 234
 
 # -------------------------------------------------------------------------
 # TANQUES - SETPOINTS (HOLDING REGISTERS - Read/Write)
