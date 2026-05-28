@@ -687,7 +687,8 @@
     }
 
     function togglePIDAccordion(id) {
-        document.getElementById(`side-pid-accordion-t${id}`).classList.toggle('expanded');
+        const suffix = (id === 'lab' || id === 'LAB') ? 'lab' : `t${id}`;
+        document.getElementById(`side-pid-accordion-${suffix}`).classList.toggle('expanded');
     }
 
     function updatePIDSetpoint(pidId, value) {
