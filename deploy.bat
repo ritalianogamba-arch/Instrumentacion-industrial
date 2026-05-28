@@ -22,7 +22,7 @@ echo OK: Raspberry encontrada
 echo.
 
 echo Preparando lista de archivos a transferir...
-set "ARCHIVOS=app.py api_routes.py bot_telegram.py modbus_core.py validate_addresses.py inicio_servicios.sh setup_red.sh requirements.txt config models static templates MODBUS_MAPPING.md ARCHITECTURE.md README.md"
+set "ARCHIVOS=app.py caudal_calculator.py api_routes.py bot_telegram.py modbus_core.py validate_addresses.py inicio_servicios.sh setup_red.sh requirements.txt config models static templates MODBUS_MAPPING.md ARCHITECTURE.md README.md"
 
 :: Anexar .env si existe (no está en git)
 if exist .env (
