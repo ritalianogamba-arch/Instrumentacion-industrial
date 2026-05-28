@@ -1,6 +1,46 @@
 #!/bin/bash
+# ============================================================
 # Script de configuración automática de red para la Raspberry Pi
 # Ejecutar con: sudo bash setup_red.sh
+# ============================================================
+#
+# ╔══════════════════════════════════════════════════════════╗
+# ║  CÓMO CAMBIAR O AGREGAR OTRA RED WI-FI                 ║
+# ╠══════════════════════════════════════════════════════════╣
+# ║                                                         ║
+# ║  1. Buscar la sección "Configurar Wi-Fi" más abajo.     ║
+# ║                                                         ║
+# ║  2. Para una RED ABIERTA (sin contraseña):              ║
+# ║     Cambiar el ssid y usar key_mgmt=NONE:              ║
+# ║                                                         ║
+# ║       network={                                         ║
+# ║           ssid="NombreDeTuRed"                          ║
+# ║           key_mgmt=NONE                                 ║
+# ║       }                                                 ║
+# ║                                                         ║
+# ║  3. Para una RED CON CONTRASEÑA (ej. hotspot celular):  ║
+# ║     Cambiar ssid, agregar psk (contraseña) y usar       ║
+# ║     key_mgmt=WPA-PSK:                                  ║
+# ║                                                         ║
+# ║       network={                                         ║
+# ║           ssid="NombreDeTuRed"                          ║
+# ║           psk="TuContraseña"                            ║
+# ║           key_mgmt=WPA-PSK                              ║
+# ║           priority=2                                    ║
+# ║       }                                                 ║
+# ║                                                         ║
+# ║  4. "priority" indica preferencia (mayor = más alta).   ║
+# ║     Si quieres que el hotspot tenga más prioridad que   ║
+# ║     AlumnosFI, ponele priority=2 o más.                 ║
+# ║                                                         ║
+# ║  5. También hay que actualizar el grep -q "..." para    ║
+# ║     que el script detecte si la red ya fue agregada.    ║
+# ║                                                         ║
+# ║  IMPORTANTE: La Raspberry necesita conexión a Internet  ║
+# ║  (vía Wi-Fi) para que el Bot de Telegram funcione.      ║
+# ║  Si solo tenés Ethernet al PLC y no hay Wi-Fi con       ║
+# ║  salida a Internet, el bot NO podrá enviar mensajes.    ║
+# ╚══════════════════════════════════════════════════════════╝
 
 echo "========================================"
 echo "🔧 Configurando Redes de la Raspberry Pi"

@@ -1,6 +1,6 @@
 from models.iot_models import PID
 from . import addresses
-from .virtual_buttons import BTN_PID_T2, BTN_PID_T4
+from .virtual_buttons import BTN_PID_T2, BTN_PID_T4, BTN_PID_LAB
 
 # NOTA
 # HOLDING REGISTER %MW
@@ -31,4 +31,18 @@ PID_T4 : PID = PID(
     td=1,
     address_td=addresses.PID_T4_TD,
     boton_virtual_address=BTN_PID_T4.address
+)
+
+PID_LAB : PID = PID(
+    nombre= 'PID LABORATORIO',
+    identifier = 3,
+    set_point=1,
+    address_set_point=addresses.PID_LAB_SP,
+    kp=1,
+    address_kp=addresses.PID_LAB_KP,
+    ti=1,
+    address_ti=addresses.PID_LAB_TI,
+    td=1,
+    address_td=addresses.PID_LAB_TD,
+    boton_virtual_address=BTN_PID_LAB.address
 )

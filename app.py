@@ -23,6 +23,11 @@ if __name__ == '__main__':
         # Bot de Telegram
         threading.Thread(target=run_bot, daemon=True, name="BotTelegram").start()
         logger.info("✅ Bot Telegram activo")
+        
+        # Calculador de Caudal PID LAB
+        from caudal_calculator import run_caudal_calculator
+        threading.Thread(target=run_caudal_calculator, daemon=True, name="CaudalCalc").start()
+        logger.info("✅ Calculador de Caudal activo")
 
     try:
         # Iniciar servidor Flask

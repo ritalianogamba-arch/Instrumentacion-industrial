@@ -23,6 +23,7 @@ BTN_VALVULA_8 = BotonVirtual(nombre="Abrir/Cerrar EV8", address=addresses.BTN_VA
 # Comandos PID
 BTN_PID_T2 = BotonVirtual(nombre="Activar PID T2", address=addresses.BTN_PID_T2)
 BTN_PID_T4 = BotonVirtual(nombre="Activar PID T4", address=addresses.BTN_PID_T4)
+BTN_PID_LAB = BotonVirtual(nombre="Activar PID LAB", address=addresses.BTN_PID_LAB)
 
 # =========================================================================
 # ENTRADAS DIGITALES MONITOREADAS

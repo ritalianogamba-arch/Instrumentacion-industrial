@@ -2,7 +2,7 @@
  * Charts Logic - Chart.js initialization and updates
  */
 
-let c2, c4;
+let c2, c4, cLab;
 
 function initCharts() {
     const commonOptions = {
@@ -59,6 +59,25 @@ function initCharts() {
             options: JSON.parse(JSON.stringify(commonOptions))
         });
     }
+
+    const ctxLab = document.getElementById('chartLAB');
+    if (ctxLab) {
+        cLab = new Chart(ctxLab.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'PID LAB SP',
+                    borderColor: '#7B1FA2',
+                    backgroundColor: 'rgba(123, 31, 162, 0.1)',
+                    data: [],
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: JSON.parse(JSON.stringify(commonOptions))
+        });
+    }
 }
 
 function toggleScaleMode() {
@@ -80,7 +99,7 @@ function applyManualScale() {
     const min = parseFloat(minEl.value);
     const max = parseFloat(maxEl.value);
     
-    [c2, c4].forEach(chart => {
+    [c2, c4, cLab].forEach(chart => {
         if (chart) {
             chart.options.scales.y.min = min;
             chart.options.scales.y.max = max;

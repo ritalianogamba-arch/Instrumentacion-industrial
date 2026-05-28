@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, render_template
 from config.logging_cfg import logger
 from config.data import get_system_data
-from config.plc import PLC_REMOTE_LOCK_ADDR, raw_to_celsius, PLC_SENDS_SCALED_TEMP, PLC_SENDS_SCALED_LEVEL
+from config.plc import PLC_REMOTE_LOCK_ADDR, raw_to_celsius, PLC_SENDS_SCALED_TEMP, PLC_SENDS_SCALED_LEVEL, raw_to_lab_value, lab_value_to_raw, PLC_SENDS_SCALED_LAB
 from config.addresses import BOTON_VN, VALVULA_NEUMATICA
 from modbus_core import (
     read_coils_safe, write_coil_safe, 
@@ -31,6 +31,7 @@ def index():
                            status=status,
                            plc_sends_scaled_temp=PLC_SENDS_SCALED_TEMP,
                            plc_sends_scaled_level=PLC_SENDS_SCALED_LEVEL,
+                           plc_sends_scaled_lab=PLC_SENDS_SCALED_LAB,
                            **system_data)
 
 # =========================================================================
@@ -131,6 +132,7 @@ def status():
             "condiciones_nivel": [],
             "pid_t2": None,
             "pid_t4": None,
+            "pid_lab": None,
             "elementos": elementos
         })
         resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
@@ -187,25 +189,31 @@ def status():
     pids_status = {}
     pid_flags = {}
     for pid in elementos['pids']:
-        res = read_registers_safe(pid['address_set_point'], count=8)
+        is_lab = pid['identifier'] == 3
+        res = read_registers_safe(pid['address_set_point'], count=9 if is_lab else 8)
         if res:
             r = res.registers
+            # PID LAB usa su propio escalamiento
+            sp_convert = raw_to_lab_value if is_lab else raw_to_celsius
             pids_status[f"pid_{pid['identifier']}"] = {
                 'params': {
-                    'setpoint': raw_to_celsius(r[0]),
+                    'setpoint': sp_convert(r[0]),
                     'kp': r[2]*0.01, 
                     'ti': r[4]*0.1, 
                     'td': r[6]*0.1
                 },
                 'status': {
-                    'temp_actual': raw_to_celsius(r[1]),
-                    'error': round(r[3] / 10.0, 1) if PLC_SENDS_SCALED_TEMP else round(r[3]*75/1000, 1), 
+                    'temp_actual': sp_convert(r[8] if is_lab else r[1]),
+                    'error': round(r[3] / 10.0, 1) if (PLC_SENDS_SCALED_TEMP and not is_lab) else (round(float(r[3]), 1) if is_lab else round(r[3]*75/1000, 1)), 
                     'salida': r[5]/100.0
                 }
             }
         
         # Flags de activación (usando el botón virtual address del modelo)
-        pid_flags[f"t{2 if pid['identifier'] == 1 else 4}_activo"] = get_coil(pid['boton_virtual_address'])
+        flag_key_map = {1: 't2_activo', 2: 't4_activo', 3: 'lab_activo'}
+        flag_key = flag_key_map.get(pid['identifier'])
+        if flag_key:
+            pid_flags[flag_key] = get_coil(pid['boton_virtual_address'])
 
     mode = "Conectado"
 
@@ -224,6 +232,7 @@ def status():
         "condiciones_nivel": condiciones_nivel,
         "pid_t2": pids_status.get("pid_1", None), 
         "pid_t4": pids_status.get("pid_2", None),
+        "pid_lab": pids_status.get("pid_3", None),
         "elementos": elementos
     })
 
@@ -246,18 +255,24 @@ def get_data():
 def update_pid():
     try:
         d = request.get_json()
-        pid_id_str = d.get('id') # 'T2' o 'T4'
+        pid_id_str = d.get('id') # 'T2', 'T4' o 'LABORATORIO'
         
         # Encontrar el PID en la configuración
         system_data = get_system_data()
-        pid_id_clean = pid_id_str.replace('T', '').strip()
+        # Buscar por coincidencia del nombre: T2→"2", T4→"4", LABORATORIO→"LABORATORIO"
+        pid_id_clean = pid_id_str.replace('T', '').strip() if pid_id_str.startswith('T') and len(pid_id_str) <= 3 else pid_id_str.strip()
         pid_obj = next((p for p in system_data["elementos"]["pids"] if p['nombre'].split()[-1] == pid_id_clean), None)
         
         if not pid_obj:
             return jsonify({'success': False, 'error': f'PID {pid_id_str} no encontrado'}), 404
             
         base = pid_obj['address_set_point']
-        if PLC_SENDS_SCALED_TEMP:
+        is_lab_pid = pid_id_clean == 'LABORATORIO'
+        
+        if is_lab_pid:
+            # PID LAB: escalamiento propio (TODO: modificar en config/plc.py)
+            sp_raw = lab_value_to_raw(float(d['setpoint']))
+        elif PLC_SENDS_SCALED_TEMP:
             sp_raw = int(round(float(d['setpoint']) * 10))
         else:
             sp_raw = int(((float(d['setpoint']) - 0.5) * 1000) / 75)

@@ -21,6 +21,7 @@ BTN_GRUPO_B = 21
 
 BTN_PID_T2 = 321
 BTN_PID_T4 = 341 
+BTN_PID_LAB = 344
 
 # -------------------------------------------------------------------------
 # ENTRADAS DIGITALES MONITOREADAS (COILS - Read)
@@ -88,6 +89,11 @@ PID_T4_SP = 440
 PID_T4_KP = 442
 PID_T4_TI = 444
 PID_T4_TD = 446
+
+PID_LAB_SP = 460
+PID_LAB_KP = 462
+PID_LAB_TI = 464
+PID_LAB_TD = 466
 
 # -------------------------------------------------------------------------
 # ACTUADORES ANALOGICOS (SALIDAS ANALOGICAS - Write)

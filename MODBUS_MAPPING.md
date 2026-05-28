@@ -12,10 +12,10 @@
 
 | Tipo | Rango | Uso | Protocolo |
 |------|-------|-----|-----------|
-| **Coils** | 1-8, 20-21, 100-107, 321, 341 | Salidas digitales (válvulas, botones) | Read/Write Coil |
+| **Coils** | 1-8, 20-21, 100-107, 321, 341, 344 | Salidas digitales (válvulas, botones) | Read/Write Coil |
 | **Coils (Monitoreadas)** | 30-38 | Entradas digitales del hardware (%I) copiadas | Read Coil |
 | **Input Registers** | 201-204, 302, 304 | Sensores analógicos | Read Input Register |
-| **Holding Registers** | 101-105, 320, 340, 420-426, 440-446 | SetPoints y parámetros | Read/Write Holding Register |
+| **Holding Registers** | 101-105, 320, 340, 420-426, 440-446, 460-466 | SetPoints y parámetros | Read/Write Holding Register |
 
 ---
 
@@ -87,6 +87,7 @@ Si PLC_SENDS_SCALED_TEMP = True:
 |-----------|--------|---------|
 | 321 | BTN_PID_T2 | Activar PID de Tanque 2 |
 | 341 | BTN_PID_T4 | Activar PID de Tanque 4 |
+| 344 | BTN_PID_LAB | Activar PID Laboratorio |
 
 #### Entradas Digitales Monitoreadas (%M 30-38)
 **Nota**: El PLC debe copiar las entradas físicas (%I0.x) a estas direcciones de memoria para que el SCADA pueda monitorearlas.
@@ -147,14 +148,24 @@ Si PLC_SENDS_SCALED_TEMP = True:
 
 **Botón Virtual**: 341 (COIL)
 
+#### PID Laboratorio (ID: 3)
+| Dirección | Parámetro | Rango | Unidad |
+|-----------|-----------|-------|--------|
+| 460 | SetPoint | 0-100 | °C o % |
+| 462 | Kp (Proporcional) | 0-1000 | - |
+| 464 | Ti (Integral) | 0-1000 | s |
+| 466 | Td (Derivativa) | 0-1000 | s |
+
+**Botón Virtual**: 344 (COIL)
+
 ---
 
 ## ⚠️ Análisis de Conflictos
 
 ### ✅ Estado Actual
 - **No hay overlaps** detectados entre direcciones
-- Coils (0-8, 13, 20-21, 100-106, 321, 341): Espaciadas correctamente
-- Registers (201-204, 302, 304, 101-105, 320, 340, 420-426, 440-446): Sin conflictos
+- Coils (0-8, 13, 20-21, 100-106, 321, 341, 344): Espaciadas correctamente
+- Registers (201-204, 302, 304, 101-105, 320, 340, 420-426, 440-446, 460-466): Sin conflictos
 
 ### ✅ Organización Lógica
 ```
@@ -168,7 +179,7 @@ Registers 101-105:    SetPoints de nivel
 Registers 201-204:    Sensores de presión
 Registers 302-304:    Sensores de temperatura
 Registers 320-340:    Condiciones auxiliares
-Registers 420-446:    Parámetros PID
+Registers 420-466:    Parámetros PID
 ```
 
 ---

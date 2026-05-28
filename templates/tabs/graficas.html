@@ -14,9 +14,9 @@
     
     <div class="charts-container">
         {% for pid in elementos.pids %}
-        {% set pid_id = 'T2' if '2' in pid.nombre else 'T4' %}
+        {% set pid_id = 'T2' if '2' in pid.nombre else ('T4' if '4' in pid.nombre else 'LAB') %}
         <div class="chart-wrapper">
-            <h4 class="chart-title {{ 't2-color' if pid_id == 'T2' else 't4-color' }}">{{ pid.nombre }}</h4>
+            <h4 class="chart-title {{ 't2-color' if pid_id == 'T2' else ('t4-color' if pid_id == 'T4' else 't2-color') }}">{{ pid.nombre }}</h4>
             <div class="canvas-container">
                 <canvas id="chart{{ pid_id }}"></canvas>
             </div>

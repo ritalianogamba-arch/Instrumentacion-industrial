@@ -77,3 +77,43 @@ def percent_to_level_raw(percent: float, cfg_min: int, cfg_max: int) -> int:
     if PLC_SENDS_SCALED_LEVEL:
         return int(round(p))
     return int(round(cfg_min + (p * (cfg_max - cfg_min) / 100)))
+
+# =========================================================================
+# ESCALAMIENTO PID LABORATORIO (Genérico — SIN función definida aún)
+# =========================================================================
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │  ESCALAMIENTO PID LABORATORIO (CONTROL DE CAUDAL)                   │
+# │                                                                     │
+# │  Fórmula de caudal (PLC/ST):                                        │
+# │  Q_int := 0.0829 * (0.75/100.0) * (delta_pct / dt) * 1000.0 * 100.0;│
+# │  (Donde delta_pct es la resta del sensor de nivel del Tanque 4      │
+# │   y dt es el delta de muestreo, el cual debe ser de 1.0 segundo).   │
+# │  Q_int se envía a la dirección %MW468 como entrada del PID LAB.     │
+# │                                                                     │
+# │  Cuando PLC_SENDS_SCALED_LAB = True:                                │
+# │    El PLC ya envía el valor escalado.                               │
+# │                                                                     │
+# │  Cuando PLC_SENDS_SCALED_LAB = False:                               │
+# │    El setpoint se divide/multiplica por 100 para manejar 2          │
+# │    decimales en el display, pero enviar enteros al PLC.             │
+# └─────────────────────────────────────────────────────────────────────┘
+
+# Cambiar a False cuando se necesite que el SCADA haga la conversión (dividir por 100).
+PLC_SENDS_SCALED_LAB = False
+
+def raw_to_lab_value(raw_value: int) -> float:
+    """Convierte un valor raw del PLC al valor de ingeniería (Caudal) del PID LAB.
+    """
+    if PLC_SENDS_SCALED_LAB:
+        return round(float(raw_value), 2)
+    # Al mostrar Q_int en el display, se divide por 100
+    return round(float(raw_value) / 100.0, 2)
+
+def lab_value_to_raw(value: float) -> int:
+    """Convierte el Caudal de ingeniería a valor raw para enviar al PLC.
+    """
+    if PLC_SENDS_SCALED_LAB:
+        return int(round(float(value)))
+    # Al enviarlo se debe multiplicar por 100 para enviar sin decimales
+    return int(round(float(value) * 100.0))

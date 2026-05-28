@@ -170,6 +170,31 @@ function mainLoop() {
                 }
             });
 
+            // --- Sincronización de Sidebar (PID Laboratorio) ---
+            if (d.pid_lab) {
+                const labActive = d.pid_flags && d.pid_flags['lab_activo'];
+                const btnLab = document.getElementById('side-btn-temp-lab');
+                if (btnLab) {
+                    btnLab.innerText = labActive ? 'ON' : 'OFF';
+                    btnLab.style.background = labActive ? '#2e7d32' : '#c62828';
+                }
+
+                const accordionLab = document.getElementById('side-pid-accordion-lab');
+                const isEditingLab = accordionLab && accordionLab.classList.contains('expanded');
+
+                const spLab = document.getElementById('side-sp-temp-lab');
+                if (spLab && document.activeElement !== spLab && !isEditingLab) spLab.value = d.pid_lab.params.setpoint;
+
+                if (!isEditingLab) {
+                    const kpLab = document.getElementById('side-kp-lab');
+                    const tiLab = document.getElementById('side-ti-lab');
+                    const tdLab = document.getElementById('side-td-lab');
+                    if (kpLab) kpLab.value = d.pid_lab.params.kp;
+                    if (tiLab) tiLab.value = d.pid_lab.params.ti;
+                    if (tdLab) tdLab.value = d.pid_lab.params.td;
+                }
+            }
+
             // --- Visualización de Tanques y Válvulas ---
             d.coils_outputs.forEach((v, i) => {
                 const btn = document.getElementById(`valve${i + 1}`);

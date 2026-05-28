@@ -82,6 +82,7 @@
         // Escalamiento de temperatura y nivel — sincronizado con config/plc.py
         window.PLC_SENDS_SCALED_TEMP = {{ 'true' if plc_sends_scaled_temp else 'false' }};
         window.PLC_SENDS_SCALED_LEVEL = {{ 'true' if plc_sends_scaled_level else 'false' }};
+        window.PLC_SENDS_SCALED_LAB = {{ 'true' if plc_sends_scaled_lab else 'false' }};
     </script>
     <script src="{{ url_for('static', filename='js/api.js') }}"></script>
     <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
