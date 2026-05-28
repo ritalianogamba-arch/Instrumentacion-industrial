@@ -50,14 +50,16 @@ echo "========================================"
 echo "📡 1. Agregando red Wi-Fi 'AlumnosFI'..."
 WPA_FILE="/etc/wpa_supplicant/wpa_supplicant.conf"
 
-if grep -q "AlumnosFI" "$WPA_FILE"; then
+if grep -q "Leo" "$WPA_FILE"; then
     echo "✅ La red AlumnosFI ya estaba configurada."
 else
     sudo bash -c "cat >> $WPA_FILE" << EOF
 
 network={
-    ssid="AlumnosFI"
-    key_mgmt=NONE
+    ssid="Leo" 
+    key_mgmt=WPA-PSK
+    psk="Leo12345"
+    priority=2
 }
 EOF
     echo "✅ Red AlumnosFI añadida."
